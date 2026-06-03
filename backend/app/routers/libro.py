@@ -5,6 +5,7 @@ from typing import List
 from app.database import get_db
 from app.models.libro import Libro
 from app.models.categoria import Categoria
+from app.models.prestamo import Prestamo
 from app.schemas.libro import LibroCreate, LibroUpdate, LibroResponse
 
 
@@ -17,6 +18,7 @@ router = APIRouter(
 def obtener_libros(db: Session = Depends(get_db)):
     libros = db.query(Libro).filter(Libro.estado == True).all()
     return libros
+
 
 @router.get("/{id_libro}", response_model=LibroResponse)
 def obtener_libro(id_libro: int, db: Session = Depends(get_db)):
@@ -33,6 +35,7 @@ def obtener_libro(id_libro: int, db: Session = Depends(get_db)):
 
     return libro
 
+
 @router.post("/", response_model=LibroResponse)
 def crear_libro(libro: LibroCreate, db: Session = Depends(get_db)):
 
@@ -47,6 +50,17 @@ def crear_libro(libro: LibroCreate, db: Session = Depends(get_db)):
             detail="La categoría no existe"
         )
 
+    if libro.cantidad_total < 0 or libro.cantidad_disponible < 0:
+        raise HTTPException(
+            status_code=400,
+            detail="Las cantidades no pueden ser negativas"
+        )
+
+    if libro.cantidad_disponible > libro.cantidad_total:
+        raise HTTPException(
+            status_code=400,
+            detail="La cantidad disponible no puede ser mayor que la cantidad total"
+        )
     nuevo_libro = Libro(**libro.model_dump())
 
     db.add(nuevo_libro)
@@ -54,6 +68,7 @@ def crear_libro(libro: LibroCreate, db: Session = Depends(get_db)):
     db.refresh(nuevo_libro)
 
     return nuevo_libro
+
 
 @router.put("/{id_libro}", response_model=LibroResponse)
 def actualizar_libro(
@@ -84,6 +99,18 @@ def actualizar_libro(
             detail="La categoría no existe"
         )
 
+    if datos.cantidad_total < 0 or datos.cantidad_disponible < 0:
+        raise HTTPException(
+            status_code=400,
+            detail="Las cantidades no pueden ser negativas"
+        )
+
+    if datos.cantidad_disponible > datos.cantidad_total:
+        raise HTTPException(
+            status_code=400,
+            detail="La cantidad disponible no puede ser mayor que la cantidad total"
+        )
+
     for campo, valor in datos.model_dump().items():
         setattr(libro, campo, valor)
 
@@ -91,6 +118,7 @@ def actualizar_libro(
     db.refresh(libro)
 
     return libro
+
 
 @router.delete("/{id_libro}")
 def eliminar_libro(
@@ -109,10 +137,21 @@ def eliminar_libro(
             detail="Libro no encontrado"
         )
 
+    prestamo_pendiente = db.query(Prestamo).filter(
+        Prestamo.libro_id == id_libro,
+        Prestamo.estado.in_(["PRESTADO", "VENCIDO"])
+    ).first()
+
+    if prestamo_pendiente:
+        raise HTTPException(
+            status_code=400,
+            detail="No se puede dar de baja un libro con préstamos activos o vencidos"
+        )
+
     libro.estado = False
 
     db.commit()
 
     return {
-        "mensaje": "Libro eliminado correctamente"
+        "mensaje": "Libro dado de baja correctamente"
     }
