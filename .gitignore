@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+
+# Entorno virtual
+venv/
+
+# VS Code
+.vscode/
+
+# Variables de entorno
+.env
+
+# Windows
+Thumbs.db
