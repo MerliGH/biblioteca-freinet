@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import usuarios
+from app.routers import usuarios, categoria
 
 app = FastAPI(
     title="API Biblioteca Freinet",
@@ -8,6 +8,7 @@ app = FastAPI(
 )
 
 app.include_router(usuarios.router)
+app.include_router(categoria.router)
 
 
 @app.get("/")
