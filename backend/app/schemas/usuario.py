@@ -26,3 +26,6 @@ class UsuarioResponse(UsuarioBase):
 
     class Config:
         from_attributes = True
+
+class UsuarioUpdate(UsuarioCreate):
+    pass
