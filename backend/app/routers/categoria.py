@@ -84,7 +84,8 @@ def eliminar_categoria(id_categoria: int, db: Session = Depends(get_db)):
             detail="Categoría no encontrada"
         )
 
-    db.delete(categoria)
+    categoria.estado = False
     db.commit()
+    db.refresh(categoria)
 
-    return {"mensaje": "Categoría eliminada correctamente"}
+    return {"mensaje": "Categoría desactivada correctamente"}

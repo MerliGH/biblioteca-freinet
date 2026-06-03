@@ -6,6 +6,7 @@ from datetime import datetime
 class CategoriaBase(BaseModel):
     nombre: str
     descripcion: Optional[str] = None
+    estado: Optional[bool] = True
 
 
 class CategoriaCreate(CategoriaBase):
