@@ -1,0 +1,92 @@
+.docentes-container {
+  width: 100%;
+  min-height: calc(100vh - 110px);
+  padding: 25px;
+  box-sizing: border-box;
+}
+
+.docentes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25px;
+}
+
+.docentes-header h1 {
+  color: #173b70;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.acciones {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.buscador {
+  width: 220px;
+  height: 40px;
+
+  border: 2px solid #8a8a8a;
+  border-radius: 25px;
+
+  padding: 0 15px;
+}
+
+.btn-agregar {
+  background-color: #f4a23a;
+  color: white;
+
+  border: none;
+  border-radius: 12px;
+
+  padding: 10px 18px;
+
+  cursor: pointer;
+}
+
+.tabla-docentes {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-docentes thead tr {
+  background: #173b70;
+}
+
+.tabla-docentes th {
+  color: white;
+  padding: 14px 8px;
+}
+
+.tabla-docentes td {
+  padding: 14px 8px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.acciones-tabla {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-editar,
+.btn-eliminar {
+  width: 34px;
+  height: 34px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #d9d9d9;
+  color: #5f5f5f;
+
+  cursor: pointer;
+}
+
+.btn-editar:hover,
+.btn-eliminar:hover {
+  background: #173b70;
+  color: white;
+}

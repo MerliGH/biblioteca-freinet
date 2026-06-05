@@ -1,0 +1,160 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.28);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 999;
+}
+
+.detalle-modal {
+  width: 620px;
+
+  background: white;
+
+  border-radius: 35px;
+
+  padding: 25px 30px;
+
+  box-sizing: border-box;
+
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+}
+
+.detalle-modal h1 {
+  text-align: center;
+
+  color: #173b70;
+
+  font-size: 34px;
+  font-weight: 700;
+
+  margin-bottom: 20px;
+}
+
+.detalle-body {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 35px;
+}
+
+.termometro-info {
+  width: 140px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.total-libros {
+  margin-top: 15px;
+
+  color: #173b70;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  text-align: center;
+}
+
+.info-alumno {
+  width: 240px;
+}
+
+.info-alumno h2 {
+  color: #173b70;
+
+  font-size: 24px;
+  font-weight: 700;
+
+  margin-bottom: 20px;
+}
+
+.info-alumno p {
+  color: #173b70;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  line-height: 1.4;
+
+  margin-bottom: 20px;
+}
+
+.botones-detalle {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 35px;
+
+  margin-top: 30px;
+}
+
+.btn-ver-registros,
+.btn-cancelar {
+  width: 120px;
+  height: 40px;
+
+  border: none;
+
+  color: white;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.btn-ver-registros {
+  background: #173b70;
+
+  color: white;
+
+  border: none;
+
+  width: 120px;
+  height: 40px;
+
+  margin-left: 60px;
+}
+
+.btn-cancelar {
+  background: #8dc63f;
+}
+
+.btn-ver-registros:hover,
+.btn-cancelar:hover {
+  transform: scale(1.03);
+}
+
+@media (max-width: 768px) {
+  .detalle-modal {
+    width: 95%;
+  }
+
+  .detalle-body {
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .info-alumno {
+    width: 100%;
+    text-align: center;
+  }
+
+  .botones-detalle {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

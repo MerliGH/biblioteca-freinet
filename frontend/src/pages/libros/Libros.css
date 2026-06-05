@@ -1,0 +1,178 @@
+/* Contenedor principal */
+.libros-container {
+  width: 100%;
+  min-height: calc(100vh - 110px);
+  padding: 25px;
+  box-sizing: border-box;
+}
+
+/* Cabecera */
+.libros-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25px;
+}
+
+.libros-header h1 {
+  color: #173b70;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.libros-header p {
+  color: #173b70;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Buscador y botón */
+.acciones {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.buscador {
+  width: 220px;
+  height: 40px;
+  border: 2px solid #8a8a8a;
+  border-radius: 25px;
+  padding: 0 15px;
+  font-size: 14px;
+  outline: none;
+}
+
+.btn-agregar {
+  background-color: #f4a23a;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-agregar:hover {
+  background-color: #e58f1c;
+}
+
+/* Tabla */
+.tabla-libros {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin-top: 15px;
+}
+
+.tabla-libros thead tr {
+  background-color: #173b70;
+}
+
+.tabla-libros th {
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 14px 8px;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tabla-libros th:last-child {
+  border-right: none;
+}
+
+.tabla-libros td {
+  color: #173b70;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  padding: 14px 8px;
+  border-bottom: 1px solid #dcdcdc;
+  word-wrap: break-word;
+}
+
+.tabla-libros tbody tr:hover {
+  background-color: #f7f7f7;
+}
+
+/* Acciones */
+.acciones-tabla {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.icono-editar {
+  color: #173b70;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.icono-eliminar {
+  color: #9c9c9c;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .libros-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .acciones {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .tabla-libros {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+/* Botones de acciones */
+
+.acciones-tabla {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-editar,
+.btn-eliminar {
+  width: 34px;
+  height: 34px;
+
+  border: none;
+  border-radius: 8px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+
+  font-size: 16px;
+
+  background-color: #d9d9d9;
+  color: #5f5f5f;
+
+  transition: all 0.2s ease;
+}
+
+.btn-editar:hover,
+.btn-eliminar:hover {
+  background-color: #173b70;
+  color: white;
+
+  transform: scale(1.08);
+}

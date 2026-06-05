@@ -1,0 +1,43 @@
+.termometro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.termometro-tubo {
+  width: 24px;
+  height: 150px;
+
+  border: 4px solid #d9d9d9;
+  border-radius: 20px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  background: white;
+}
+
+.termometro-relleno {
+  position: absolute;
+
+  bottom: 0;
+  left: 0;
+
+  width: 100%;
+
+  transition: all 0.4s ease;
+}
+
+.termometro-bulbo {
+  width: 46px;
+  height: 46px;
+
+  border-radius: 50%;
+
+  margin-top: -3px;
+
+  border: 4px solid #d9d9d9;
+
+  transition: all 0.4s ease;
+}
