@@ -1,0 +1,53 @@
+.sidebar {
+  width: 240px;
+  min-height: calc(100vh - 110px);
+  background-color: #173b70;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Opción del menú */
+.menu-item {
+  height: 78px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 20px;
+
+  color: white;
+
+  cursor: pointer;
+
+  position: relative;
+
+  transition: all 0.3s ease;
+}
+
+.menu-item:hover {
+  background-color: #284d82;
+}
+
+/* Opción seleccionada */
+.active {
+  background-color: #7588a7;
+}
+
+/* ICONOS GRANDES */
+.icon {
+  font-size: 38px;
+  min-width: 50px;
+}
+
+/* TEXTO */
+.menu-item span {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+/* Flecha de libros */
+.arrow {
+  position: absolute;
+  right: 20px;
+  font-size: 22px;
+}
