@@ -1,27 +1,23 @@
-/* Contenedor principal */
-.alumnos-container {
+.historial-container {
   width: 100%;
   min-height: calc(100vh - 110px);
   padding: 25px;
   box-sizing: border-box;
 }
 
-/* Cabecera */
-.alumnos-header {
+.historial-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 25px;
 }
 
-.alumnos-header h1 {
+.historial-header h1 {
   color: #173b70;
   font-size: 28px;
   font-weight: 700;
-  margin-bottom: 8px;
 }
 
-/* Buscador y botón */
 .acciones {
   display: flex;
   align-items: center;
@@ -36,8 +32,6 @@
   border-radius: 25px;
 
   padding: 0 15px;
-
-  font-size: 14px;
   outline: none;
 }
 
@@ -50,67 +44,35 @@
 
   padding: 10px 18px;
 
-  font-size: 15px;
-  font-weight: 600;
-
   cursor: pointer;
 
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 .btn-agregar:hover {
-  background-color: #e58f1c;
+  opacity: 0.9;
 }
 
-/* Tabla */
-.tabla-alumnos {
+.tabla-historial {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
-  margin-top: 15px;
 }
 
-.tabla-alumnos thead tr {
-  background-color: #173b70;
+.tabla-historial thead tr {
+  background: #173b70;
 }
 
-.tabla-alumnos th {
+.tabla-historial th {
   color: white;
-
-  font-size: 13px;
-  font-weight: 600;
-
   padding: 14px 8px;
-
-  text-align: center;
-
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: left;
 }
 
-.tabla-alumnos th:last-child {
-  border-right: none;
-}
-
-.tabla-alumnos td {
-  color: #173b70;
-
-  font-size: 13px;
-  font-weight: 600;
-
-  text-align: center;
-
+.tabla-historial td {
   padding: 14px 8px;
-
   border-bottom: 1px solid #dcdcdc;
-
-  word-wrap: break-word;
 }
 
-.tabla-alumnos tbody tr:hover {
-  background-color: #f7f7f7;
-}
-
-/* Acciones */
 .acciones-tabla {
   display: flex;
   justify-content: center;
@@ -118,13 +80,16 @@
   gap: 12px;
 }
 
-.btn-editar,
-.btn-eliminar {
+/* BOTON EDITAR TABLA */
+
+.acciones-tabla .btn-editar {
   width: 34px;
   height: 34px;
 
   border: none;
   border-radius: 8px;
+
+  background: #d9d9d9;
 
   display: flex;
   justify-content: center;
@@ -132,38 +97,74 @@
 
   cursor: pointer;
 
-  font-size: 16px;
+  transition: 0.2s;
+}
 
-  background-color: #d9d9d9;
+.acciones-tabla .btn-editar svg {
   color: #5f5f5f;
-
-  transition: all 0.2s ease;
+  font-size: 18px;
 }
 
-.btn-editar:hover,
-.btn-eliminar:hover {
-  background-color: #173b70;
+.acciones-tabla .btn-editar:hover {
+  background: #173b70;
+}
+
+.acciones-tabla .btn-editar:hover svg {
   color: white;
-
-  transform: scale(1.08);
 }
 
-/* Responsive */
-@media (max-width: 1200px) {
-  .alumnos-header {
+/* BOTON ELIMINAR TABLA */
+
+.acciones-tabla .btn-eliminar {
+  width: 34px;
+  height: 34px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #d9d9d9 !important;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.acciones-tabla .btn-eliminar svg {
+  color: #5f5f5f !important;
+  font-size: 18px;
+}
+
+.acciones-tabla .btn-eliminar:hover {
+  background: #173b70 !important;
+}
+
+.acciones-tabla .btn-eliminar:hover svg {
+  color: white !important;
+}
+
+@media (max-width: 768px) {
+  .historial-header {
     flex-direction: column;
     gap: 15px;
   }
 
   .acciones {
     width: 100%;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .tabla-alumnos {
+  .buscador {
+    width: 100%;
+  }
+
+  .tabla-historial {
     display: block;
     overflow-x: auto;
-    white-space: nowrap;
   }
 }
 .fecha-pill {

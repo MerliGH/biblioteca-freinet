@@ -1,0 +1,188 @@
+.dashboard-container {
+  width: 100%;
+  min-height: calc(100vh - 110px);
+
+  padding: 40px;
+
+  box-sizing: border-box;
+}
+
+
+.dashboard-header h1 {
+  color: #173b70;
+
+  font-size: 40px;
+
+  font-weight: 700;
+
+  margin-bottom: 10px;
+}
+
+.dashboard-header p {
+  color: #173b70;
+
+  font-size: 22px;
+
+  margin-bottom: 35px;
+}
+
+/* CARDS */
+
+.cards-dashboard {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-top: 30px;
+  margin-bottom: 55px;
+}
+
+.card {
+  width: 240px;
+  height: 140px;
+
+  padding: 18px;
+
+  box-sizing: border-box;
+
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  position: relative;
+}
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.card svg {
+  font-size: 22px;
+}
+
+.card h2 {
+  font-size: 54px;
+  font-weight: 700;
+
+  margin: 0;
+}
+
+.card span {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.card-libros {
+  background: #8dc63f;
+}
+
+.card-prestamos {
+  background: #f4a23a;
+}
+
+.card-alumnos {
+  background: #173b70;
+}
+
+.card-docentes {
+  background: #707070;
+}
+
+/* TABLA */
+
+.ultimos-prestamos {
+  width: 100%;
+}
+
+.ultimos-prestamos h2 {
+  color: #173b70;
+
+  font-size: 42px;
+  font-weight: 700;
+
+  margin-bottom: 15px;
+}
+
+.ultimos-prestamos table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  background: white;
+}
+
+.ultimos-prestamos thead tr {
+  background: #173b70;
+}
+
+.ultimos-prestamos th {
+  color: white;
+
+  padding: 16px;
+
+  text-align: center;
+
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.ultimos-prestamos td {
+  padding: 18px;
+
+  text-align: center;
+
+  color: #173b70;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.ultimos-prestamos tbody tr:nth-child(even) {
+  background: #f7f7f7;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px) {
+  .cards-dashboard {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header h1 {
+    font-size: 38px;
+  }
+
+  .dashboard-header p {
+    font-size: 18px;
+  }
+
+  .cards-dashboard {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card {
+    width: 100%;
+  }
+
+  .ultimos-prestamos table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

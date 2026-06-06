@@ -60,15 +60,29 @@ function Alumnos() {
           <tbody>
 
             <tr>
+
               <td>María</td>
+
               <td>López</td>
-              <td>maria.lopez@escuela.edu</td>
-              <td>A2025001</td>
-              <td>3A</td>
-              <td>Activo</td>
-              <td>10/08/2025</td>
 
               <td>
+                maria.lopez@escuela.edu
+              </td>
+
+              <td>A2025001</td>
+
+              <td>3A</td>
+
+              <td>Activo</td>
+
+              <td>
+                <span className="fecha-pill">
+                  10/08/2025
+                </span>
+              </td>
+
+              <td>
+
                 <div className="acciones-tabla">
 
                   <button
@@ -86,6 +100,7 @@ function Alumnos() {
                   </button>
 
                 </div>
+
               </td>
 
             </tr>

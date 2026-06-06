@@ -19,8 +19,8 @@ import DeleteDocente from "./pages/docentes/DeleteDocente";
 
 import Termometro from "./pages/termometro/Termometro";
 
-import Prestamos from "./pages/Prestamos";
-import Historial from "./pages/Historial";
+import Prestamos from "./pages/Prestamos/Prestamos";
+import Historial from "./pages/Historial/Historial";
 
 function App() {
   return (

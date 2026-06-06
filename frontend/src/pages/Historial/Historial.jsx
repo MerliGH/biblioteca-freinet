@@ -1,27 +1,27 @@
 import Layout from "../../components/Layout";
-import "./Docentes.css";
+import "./Historial.css";
 
 import { useState } from "react";
 
-import CreateDocente from "./CreateDocente";
-import EditDocente from "./EditDocente";
-import DeleteDocente from "./DeleteDocente";
+import CreateHistorial from "./CreateHistorial";
+import EditHistorial from "./EditHistorial";
+import DeleteHistorial from "./DeleteHistorial";
 
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 
-function Docentes() {
+function Historial() {
   const [mostrarCreate, setMostrarCreate] = useState(false);
   const [mostrarEdit, setMostrarEdit] = useState(false);
   const [mostrarDelete, setMostrarDelete] = useState(false);
 
   return (
     <Layout>
-      <div className="docentes-container">
+      <div className="historial-container">
 
-        <div className="docentes-header">
+        <div className="historial-header">
 
-          <h1>Gestión de Docentes</h1>
+          <h1>Historial de Préstamos</h1>
 
           <div className="acciones">
 
@@ -35,23 +35,23 @@ function Docentes() {
               className="btn-agregar"
               onClick={() => setMostrarCreate(true)}
             >
-              Añadir Docente
+              Añadir Historial
             </button>
 
           </div>
 
         </div>
 
-        <table className="tabla-docentes">
+        <table className="tabla-historial">
 
           <thead>
             <tr>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Correo</th>
-              <th>Matrícula</th>
+              <th>Alumno</th>
+              <th>Libro</th>
+              <th>Fecha préstamo</th>
+              <th>Fecha devolución</th>
               <th>Estado</th>
-              <th>Fecha de registro</th>
+              <th>Autorizado por</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -60,17 +60,11 @@ function Docentes() {
 
             <tr>
 
-              <td>Laura</td>
-
-              <td>Gómez</td>
+              <td>María López</td>
 
               <td>
-                laura.gomez@escuela.edu
+                Tiny y las alas del corazón
               </td>
-
-              <td>DOC001</td>
-
-              <td>Activo</td>
 
               <td>
                 <span className="fecha-pill">
@@ -79,48 +73,14 @@ function Docentes() {
               </td>
 
               <td>
-
-                <div className="acciones-tabla">
-
-                  <button
-                    className="btn-editar"
-                    onClick={() => setMostrarEdit(true)}
-                  >
-                    <FaRegEdit />
-                  </button>
-
-                  <button
-                    className="btn-eliminar"
-                    onClick={() => setMostrarDelete(true)}
-                  >
-                    <RiDeleteBinLine />
-                  </button>
-
-                </div>
-
-              </td>
-
-            </tr>
-
-            <tr>
-
-              <td>Carlos</td>
-
-              <td>Ramírez</td>
-
-              <td>
-                carlos.ramirez@escuela.edu
-              </td>
-
-              <td>DOC002</td>
-
-              <td>Activo</td>
-
-              <td>
                 <span className="fecha-pill">
-                  11/08/2025
+                  15/08/2025
                 </span>
               </td>
+
+              <td>Devuelto</td>
+
+              <td>Laura Gómez</td>
 
               <td>
 
@@ -151,26 +111,20 @@ function Docentes() {
         </table>
 
         {mostrarCreate && (
-          <CreateDocente
-            onClose={() =>
-              setMostrarCreate(false)
-            }
+          <CreateHistorial
+            onClose={() => setMostrarCreate(false)}
           />
         )}
 
         {mostrarEdit && (
-          <EditDocente
-            onClose={() =>
-              setMostrarEdit(false)
-            }
+          <EditHistorial
+            onClose={() => setMostrarEdit(false)}
           />
         )}
 
         {mostrarDelete && (
-          <DeleteDocente
-            onClose={() =>
-              setMostrarDelete(false)
-            }
+          <DeleteHistorial
+            onClose={() => setMostrarDelete(false)}
           />
         )}
 
@@ -179,4 +133,4 @@ function Docentes() {
   );
 }
 
-export default Docentes;
+export default Historial;

@@ -1,27 +1,32 @@
-import Layout from "../../components/Layout";
-import "./Docentes.css";
+import "./Prestamos.css";
 
 import { useState } from "react";
 
-import CreateDocente from "./CreateDocente";
-import EditDocente from "./EditDocente";
-import DeleteDocente from "./DeleteDocente";
+import Layout from "../../components/Layout";
+
+import CreatePrestamo from "./CreatePrestamo";
+import EditPrestamo from "./EditPrestamos";
+import DeletePrestamo from "./DeletePrestamo";
 
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 
-function Docentes() {
+function Prestamos() {
   const [mostrarCreate, setMostrarCreate] = useState(false);
   const [mostrarEdit, setMostrarEdit] = useState(false);
   const [mostrarDelete, setMostrarDelete] = useState(false);
 
   return (
     <Layout>
-      <div className="docentes-container">
+      <div className="prestamos-container">
 
-        <div className="docentes-header">
+        <div className="prestamos-header">
 
-          <h1>Gestión de Docentes</h1>
+          <h1>
+            Gestión de Libros
+            <br />
+            Prestamos Activos
+          </h1>
 
           <div className="acciones">
 
@@ -35,48 +40,56 @@ function Docentes() {
               className="btn-agregar"
               onClick={() => setMostrarCreate(true)}
             >
-              Añadir Docente
+              Añadir Prestamo
             </button>
 
           </div>
 
         </div>
 
-        <table className="tabla-docentes">
+        <table className="tabla-prestamos">
 
           <thead>
+
             <tr>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Correo</th>
-              <th>Matrícula</th>
+              <th>Nombre del alumno</th>
+              <th>Libro</th>
+              <th>Autorizado por</th>
+              <th>Fecha de préstamo</th>
+              <th>Fecha límite</th>
               <th>Estado</th>
-              <th>Fecha de registro</th>
               <th>Acciones</th>
             </tr>
+
           </thead>
 
           <tbody>
 
             <tr>
 
-              <td>Laura</td>
-
-              <td>Gómez</td>
+              <td>Nombre del Alumno</td>
 
               <td>
-                laura.gomez@escuela.edu
+                Tiny y las alas
+                <br />
+                del corazón
               </td>
 
-              <td>DOC001</td>
-
-              <td>Activo</td>
+              <td>Miss Luna</td>
 
               <td>
                 <span className="fecha-pill">
-                  10/08/2025
+                  10/8/2025
                 </span>
               </td>
+
+              <td>
+                <span className="fecha-pill">
+                  17/8/2025
+                </span>
+              </td>
+
+              <td>Prestado</td>
 
               <td>
 
@@ -104,23 +117,25 @@ function Docentes() {
 
             <tr>
 
-              <td>Carlos</td>
+              <td>Nombre alumno</td>
 
-              <td>Ramírez</td>
+              <td>Harry Potter</td>
 
-              <td>
-                carlos.ramirez@escuela.edu
-              </td>
-
-              <td>DOC002</td>
-
-              <td>Activo</td>
+              <td>Miss Mariela</td>
 
               <td>
                 <span className="fecha-pill">
-                  11/08/2025
+                  12/8/2025
                 </span>
               </td>
+
+              <td>
+                <span className="fecha-pill">
+                  19/8/2025
+                </span>
+              </td>
+
+              <td>Prestado</td>
 
               <td>
 
@@ -151,26 +166,20 @@ function Docentes() {
         </table>
 
         {mostrarCreate && (
-          <CreateDocente
-            onClose={() =>
-              setMostrarCreate(false)
-            }
+          <CreatePrestamo
+            onClose={() => setMostrarCreate(false)}
           />
         )}
 
         {mostrarEdit && (
-          <EditDocente
-            onClose={() =>
-              setMostrarEdit(false)
-            }
+          <EditPrestamo
+            onClose={() => setMostrarEdit(false)}
           />
         )}
 
         {mostrarDelete && (
-          <DeleteDocente
-            onClose={() =>
-              setMostrarDelete(false)
-            }
+          <DeletePrestamo
+            onClose={() => setMostrarDelete(false)}
           />
         )}
 
@@ -179,4 +188,4 @@ function Docentes() {
   );
 }
 
-export default Docentes;
+export default Prestamos;
