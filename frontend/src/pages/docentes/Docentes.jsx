@@ -1,7 +1,7 @@
 import Layout from "../../components/Layout";
 import "./Docentes.css";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import CreateDocente from "./CreateDocente";
 import EditDocente from "./EditDocente";
@@ -10,10 +10,32 @@ import DeleteDocente from "./DeleteDocente";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 
+import api from "../../services/api";
+
 function Docentes() {
+  const [docentes, setDocentes] = useState([]);
+
   const [mostrarCreate, setMostrarCreate] = useState(false);
   const [mostrarEdit, setMostrarEdit] = useState(false);
   const [mostrarDelete, setMostrarDelete] = useState(false);
+
+  useEffect(() => {
+    obtenerDocentes();
+  }, []);
+
+  const obtenerDocentes = async () => {
+    try {
+      const response = await api.get("/usuarios/");
+
+      const docentesFiltrados = response.data.filter(
+        (usuario) => usuario.rol === "DOCENTE"
+      );
+
+      setDocentes(docentesFiltrados);
+    } catch (error) {
+      console.error("Error al obtener docentes:", error);
+    }
+  };
 
   return (
     <Layout>
@@ -58,93 +80,55 @@ function Docentes() {
 
           <tbody>
 
-            <tr>
+            {docentes.map((docente) => (
+              <tr key={docente.id_usuario}>
 
-              <td>Laura</td>
+                <td>{docente.nombre}</td>
 
-              <td>Gómez</td>
+                <td>{docente.apellido_paterno}</td>
 
-              <td>
-                laura.gomez@escuela.edu
-              </td>
+                <td>{docente.correo}</td>
 
-              <td>DOC001</td>
+                <td>{docente.matricula}</td>
 
-              <td>Activo</td>
+                <td>
+                  {docente.estado
+                    ? "Activo"
+                    : "Inactivo"}
+                </td>
 
-              <td>
-                <span className="fecha-pill">
-                  10/08/2025
-                </span>
-              </td>
+                <td>
+                  <span className="fecha-pill">
+                    {new Date(
+                      docente.fecha_registro
+                    ).toLocaleDateString()}
+                  </span>
+                </td>
 
-              <td>
+                <td>
 
-                <div className="acciones-tabla">
+                  <div className="acciones-tabla">
 
-                  <button
-                    className="btn-editar"
-                    onClick={() => setMostrarEdit(true)}
-                  >
-                    <FaRegEdit />
-                  </button>
+                    <button
+                      className="btn-editar"
+                      onClick={() => setMostrarEdit(true)}
+                    >
+                      <FaRegEdit />
+                    </button>
 
-                  <button
-                    className="btn-eliminar"
-                    onClick={() => setMostrarDelete(true)}
-                  >
-                    <RiDeleteBinLine />
-                  </button>
+                    <button
+                      className="btn-eliminar"
+                      onClick={() => setMostrarDelete(true)}
+                    >
+                      <RiDeleteBinLine />
+                    </button>
 
-                </div>
+                  </div>
 
-              </td>
+                </td>
 
-            </tr>
-
-            <tr>
-
-              <td>Carlos</td>
-
-              <td>Ramírez</td>
-
-              <td>
-                carlos.ramirez@escuela.edu
-              </td>
-
-              <td>DOC002</td>
-
-              <td>Activo</td>
-
-              <td>
-                <span className="fecha-pill">
-                  11/08/2025
-                </span>
-              </td>
-
-              <td>
-
-                <div className="acciones-tabla">
-
-                  <button
-                    className="btn-editar"
-                    onClick={() => setMostrarEdit(true)}
-                  >
-                    <FaRegEdit />
-                  </button>
-
-                  <button
-                    className="btn-eliminar"
-                    onClick={() => setMostrarDelete(true)}
-                  >
-                    <RiDeleteBinLine />
-                  </button>
-
-                </div>
-
-              </td>
-
-            </tr>
+              </tr>
+            ))}
 
           </tbody>
 

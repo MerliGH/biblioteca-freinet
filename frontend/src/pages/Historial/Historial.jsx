@@ -1,7 +1,7 @@
 import Layout from "../../components/Layout";
 import "./Historial.css";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import CreateHistorial from "./CreateHistorial";
 import EditHistorial from "./EditHistorial";
@@ -10,18 +10,120 @@ import DeleteHistorial from "./DeleteHistorial";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 
+import api from "../../services/api";
+
 function Historial() {
-  const [mostrarCreate, setMostrarCreate] = useState(false);
-  const [mostrarEdit, setMostrarEdit] = useState(false);
-  const [mostrarDelete, setMostrarDelete] = useState(false);
+
+  const [historial, setHistorial] =
+    useState([]);
+
+  const [mostrarCreate,
+    setMostrarCreate] =
+    useState(false);
+
+  const [mostrarEdit,
+    setMostrarEdit] =
+    useState(false);
+
+  const [mostrarDelete,
+    setMostrarDelete] =
+    useState(false);
+
+  const [registroSeleccionado,
+    setRegistroSeleccionado] =
+    useState(null);
+
+  useEffect(() => {
+    obtenerHistorial();
+  }, []);
+
+  const obtenerHistorial = async () => {
+
+    try {
+
+      const [
+        prestamosResponse,
+        usuariosResponse,
+        librosResponse,
+      ] = await Promise.all([
+        api.get("/prestamos/"),
+        api.get("/usuarios/"),
+        api.get("/libros/"),
+      ]);
+
+      const historialPrestamos =
+        prestamosResponse.data
+          .filter(
+            (prestamo) =>
+              prestamo.estado ===
+              "DEVUELTO"
+          )
+          .map((prestamo) => {
+
+            const alumno =
+              usuariosResponse.data.find(
+                (usuario) =>
+                  usuario.id_usuario ===
+                  prestamo.usuario_id
+              );
+
+            const docente =
+              usuariosResponse.data.find(
+                (usuario) =>
+                  usuario.id_usuario ===
+                  prestamo.autorizado_por
+              );
+
+            const libro =
+              librosResponse.data.find(
+                (lib) =>
+                  lib.id_libro ===
+                  prestamo.libro_id
+              );
+
+            return {
+              ...prestamo,
+
+              nombreAlumno: alumno
+                ? `${alumno.nombre} ${alumno.apellido_paterno}`
+                : "No encontrado",
+
+              autorizadoPor: docente
+                ? `${docente.nombre} ${docente.apellido_paterno}`
+                : "No encontrado",
+
+              tituloLibro: libro
+                ? libro.titulo
+                : "No encontrado",
+            };
+
+          });
+
+      setHistorial(
+        historialPrestamos
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Error al obtener historial:",
+        error
+      );
+
+    }
+
+  };
 
   return (
     <Layout>
+
       <div className="historial-container">
 
         <div className="historial-header">
 
-          <h1>Historial de Préstamos</h1>
+          <h1>
+            Historial de Préstamos
+          </h1>
 
           <div className="acciones">
 
@@ -33,7 +135,9 @@ function Historial() {
 
             <button
               className="btn-agregar"
-              onClick={() => setMostrarCreate(true)}
+              onClick={() =>
+                setMostrarCreate(true)
+              }
             >
               Añadir Historial
             </button>
@@ -45,6 +149,7 @@ function Historial() {
         <table className="tabla-historial">
 
           <thead>
+
             <tr>
               <th>Alumno</th>
               <th>Libro</th>
@@ -54,81 +159,161 @@ function Historial() {
               <th>Autorizado por</th>
               <th>Acciones</th>
             </tr>
+
           </thead>
 
           <tbody>
 
-            <tr>
+            {historial.map(
+              (registro) => (
 
-              <td>María López</td>
+                <tr
+                  key={
+                    registro.id_prestamo
+                  }
+                >
 
-              <td>
-                Tiny y las alas del corazón
-              </td>
+                  <td>
+                    {
+                      registro.nombreAlumno
+                    }
+                  </td>
 
-              <td>
-                <span className="fecha-pill">
-                  10/08/2025
-                </span>
-              </td>
+                  <td>
+                    {
+                      registro.tituloLibro
+                    }
+                  </td>
 
-              <td>
-                <span className="fecha-pill">
-                  15/08/2025
-                </span>
-              </td>
+                  <td>
 
-              <td>Devuelto</td>
+                    <span className="fecha-pill">
 
-              <td>Laura Gómez</td>
+                      {new Date(
+                        registro.fecha_prestamo
+                      ).toLocaleDateString()}
 
-              <td>
+                    </span>
 
-                <div className="acciones-tabla">
+                  </td>
 
-                  <button
-                    className="btn-editar"
-                    onClick={() => setMostrarEdit(true)}
-                  >
-                    <FaRegEdit />
-                  </button>
+                  <td>
 
-                  <button
-                    className="btn-eliminar"
-                    onClick={() => setMostrarDelete(true)}
-                  >
-                    <RiDeleteBinLine />
-                  </button>
+                    <span className="fecha-pill">
 
-                </div>
+                      {registro.fecha_devolucion
+                        ? new Date(
+                            registro.fecha_devolucion
+                          ).toLocaleDateString()
+                        : "-"}
 
-              </td>
+                    </span>
 
-            </tr>
+                  </td>
+
+                  <td>
+                    {
+                      registro.estado
+                    }
+                  </td>
+
+                  <td>
+                    {
+                      registro.autorizadoPor
+                    }
+                  </td>
+
+                  <td>
+
+                    <div className="acciones-tabla">
+
+                      <button
+                        className="btn-editar"
+                        onClick={() => {
+
+                          setRegistroSeleccionado(
+                            registro
+                          );
+
+                          setMostrarEdit(
+                            true
+                          );
+
+                        }}
+                      >
+                        <FaRegEdit />
+                      </button>
+
+                      <button
+                        className="btn-eliminar"
+                        onClick={() => {
+
+                          setRegistroSeleccionado(
+                            registro
+                          );
+
+                          setMostrarDelete(
+                            true
+                          );
+
+                        }}
+                      >
+                        <RiDeleteBinLine />
+                      </button>
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              )
+            )}
 
           </tbody>
 
         </table>
 
         {mostrarCreate && (
+
           <CreateHistorial
-            onClose={() => setMostrarCreate(false)}
+            onClose={() =>
+              setMostrarCreate(false)
+            }
           />
+
         )}
 
-        {mostrarEdit && (
-          <EditHistorial
-            onClose={() => setMostrarEdit(false)}
-          />
-        )}
+        {mostrarEdit &&
+          registroSeleccionado && (
 
-        {mostrarDelete && (
-          <DeleteHistorial
-            onClose={() => setMostrarDelete(false)}
-          />
-        )}
+            <EditHistorial
+              historial={
+                registroSeleccionado
+              }
+              onClose={() =>
+                setMostrarEdit(false)
+              }
+            />
+
+          )}
+
+        {mostrarDelete &&
+          registroSeleccionado && (
+
+            <DeleteHistorial
+              historial={
+                registroSeleccionado
+              }
+              onClose={() =>
+                setMostrarDelete(false)
+              }
+            />
+
+          )}
 
       </div>
+
     </Layout>
   );
 }

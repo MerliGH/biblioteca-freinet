@@ -1,6 +1,151 @@
 import "./EditPrestamo.css";
 
-function EditPrestamos({ onClose }) {
+import { useState, useEffect } from "react";
+import api from "../../services/api";
+
+function EditPrestamo({
+  prestamo,
+  onClose,
+}) {
+
+  const [alumnos, setAlumnos] =
+    useState([]);
+
+  const [docentes, setDocentes] =
+    useState([]);
+
+  const [libros, setLibros] =
+    useState([]);
+
+  const [formData, setFormData] =
+    useState({
+      usuario_id:
+        prestamo?.usuario_id || "",
+
+      libro_id:
+        prestamo?.libro_id || "",
+
+      autorizado_por:
+        prestamo?.autorizado_por ||
+        "",
+
+      fecha_limite:
+        prestamo?.fecha_limite || "",
+
+      fecha_devolucion:
+        prestamo?.fecha_devolucion ||
+        "",
+
+      estado:
+        prestamo?.estado ||
+        "PRESTADO",
+    });
+
+  useEffect(() => {
+    cargarDatos();
+  }, []);
+
+  const cargarDatos = async () => {
+
+    try {
+
+      const [
+        usuariosResponse,
+        librosResponse,
+      ] = await Promise.all([
+        api.get("/usuarios/"),
+        api.get("/libros/"),
+      ]);
+
+      setAlumnos(
+        usuariosResponse.data.filter(
+          (u) => u.rol === "ALUMNO"
+        )
+      );
+
+      setDocentes(
+        usuariosResponse.data.filter(
+          (u) =>
+            u.rol === "DOCENTE" ||
+            u.rol === "DIRECTORA"
+        )
+      );
+
+      setLibros(
+        librosResponse.data
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  };
+
+  const handleChange = (e) => {
+
+    const { name, value } =
+      e.target;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+  };
+
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    try {
+
+      await api.put(
+        `/prestamos/${prestamo.id_prestamo}`,
+        {
+          usuario_id: Number(
+            formData.usuario_id
+          ),
+
+          libro_id: Number(
+            formData.libro_id
+          ),
+
+          autorizado_por: Number(
+            formData.autorizado_por
+          ),
+
+          fecha_limite:
+            formData.fecha_limite,
+
+          fecha_devolucion:
+            formData.fecha_devolucion ||
+            null,
+
+          estado:
+            formData.estado,
+        }
+      );
+
+      alert(
+        "Préstamo actualizado correctamente"
+      );
+
+      window.location.reload();
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "Error al actualizar préstamo"
+      );
+
+    }
+
+  };
+
   return (
     <div
       className="modal-overlay"
@@ -8,62 +153,146 @@ function EditPrestamos({ onClose }) {
     >
       <div
         className="modal-content"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) =>
+          e.stopPropagation()
+        }
       >
         <h1>EDITAR PRÉSTAMO</h1>
 
-        <form className="prestamo-form">
+        <form
+          className="prestamo-form"
+          onSubmit={handleSubmit}
+        >
 
-          <label>Nombre del Alumno:</label>
-          <select defaultValue="María López">
-            <option>María López</option>
-            <option>Mateo Gutiérrez</option>
-            <option>Sofía Pérez</option>
+          <label>Alumno:</label>
+
+          <select
+            name="usuario_id"
+            value={
+              formData.usuario_id
+            }
+            onChange={handleChange}
+          >
+            {alumnos.map(
+              (alumno) => (
+                <option
+                  key={
+                    alumno.id_usuario
+                  }
+                  value={
+                    alumno.id_usuario
+                  }
+                >
+                  {alumno.nombre}{" "}
+                  {
+                    alumno.apellido_paterno
+                  }
+                </option>
+              )
+            )}
           </select>
 
           <label>Libro:</label>
-          <select defaultValue="Tiny y las alas del corazón">
-            <option>
-              Tiny y las alas del corazón
-            </option>
 
-            <option>
-              Harry Potter
-            </option>
-
-            <option>
-              El Principito
-            </option>
+          <select
+            name="libro_id"
+            value={
+              formData.libro_id
+            }
+            onChange={handleChange}
+          >
+            {libros.map(
+              (libro) => (
+                <option
+                  key={
+                    libro.id_libro
+                  }
+                  value={
+                    libro.id_libro
+                  }
+                >
+                  {libro.titulo}
+                </option>
+              )
+            )}
           </select>
 
-          <label>Autorizado por:</label>
-          <select defaultValue="Miss Luna">
-            <option>Miss Luna</option>
-            <option>Miss Mariela</option>
+          <label>
+            Autorizado por:
+          </label>
+
+          <select
+            name="autorizado_por"
+            value={
+              formData.autorizado_por
+            }
+            onChange={handleChange}
+          >
+            {docentes.map(
+              (docente) => (
+                <option
+                  key={
+                    docente.id_usuario
+                  }
+                  value={
+                    docente.id_usuario
+                  }
+                >
+                  {docente.nombre}{" "}
+                  {
+                    docente.apellido_paterno
+                  }
+                </option>
+              )
+            )}
           </select>
 
-          <label>Fecha de préstamo:</label>
+          <label>
+            Fecha límite:
+          </label>
+
           <input
-            type="text"
-            defaultValue="10/08/2025"
+            type="date"
+            name="fecha_limite"
+            value={
+              formData.fecha_limite
+            }
+            onChange={handleChange}
           />
 
-          <label>Fecha límite:</label>
-          <input
-            type="text"
-            defaultValue="17/08/2025"
-          />
+          <label>
+            Fecha devolución:
+          </label>
 
-          <label>Fecha de devolución:</label>
           <input
-            type="text"
-            placeholder="Pendiente"
+            type="date"
+            name="fecha_devolucion"
+            value={
+              formData.fecha_devolucion
+            }
+            onChange={handleChange}
           />
 
           <label>Estado:</label>
-          <select defaultValue="Prestado">
-            <option>Prestado</option>
-            <option>Devuelto</option>
+
+          <select
+            name="estado"
+            value={
+              formData.estado
+            }
+            onChange={handleChange}
+          >
+            <option value="PRESTADO">
+              PRESTADO
+            </option>
+
+            <option value="DEVUELTO">
+              DEVUELTO
+            </option>
+
+            <option value="VENCIDO">
+              VENCIDO
+            </option>
           </select>
 
           <div className="botones-form">
@@ -92,4 +321,4 @@ function EditPrestamos({ onClose }) {
   );
 }
 
-export default EditPrestamos;
+export default EditPrestamo;

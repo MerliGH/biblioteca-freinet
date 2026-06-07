@@ -1,6 +1,53 @@
 import "./CreateLibro.css";
 
+import { useState } from "react";
+import api from "../../services/api";
+
 function CreateLibro({ onClose }) {
+  const [formData, setFormData] = useState({
+    categoria_id: "",
+    titulo: "",
+    autor_ilustrador: "",
+    serie: "",
+    procedencia: "",
+    cantidad_total: 1,
+    cantidad_disponible: 1,
+    seccion: "",
+    estado: true,
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]:
+        name === "categoria_id" ||
+        name === "cantidad_total" ||
+        name === "cantidad_disponible"
+          ? Number(value)
+          : value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await api.post("/libros/", formData);
+
+      alert("Libro creado correctamente");
+
+      onClose();
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+
+      alert("Error al crear libro");
+    }
+  };
+
   return (
     <div
       className="modal-overlay"
@@ -12,44 +59,97 @@ function CreateLibro({ onClose }) {
       >
         <h1>AGREGAR LIBRO</h1>
 
-        <form className="libro-form">
+        <form
+          className="libro-form"
+          onSubmit={handleSubmit}
+        >
 
           <label>Clasificación:</label>
-          <select>
-            <option>Seleccionar clasificación</option>
+
+          <select
+            name="categoria_id"
+            value={formData.categoria_id}
+            onChange={handleChange}
+            required
+          >
+            <option value="">
+              Seleccionar clasificación
+            </option>
+
+            <option value="1">
+              Cuentos
+            </option>
+
+            <option value="2">
+              Novela
+            </option>
+
+            <option value="3">
+              Infantil
+            </option>
           </select>
 
           <label>Título:</label>
+
           <input
             type="text"
+            name="titulo"
+            value={formData.titulo}
+            onChange={handleChange}
             placeholder="Ingrese el título"
+            required
           />
 
           <label>Autor e ilustrador:</label>
+
           <input
             type="text"
+            name="autor_ilustrador"
+            value={formData.autor_ilustrador}
+            onChange={handleChange}
             placeholder="Ingrese autor"
           />
 
           <label>Serie:</label>
-          <select>
-            <option>Seleccionar serie</option>
-          </select>
+
+          <input
+            type="text"
+            name="serie"
+            value={formData.serie}
+            onChange={handleChange}
+            placeholder="Serie"
+          />
 
           <label>Procedencia:</label>
-          <select>
-            <option>Seleccionar procedencia</option>
-          </select>
 
-          <label>Cantidad en Existencia:</label>
+          <input
+            type="text"
+            name="procedencia"
+            value={formData.procedencia}
+            onChange={handleChange}
+            placeholder="Procedencia"
+          />
+
+          <label>
+            Cantidad en Existencia:
+          </label>
+
           <input
             type="number"
+            name="cantidad_total"
             min="1"
+            value={formData.cantidad_total}
+            onChange={handleChange}
+            required
           />
 
           <label>Sección:</label>
+
           <input
             type="text"
+            name="seccion"
+            value={formData.seccion}
+            onChange={handleChange}
             placeholder="Ejemplo: L"
           />
 
@@ -73,6 +173,7 @@ function CreateLibro({ onClose }) {
           </div>
 
         </form>
+
       </div>
     </div>
   );

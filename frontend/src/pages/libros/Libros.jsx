@@ -1,7 +1,7 @@
 import Layout from "../../components/Layout";
 import "./Libros.css";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import CreateLibro from "./CreateLibro";
 import EditLibro from "./EditLibro";
@@ -10,10 +10,34 @@ import DeleteLibro from "./DeleteLibro";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 
+import api from "../../services/api";
+
 function Libros() {
+  const [libros, setLibros] = useState([]);
+
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarEdit, setMostrarEdit] = useState(false);
   const [mostrarDelete, setMostrarDelete] = useState(false);
+
+  const [libroSeleccionado, setLibroSeleccionado] =
+    useState(null);
+
+  useEffect(() => {
+    obtenerLibros();
+  }, []);
+
+  const obtenerLibros = async () => {
+    try {
+      const response = await api.get("/libros/");
+
+      setLibros(response.data);
+    } catch (error) {
+      console.error(
+        "Error al obtener libros:",
+        error
+      );
+    }
+  };
 
   return (
     <Layout>
@@ -63,37 +87,55 @@ function Libros() {
 
           <tbody>
 
-            <tr>
-              <td>1</td>
-              <td>Narrativa Infantil</td>
-              <td>Tiny y las alas del corazón</td>
-              <td>Yemina Mascareño</td>
-              <td>LUDOS</td>
-              <td>Compra</td>
-              <td>1</td>
-              <td>L</td>
+            {libros.map((libro) => (
+              <tr key={libro.id_libro}>
 
-              <td>
-                <div className="acciones-tabla">
+                <td>{libro.id_libro}</td>
 
-                  <button
-                    className="btn-editar"
-                    onClick={() => setMostrarEdit(true)}
-                  >
-                    <FaRegEdit />
-                  </button>
+                <td>{libro.categoria_id}</td>
 
-                  <button
-                    className="btn-eliminar"
-                    onClick={() => setMostrarDelete(true)}
-                  >
-                    <RiDeleteBinLine />
-                  </button>
+                <td>{libro.titulo}</td>
 
-                </div>
-              </td>
+                <td>{libro.autor_ilustrador}</td>
 
-            </tr>
+                <td>{libro.serie}</td>
+
+                <td>{libro.procedencia}</td>
+
+                <td>{libro.cantidad_total}</td>
+
+                <td>{libro.seccion}</td>
+
+                <td>
+
+                  <div className="acciones-tabla">
+
+                    <button
+                      className="btn-editar"
+                      onClick={() => {
+                        setLibroSeleccionado(libro);
+                        setMostrarEdit(true);
+                      }}
+                    >
+                      <FaRegEdit />
+                    </button>
+
+                    <button
+                      className="btn-eliminar"
+                      onClick={() => {
+                        setLibroSeleccionado(libro);
+                        setMostrarDelete(true);
+                      }}
+                    >
+                      <RiDeleteBinLine />
+                    </button>
+
+                  </div>
+
+                </td>
+
+              </tr>
+            ))}
 
           </tbody>
 
@@ -101,21 +143,31 @@ function Libros() {
 
         {mostrarModal && (
           <CreateLibro
-            onClose={() => setMostrarModal(false)}
+            onClose={() =>
+              setMostrarModal(false)
+            }
           />
         )}
 
-        {mostrarEdit && (
-          <EditLibro
-            onClose={() => setMostrarEdit(false)}
-          />
-        )}
+        {mostrarEdit &&
+          libroSeleccionado && (
+            <EditLibro
+              libro={libroSeleccionado}
+              onClose={() =>
+                setMostrarEdit(false)
+              }
+            />
+          )}
 
-        {mostrarDelete && (
-          <DeleteLibro
-            onClose={() => setMostrarDelete(false)}
-          />
-        )}
+        {mostrarDelete &&
+          libroSeleccionado && (
+            <DeleteLibro
+              libro={libroSeleccionado}
+              onClose={() =>
+                setMostrarDelete(false)
+              }
+            />
+          )}
 
       </div>
     </Layout>

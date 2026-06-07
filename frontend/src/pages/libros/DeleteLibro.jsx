@@ -1,6 +1,36 @@
 import "./DeleteLibro.css";
 
-function DeleteLibro({ onClose }) {
+import api from "../../services/api";
+
+function DeleteLibro({
+  libro,
+  onClose,
+}) {
+
+  const eliminarLibro = async () => {
+    try {
+
+      await api.delete(
+        `/libros/${libro.id_libro}`
+      );
+
+      alert(
+        "Libro eliminado correctamente"
+      );
+
+      window.location.reload();
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "Error al eliminar el libro"
+      );
+
+    }
+  };
+
   return (
     <div
       className="delete-overlay"
@@ -8,17 +38,22 @@ function DeleteLibro({ onClose }) {
     >
       <div
         className="delete-modal"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) =>
+          e.stopPropagation()
+        }
       >
         <h2>
-          ¿Deseas eliminar el libro
+          ¿Deseas eliminar el libro?
           <br />
-          "Tiny y las alas del corazón"?
+          "{libro?.titulo}"
         </h2>
 
         <div className="delete-buttons">
 
-          <button className="btn-delete">
+          <button
+            className="btn-delete"
+            onClick={eliminarLibro}
+          >
             Eliminar
           </button>
 
@@ -30,6 +65,7 @@ function DeleteLibro({ onClose }) {
           </button>
 
         </div>
+
       </div>
     </div>
   );

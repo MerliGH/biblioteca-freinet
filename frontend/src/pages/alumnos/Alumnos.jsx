@@ -1,7 +1,7 @@
 import Layout from "../../components/Layout";
 import "./Alumnos.css";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import CreateAlumno from "./CreateAlumno";
 import EditAlumno from "./EditAlumno";
@@ -10,13 +10,55 @@ import DeleteAlumno from "./DeleteAlumno";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 
+import api from "../../services/api";
+
 function Alumnos() {
-  const [mostrarCreate, setMostrarCreate] = useState(false);
-  const [mostrarEdit, setMostrarEdit] = useState(false);
-  const [mostrarDelete, setMostrarDelete] = useState(false);
+  const [alumnos, setAlumnos] = useState([]);
+
+  const [mostrarCreate, setMostrarCreate] =
+    useState(false);
+
+  const [mostrarEdit, setMostrarEdit] =
+    useState(false);
+
+  const [mostrarDelete, setMostrarDelete] =
+    useState(false);
+
+  const [alumnoSeleccionado,
+    setAlumnoSeleccionado] =
+    useState(null);
+
+  useEffect(() => {
+    obtenerAlumnos();
+  }, []);
+
+  const obtenerAlumnos = async () => {
+    try {
+
+      const response =
+        await api.get("/usuarios/");
+
+      const alumnosFiltrados =
+        response.data.filter(
+          (usuario) =>
+            usuario.rol === "ALUMNO"
+        );
+
+      setAlumnos(alumnosFiltrados);
+
+    } catch (error) {
+
+      console.error(
+        "Error al obtener alumnos:",
+        error
+      );
+
+    }
+  };
 
   return (
     <Layout>
+
       <div className="alumnos-container">
 
         <div className="alumnos-header">
@@ -33,7 +75,9 @@ function Alumnos() {
 
             <button
               className="btn-agregar"
-              onClick={() => setMostrarCreate(true)}
+              onClick={() =>
+                setMostrarCreate(true)
+              }
             >
               Añadir Alumno
             </button>
@@ -45,6 +89,7 @@ function Alumnos() {
         <table className="tabla-alumnos">
 
           <thead>
+
             <tr>
               <th>Nombre</th>
               <th>Apellido</th>
@@ -55,79 +100,140 @@ function Alumnos() {
               <th>Fecha de registro</th>
               <th>Acciones</th>
             </tr>
+
           </thead>
 
           <tbody>
 
-            <tr>
+            {alumnos.map((alumno) => (
 
-              <td>María</td>
+              <tr key={alumno.id_usuario}>
 
-              <td>López</td>
+                <td>
+                  {alumno.nombre}
+                </td>
 
-              <td>
-                maria.lopez@escuela.edu
-              </td>
+                <td>
+                  {alumno.apellido_paterno}
+                </td>
 
-              <td>A2025001</td>
+                <td>
+                  {alumno.correo}
+                </td>
 
-              <td>3A</td>
+                <td>
+                  {alumno.matricula}
+                </td>
 
-              <td>Activo</td>
+                <td>
+                  {alumno.grado}
+                  {alumno.grupo}
+                </td>
 
-              <td>
-                <span className="fecha-pill">
-                  10/08/2025
-                </span>
-              </td>
+                <td>
+                  {alumno.estado
+                    ? "Activo"
+                    : "Inactivo"}
+                </td>
 
-              <td>
+                <td>
 
-                <div className="acciones-tabla">
+                  <span className="fecha-pill">
 
-                  <button
-                    className="btn-editar"
-                    onClick={() => setMostrarEdit(true)}
-                  >
-                    <FaRegEdit />
-                  </button>
+                    {new Date(
+                      alumno.fecha_registro
+                    ).toLocaleDateString()}
 
-                  <button
-                    className="btn-eliminar"
-                    onClick={() => setMostrarDelete(true)}
-                  >
-                    <RiDeleteBinLine />
-                  </button>
+                  </span>
 
-                </div>
+                </td>
 
-              </td>
+                <td>
 
-            </tr>
+                  <div className="acciones-tabla">
+
+                    <button
+                      className="btn-editar"
+                      onClick={() => {
+
+                        setAlumnoSeleccionado(
+                          alumno
+                        );
+
+                        setMostrarEdit(true);
+
+                      }}
+                    >
+                      <FaRegEdit />
+                    </button>
+
+                    <button
+                      className="btn-eliminar"
+                      onClick={() => {
+
+                        setAlumnoSeleccionado(
+                          alumno
+                        );
+
+                        setMostrarDelete(true);
+
+                      }}
+                    >
+                      <RiDeleteBinLine />
+                    </button>
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            ))}
 
           </tbody>
 
         </table>
 
         {mostrarCreate && (
+
           <CreateAlumno
-            onClose={() => setMostrarCreate(false)}
+            onClose={() =>
+              setMostrarCreate(false)
+            }
           />
+
         )}
 
-        {mostrarEdit && (
-          <EditAlumno
-            onClose={() => setMostrarEdit(false)}
-          />
-        )}
+        {mostrarEdit &&
+          alumnoSeleccionado && (
 
-        {mostrarDelete && (
-          <DeleteAlumno
-            onClose={() => setMostrarDelete(false)}
-          />
-        )}
+            <EditAlumno
+              alumno={
+                alumnoSeleccionado
+              }
+              onClose={() =>
+                setMostrarEdit(false)
+              }
+            />
+
+          )}
+
+        {mostrarDelete &&
+          alumnoSeleccionado && (
+
+            <DeleteAlumno
+              alumno={
+                alumnoSeleccionado
+              }
+              onClose={() =>
+                setMostrarDelete(false)
+              }
+            />
+
+          )}
 
       </div>
+
     </Layout>
   );
 }

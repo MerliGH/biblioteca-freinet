@@ -1,6 +1,6 @@
 import "./Prestamos.css";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Layout from "../../components/Layout";
 
@@ -11,13 +11,107 @@ import DeletePrestamo from "./DeletePrestamo";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 
+import api from "../../services/api";
+
 function Prestamos() {
-  const [mostrarCreate, setMostrarCreate] = useState(false);
-  const [mostrarEdit, setMostrarEdit] = useState(false);
-  const [mostrarDelete, setMostrarDelete] = useState(false);
+  const [prestamos, setPrestamos] = useState([]);
+
+  const [mostrarCreate, setMostrarCreate] =
+    useState(false);
+
+  const [mostrarEdit, setMostrarEdit] =
+    useState(false);
+
+  const [mostrarDelete, setMostrarDelete] =
+    useState(false);
+
+  const [prestamoSeleccionado,
+    setPrestamoSeleccionado] =
+    useState(null);
+
+  useEffect(() => {
+    obtenerPrestamos();
+  }, []);
+
+  const obtenerPrestamos = async () => {
+    try {
+
+      const [
+        prestamosResponse,
+        usuariosResponse,
+        librosResponse,
+      ] = await Promise.all([
+        api.get("/prestamos/"),
+        api.get("/usuarios/"),
+        api.get("/libros/"),
+      ]);
+
+      const prestamosConDatos =
+        prestamosResponse.data
+          .map((prestamo) => {
+
+            const alumno =
+              usuariosResponse.data.find(
+                (usuario) =>
+                  usuario.id_usuario ===
+                  prestamo.usuario_id
+              );
+
+            const docente =
+              usuariosResponse.data.find(
+                (usuario) =>
+                  usuario.id_usuario ===
+                  prestamo.autorizado_por
+              );
+
+            const libro =
+              librosResponse.data.find(
+                (lib) =>
+                  lib.id_libro ===
+                  prestamo.libro_id
+              );
+
+            return {
+              ...prestamo,
+
+              nombreAlumno: alumno
+                ? `${alumno.nombre} ${alumno.apellido_paterno}`
+                : "No encontrado",
+
+              autorizadoPor: docente
+                ? `${docente.nombre} ${docente.apellido_paterno}`
+                : "No encontrado",
+
+              tituloLibro: libro
+                ? libro.titulo
+                : "No encontrado",
+            };
+          })
+          .filter(
+            (prestamo) =>
+              prestamo.estado ===
+                "PRESTADO" ||
+              prestamo.estado ===
+                "VENCIDO"
+          );
+
+      setPrestamos(
+        prestamosConDatos
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Error al obtener préstamos:",
+        error
+      );
+
+    }
+  };
 
   return (
     <Layout>
+
       <div className="prestamos-container">
 
         <div className="prestamos-header">
@@ -25,7 +119,7 @@ function Prestamos() {
           <h1>
             Gestión de Libros
             <br />
-            Prestamos Activos
+            Préstamos Activos
           </h1>
 
           <div className="acciones">
@@ -38,9 +132,11 @@ function Prestamos() {
 
             <button
               className="btn-agregar"
-              onClick={() => setMostrarCreate(true)}
+              onClick={() =>
+                setMostrarCreate(true)
+              }
             >
-              Añadir Prestamo
+              Añadir Préstamo
             </button>
 
           </div>
@@ -55,7 +151,7 @@ function Prestamos() {
               <th>Nombre del alumno</th>
               <th>Libro</th>
               <th>Autorizado por</th>
-              <th>Fecha de préstamo</th>
+              <th>Fecha préstamo</th>
               <th>Fecha límite</th>
               <th>Estado</th>
               <th>Acciones</th>
@@ -65,101 +161,107 @@ function Prestamos() {
 
           <tbody>
 
-            <tr>
+            {prestamos.map(
+              (prestamo) => (
 
-              <td>Nombre del Alumno</td>
+                <tr
+                  key={
+                    prestamo.id_prestamo
+                  }
+                >
 
-              <td>
-                Tiny y las alas
-                <br />
-                del corazón
-              </td>
+                  <td>
+                    {
+                      prestamo.nombreAlumno
+                    }
+                  </td>
 
-              <td>Miss Luna</td>
+                  <td>
+                    {
+                      prestamo.tituloLibro
+                    }
+                  </td>
 
-              <td>
-                <span className="fecha-pill">
-                  10/8/2025
-                </span>
-              </td>
+                  <td>
+                    {
+                      prestamo.autorizadoPor
+                    }
+                  </td>
 
-              <td>
-                <span className="fecha-pill">
-                  17/8/2025
-                </span>
-              </td>
+                  <td>
 
-              <td>Prestado</td>
+                    <span className="fecha-pill">
 
-              <td>
+                      {new Date(
+                        prestamo.fecha_prestamo
+                      ).toLocaleDateString()}
 
-                <div className="acciones-tabla">
+                    </span>
 
-                  <button
-                    className="btn-editar"
-                    onClick={() => setMostrarEdit(true)}
-                  >
-                    <FaRegEdit />
-                  </button>
+                  </td>
 
-                  <button
-                    className="btn-eliminar"
-                    onClick={() => setMostrarDelete(true)}
-                  >
-                    <RiDeleteBinLine />
-                  </button>
+                  <td>
 
-                </div>
+                    <span className="fecha-pill">
 
-              </td>
+                      {new Date(
+                        prestamo.fecha_limite
+                      ).toLocaleDateString()}
 
-            </tr>
+                    </span>
 
-            <tr>
+                  </td>
 
-              <td>Nombre alumno</td>
+                  <td>
+                    {prestamo.estado}
+                  </td>
 
-              <td>Harry Potter</td>
+                  <td>
 
-              <td>Miss Mariela</td>
+                    <div className="acciones-tabla">
 
-              <td>
-                <span className="fecha-pill">
-                  12/8/2025
-                </span>
-              </td>
+                      <button
+                        className="btn-editar"
+                        onClick={() => {
 
-              <td>
-                <span className="fecha-pill">
-                  19/8/2025
-                </span>
-              </td>
+                          setPrestamoSeleccionado(
+                            prestamo
+                          );
 
-              <td>Prestado</td>
+                          setMostrarEdit(
+                            true
+                          );
 
-              <td>
+                        }}
+                      >
+                        <FaRegEdit />
+                      </button>
 
-                <div className="acciones-tabla">
+                      <button
+                        className="btn-eliminar"
+                        onClick={() => {
 
-                  <button
-                    className="btn-editar"
-                    onClick={() => setMostrarEdit(true)}
-                  >
-                    <FaRegEdit />
-                  </button>
+                          setPrestamoSeleccionado(
+                            prestamo
+                          );
 
-                  <button
-                    className="btn-eliminar"
-                    onClick={() => setMostrarDelete(true)}
-                  >
-                    <RiDeleteBinLine />
-                  </button>
+                          setMostrarDelete(
+                            true
+                          );
 
-                </div>
+                        }}
+                      >
+                        <RiDeleteBinLine />
+                      </button>
 
-              </td>
+                    </div>
 
-            </tr>
+                  </td>
+
+                </tr>
+
+              )
+            )}
 
           </tbody>
 
@@ -167,23 +269,42 @@ function Prestamos() {
 
         {mostrarCreate && (
           <CreatePrestamo
-            onClose={() => setMostrarCreate(false)}
+            onClose={() =>
+              setMostrarCreate(false)
+            }
           />
         )}
 
-        {mostrarEdit && (
-          <EditPrestamo
-            onClose={() => setMostrarEdit(false)}
-          />
-        )}
+        {mostrarEdit &&
+          prestamoSeleccionado && (
 
-        {mostrarDelete && (
-          <DeletePrestamo
-            onClose={() => setMostrarDelete(false)}
-          />
-        )}
+            <EditPrestamo
+              prestamo={
+                prestamoSeleccionado
+              }
+              onClose={() =>
+                setMostrarEdit(false)
+              }
+            />
+
+          )}
+
+        {mostrarDelete &&
+          prestamoSeleccionado && (
+
+            <DeletePrestamo
+              prestamo={
+                prestamoSeleccionado
+              }
+              onClose={() =>
+                setMostrarDelete(false)
+              }
+            />
+
+          )}
 
       </div>
+
     </Layout>
   );
 }

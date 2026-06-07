@@ -1,24 +1,152 @@
 import Layout from "../../components/Layout";
 import "./Dashboard.css";
 
+import { useState, useEffect } from "react";
+
 import { FaBook } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { PiStudentFill } from "react-icons/pi";
 import { MdLibraryBooks } from "react-icons/md";
 
+import api from "../../services/api";
+
 function Dashboard() {
+
+  const [libros, setLibros] = useState(0);
+  const [prestamos, setPrestamos] = useState(0);
+  const [alumnos, setAlumnos] = useState(0);
+  const [docentes, setDocentes] = useState(0);
+
+  const [ultimosPrestamos,
+    setUltimosPrestamos] = useState([]);
+
+  useEffect(() => {
+    cargarDashboard();
+  }, []);
+
+  const cargarDashboard = async () => {
+
+    try {
+
+      const [
+        usuariosResponse,
+        librosResponse,
+        prestamosResponse,
+      ] = await Promise.all([
+        api.get("/usuarios/"),
+        api.get("/libros/"),
+        api.get("/prestamos/"),
+      ]);
+
+      const usuarios =
+        usuariosResponse.data;
+
+      const librosData =
+        librosResponse.data;
+
+      const prestamosData =
+        prestamosResponse.data;
+
+      setLibros(
+        librosData.length
+      );
+
+      setPrestamos(
+        prestamosData.filter(
+          (p) =>
+            p.estado === "PRESTADO" ||
+            p.estado === "VENCIDO"
+        ).length
+      );
+
+      setAlumnos(
+        usuarios.filter(
+          (u) =>
+            u.rol === "ALUMNO"
+        ).length
+      );
+
+      setDocentes(
+        usuarios.filter(
+          (u) =>
+            u.rol === "DOCENTE"
+        ).length
+      );
+
+      const prestamosConAlumno =
+        prestamosData.map(
+          (prestamo) => {
+
+            const alumno =
+              usuarios.find(
+                (u) =>
+                  u.id_usuario ===
+                  prestamo.usuario_id
+              );
+
+            const libro =
+              librosData.find(
+                (l) =>
+                  l.id_libro ===
+                  prestamo.libro_id
+              );
+
+            return {
+              ...prestamo,
+
+              alumno:
+                alumno
+                  ? `${alumno.nombre} ${alumno.apellido_paterno}`
+                  : "Sin alumno",
+
+              libro:
+                libro?.titulo ||
+                "Sin libro",
+            };
+
+          }
+        );
+
+      setUltimosPrestamos(
+        prestamosConAlumno
+          .sort(
+            (a, b) =>
+              new Date(
+                b.fecha_prestamo
+              ) -
+              new Date(
+                a.fecha_prestamo
+              )
+          )
+          .slice(0, 5)
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Error al cargar dashboard:",
+        error
+      );
+
+    }
+
+  };
+
   return (
     <Layout>
+
       <div className="dashboard-container">
 
         <div className="dashboard-header">
 
           <h1>
-            Bienvenida, Mtra. Elizabeth
+            Bienvenida,
+            Mtra. Elizabeth
           </h1>
 
           <p>
-            Sistema de control de biblioteca escolar
+            Sistema de control de
+            biblioteca escolar
           </p>
 
         </div>
@@ -26,70 +154,102 @@ function Dashboard() {
         <div className="cards-dashboard">
 
           <div className="card card-libros">
+
             <FaBook />
-            <h2>250</h2>
-            <span>de 260 libros</span>
+
+            <h2>{libros}</h2>
+
+            <span>
+              Libros registrados
+            </span>
+
           </div>
 
           <div className="card card-prestamos">
+
             <MdLibraryBooks />
-            <h2>10</h2>
-            <span>Préstamos activos</span>
+
+            <h2>{prestamos}</h2>
+
+            <span>
+              Préstamos activos
+            </span>
+
           </div>
 
           <div className="card card-alumnos">
+
             <PiStudentFill />
-            <h2>60</h2>
+
+            <h2>{alumnos}</h2>
+
             <span>Alumnos</span>
+
           </div>
 
           <div className="card card-docentes">
+
             <FaPeopleGroup />
-            <h2>6</h2>
+
+            <h2>{docentes}</h2>
+
             <span>Docentes</span>
+
           </div>
 
         </div>
 
         <div className="ultimos-prestamos">
 
-          <h2>Últimos préstamos</h2>
+          <h2>
+            Últimos préstamos
+          </h2>
 
           <table>
 
             <thead>
+
               <tr>
                 <th>Alumno</th>
                 <th>Libro</th>
                 <th>Fecha</th>
               </tr>
+
             </thead>
 
             <tbody>
 
-              <tr>
-                <td>Juan Pérez</td>
-                <td>El Principito</td>
-                <td>08/05/2026</td>
-              </tr>
+              {ultimosPrestamos.map(
+                (prestamo) => (
 
-              <tr>
-                <td>María López</td>
-                <td>Cuentos de la Selva</td>
-                <td>08/05/2026</td>
-              </tr>
+                  <tr
+                    key={
+                      prestamo.id_prestamo
+                    }
+                  >
 
-              <tr>
-                <td>Sofía Ramírez</td>
-                <td>Alicia en el País de las Maravillas</td>
-                <td>07/05/2026</td>
-              </tr>
+                    <td>
+                      {
+                        prestamo.alumno
+                      }
+                    </td>
 
-              <tr>
-                <td>Diego Torres</td>
-                <td>Atlas Infantil de México</td>
-                <td>07/05/2026</td>
-              </tr>
+                    <td>
+                      {
+                        prestamo.libro
+                      }
+                    </td>
+
+                    <td>
+                      {new Date(
+                        prestamo.fecha_prestamo
+                      ).toLocaleDateString()}
+                    </td>
+
+                  </tr>
+
+                )
+              )}
 
             </tbody>
 
@@ -98,6 +258,7 @@ function Dashboard() {
         </div>
 
       </div>
+
     </Layout>
   );
 }

@@ -1,10 +1,12 @@
 import Layout from "../../components/Layout";
 import "./Termometro.css";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import DetailTermometro from "./DetailTermometro";
 import MiniTermometro from "./MiniTermometro";
+
+import api from "../../services/api";
 
 function Termometro() {
   const [mostrarDetalle, setMostrarDetalle] =
@@ -13,35 +15,48 @@ function Termometro() {
   const [alumnoSeleccionado, setAlumnoSeleccionado] =
     useState(null);
 
-  const alumnos = [
-    {
-      id: 1,
-      nombre: "María López",
-      grupo: "3A",
-      libros: 18,
-      ultimoLibro:
-        "Charlie y la fábrica de chocolate",
-      fecha: "20/05/2026",
-    },
+  const [registros, setRegistros] = useState([]);
 
-    {
-      id: 2,
-      nombre: "Mateo Gutiérrez",
-      grupo: "3A",
-      libros: 10,
-      ultimoLibro: "Matilda",
-      fecha: "18/05/2026",
-    },
+  useEffect(() => {
+    obtenerRegistros();
+  }, []);
 
-    {
-      id: 3,
-      nombre: "Sofía Pérez",
-      grupo: "3A",
-      libros: 25,
-      ultimoLibro: "Harry Potter",
-      fecha: "25/05/2026",
-    },
-  ];
+  const obtenerRegistros = async () => {
+    try {
+      const [termometroRes, usuariosRes] =
+        await Promise.all([
+          api.get("/termometro/"),
+          api.get("/usuarios/"),
+        ]);
+
+      const registrosConNombre =
+        termometroRes.data.map((registro) => {
+          const alumno = usuariosRes.data.find(
+            (usuario) =>
+              usuario.id_usuario ===
+              registro.usuario_id
+          );
+
+          return {
+            ...registro,
+            nombreAlumno: alumno
+              ? `${alumno.nombre} ${alumno.apellido_paterno}`
+              : "Alumno no encontrado",
+
+            grupo: alumno
+              ? `${alumno.grado || ""}${alumno.grupo || ""}`
+              : "",
+          };
+        });
+
+      setRegistros(registrosConNombre);
+    } catch (error) {
+      console.error(
+        "Error al obtener registros:",
+        error
+      );
+    }
+  };
 
   const abrirDetalle = (alumno) => {
     setAlumnoSeleccionado(alumno);
@@ -66,29 +81,33 @@ function Termometro() {
 
         <div className="cards-termometro">
 
-          {alumnos.map((alumno) => (
+          {registros.map((registro) => (
             <div
-              key={alumno.id}
+              key={registro.id_termometro}
               className="card-termometro"
               onClick={() =>
-                abrirDetalle(alumno)
+                abrirDetalle(registro)
               }
             >
 
               <h3>
-                {alumno.nombre} {alumno.grupo}
+                {registro.nombreAlumno}
               </h3>
+
+              <p>
+                Grupo {registro.grupo}
+              </p>
 
               <div className="contenido-card">
 
                 <MiniTermometro
-                  libros={alumno.libros}
+                  libros={1}
                 />
 
               </div>
 
               <p className="libros-card">
-                {alumno.libros} Libros
+                Libro #{registro.libro_id}
               </p>
 
             </div>

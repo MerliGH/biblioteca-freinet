@@ -1,6 +1,39 @@
 import "./DeletePrestamo.css";
 
-function DeletePrestamo({ onClose }) {
+import api from "../../services/api";
+
+function DeletePrestamo({
+  prestamo,
+  onClose,
+}) {
+
+  const eliminarPrestamo =
+    async () => {
+
+      try {
+
+        await api.delete(
+          `/prestamos/${prestamo.id_prestamo}`
+        );
+
+        alert(
+          "Préstamo eliminado correctamente"
+        );
+
+        window.location.reload();
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          "Error al eliminar préstamo"
+        );
+
+      }
+
+    };
+
   return (
     <div
       className="modal-overlay"
@@ -8,17 +41,33 @@ function DeletePrestamo({ onClose }) {
     >
       <div
         className="delete-modal"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) =>
+          e.stopPropagation()
+        }
       >
         <p>
-          ¿Estás seguro de que deseas eliminar
-          el préstamo del libro
-          "Tiny y las alas del corazón"?
+
+          ¿Deseas eliminar el préstamo
+          del libro?
+
+          <br />
+
+          <strong>
+            {
+              prestamo?.tituloLibro
+            }
+          </strong>
+
         </p>
 
         <div className="botones-delete">
 
-          <button className="btn-eliminar-confirm">
+          <button
+            className="btn-eliminar-confirm"
+            onClick={
+              eliminarPrestamo
+            }
+          >
             Eliminar
           </button>
 

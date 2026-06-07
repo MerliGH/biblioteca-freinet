@@ -1,5 +1,68 @@
 import "./CreateAlumno.css";
-function EditAlumno({ onClose }) {
+
+import { useState } from "react";
+import api from "../../services/api";
+
+function EditAlumno({
+  alumno,
+  onClose,
+}) {
+
+  const [formData, setFormData] =
+    useState({
+      nombre: alumno?.nombre || "",
+      apellido_paterno:
+        alumno?.apellido_paterno || "",
+      apellido_materno:
+        alumno?.apellido_materno || "",
+      correo: alumno?.correo || "",
+      password:
+        alumno?.password || "",
+      matricula:
+        alumno?.matricula || "",
+      rol: "ALUMNO",
+      grado: alumno?.grado || "",
+      grupo: alumno?.grupo || "",
+      estado:
+        alumno?.estado ?? true,
+    });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+
+      await api.put(
+        `/usuarios/${alumno.id_usuario}`,
+        formData
+      );
+
+      alert(
+        "Alumno actualizado correctamente"
+      );
+
+      window.location.reload();
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "Error al actualizar alumno"
+      );
+
+    }
+  };
+
   return (
     <div
       className="modal-overlay"
@@ -7,47 +70,107 @@ function EditAlumno({ onClose }) {
     >
       <div
         className="modal-content"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) =>
+          e.stopPropagation()
+        }
       >
 
         <h1>EDITAR ALUMNO</h1>
 
-        <form className="libro-form">
+        <form
+          className="alumno-form"
+          onSubmit={handleSubmit}
+        >
 
           <label>Nombre:</label>
+
           <input
             type="text"
-            defaultValue="María"
+            name="nombre"
+            value={formData.nombre}
+            onChange={handleChange}
           />
 
           <label>Apellido:</label>
+
           <input
             type="text"
-            defaultValue="López"
+            name="apellido_paterno"
+            value={
+              formData.apellido_paterno
+            }
+            onChange={handleChange}
           />
 
           <label>Correo:</label>
+
           <input
             type="email"
-            defaultValue="maria.lopez@escuela.edu"
+            name="correo"
+            value={formData.correo}
+            onChange={handleChange}
+          />
+
+          <label>Contraseña:</label>
+
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
           />
 
           <label>Matrícula:</label>
+
           <input
             type="text"
-            defaultValue="A2025001"
+            name="matricula"
+            value={formData.matricula}
+            onChange={handleChange}
+          />
+
+          <label>Grado:</label>
+
+          <input
+            type="text"
+            name="grado"
+            value={formData.grado}
+            onChange={handleChange}
           />
 
           <label>Grupo:</label>
+
           <input
             type="text"
-            defaultValue="3A"
+            name="grupo"
+            value={formData.grupo}
+            onChange={handleChange}
           />
 
           <label>Estado:</label>
-          <select defaultValue="Activo">
-            <option>Activo</option>
-            <option>Inactivo</option>
+
+          <select
+            value={
+              formData.estado
+                ? "Activo"
+                : "Inactivo"
+            }
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                estado:
+                  e.target.value ===
+                  "Activo",
+              })
+            }
+          >
+            <option value="Activo">
+              Activo
+            </option>
+
+            <option value="Inactivo">
+              Inactivo
+            </option>
           </select>
 
           <div className="botones-form">
@@ -56,7 +179,7 @@ function EditAlumno({ onClose }) {
               type="submit"
               className="btn-guardar"
             >
-              Guardar
+              Actualizar
             </button>
 
             <button
