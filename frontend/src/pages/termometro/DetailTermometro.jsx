@@ -9,53 +9,83 @@ function DetailTermometro({
   alumno,
   onClose,
 }) {
-  const [mostrarRegistros, setMostrarRegistros] =
+
+  const [mostrarRegistros,
+    setMostrarRegistros] =
     useState(false);
 
-  const libros = alumno.libros;
+  const libros =
+    alumno.librosLeidos || 0;
 
-  let nivel = "Verde";
+  let nivel = "Sin nivel";
   let faltan = 0;
 
   if (libros >= 26) {
+
     nivel = "Platino";
-    faltan = 0;
+
   }
 
   else if (libros >= 25) {
+
     nivel = "Dorado";
     faltan = 1;
+
   }
 
   else if (libros >= 20) {
+
     nivel = "Rojo";
     faltan = 25 - libros;
+
   }
 
   else if (libros >= 15) {
+
     nivel = "Amarillo";
     faltan = 20 - libros;
+
   }
 
   else if (libros >= 5) {
+
     nivel = "Verde";
     faltan = 15 - libros;
+
   }
 
+  else {
+
+    nivel = "Sin nivel";
+    faltan = 5 - libros;
+
+  }
+
+  const ultimoRegistro =
+    alumno.registros?.[
+      alumno.registros.length - 1
+    ];
+
   return (
+
     <>
+
       <div
         className="modal-overlay"
         onClick={onClose}
       >
+
         <div
           className="detalle-modal"
           onClick={(e) =>
             e.stopPropagation()
           }
         >
+
           <h1>
-            {alumno.nombre} {alumno.grupo}
+
+            {alumno.nombreAlumno}
+
           </h1>
 
           <div className="detalle-body">
@@ -67,7 +97,9 @@ function DetailTermometro({
               />
 
               <p className="total-libros">
+
                 {libros} de 26 libros
+
               </p>
 
             </div>
@@ -75,31 +107,69 @@ function DetailTermometro({
             <div className="info-alumno">
 
               <h2>
+
                 Nivel {nivel}
+
               </h2>
 
-              <p>
-                Faltan {faltan} libros para el
-                siguiente nivel
-              </p>
+              {nivel === "Platino" ? (
+
+                <p className="nivel-maximo">
+
+                  🏆 ¡Nivel máximo alcanzado!
+
+                </p>
+
+              ) : (
+
+                <p>
+
+                  Faltan {faltan} libro
+                  {faltan !== 1 ? "s" : ""}
+                  para el siguiente nivel
+
+                </p>
+
+              )}
 
               <p>
+
                 <strong>
-                  Último libro:
+                  Grupo:
                 </strong>
 
                 <br />
 
-                {alumno.ultimoLibro}
+                {alumno.grupo}
+
               </p>
 
               <p>
+
                 <strong>
-                  Fecha:
+                  Último registro:
+                </strong>
+
+                <br />
+
+                {ultimoRegistro
+                  ? new Date(
+                      ultimoRegistro.fecha_acreditacion
+                    ).toLocaleDateString()
+                  : "Sin registros"}
+
+              </p>
+
+              <p>
+
+                <strong>
+                  Lecturas acreditadas:
                 </strong>
 
                 {" "}
-                {alumno.fecha}
+
+                {libros}
+
               </p>
 
             </div>
@@ -111,7 +181,9 @@ function DetailTermometro({
             <button
               className="btn-ver-registros"
               onClick={() =>
-                setMostrarRegistros(true)
+                setMostrarRegistros(
+                  true
+                )
               }
             >
               Ver registros
@@ -127,18 +199,26 @@ function DetailTermometro({
           </div>
 
         </div>
+
       </div>
 
       {mostrarRegistros && (
+
         <RegistrosAlumno
           alumno={alumno}
           onClose={() =>
-            setMostrarRegistros(false)
+            setMostrarRegistros(
+              false
+            )
           }
         />
+
       )}
+
     </>
+
   );
+
 }
 
 export default DetailTermometro;

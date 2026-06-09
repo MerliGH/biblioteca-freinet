@@ -1,0 +1,190 @@
+.login-container {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(
+    135deg,
+    #0b1120,
+    #172554
+  );
+
+  padding: 30px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 600px;
+
+  background: #ffffff;
+
+  border-radius: 20px;
+
+  padding: 40px 50px;
+
+  box-shadow:
+    0 15px 40px rgba(
+      0,
+      0,
+      0,
+      0.20
+    );
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-login {
+  width: 180px;
+  height: auto;
+
+  margin-bottom: 15px;
+}
+
+.login-card h1 {
+  font-size: 34px;
+  font-weight: 700;
+
+  color: #1E3A8A;
+
+  margin-bottom: 8px;
+}
+
+.subtitulo {
+  color: #1E3A8A;
+
+  font-size: 17px;
+
+  font-weight: 500;
+
+  margin-bottom: 30px;
+
+  text-align: center;
+}
+
+.login-form {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form label {
+  color: #1E3A8A;
+
+  font-weight: 600;
+
+  font-size: 15px;
+
+  margin-bottom: 8px;
+}
+
+.login-form input {
+  width: 100%;
+
+  padding: 14px;
+
+  border: 2px solid #CBD5E1;
+
+  border-radius: 12px;
+
+  font-size: 16px;
+
+  color: #1E3A8A;
+
+  background: white;
+
+  margin-bottom: 20px;
+
+  box-sizing: border-box;
+
+  transition: 0.3s;
+}
+
+.login-form input::placeholder {
+  color: #94A3B8;
+}
+
+.login-form input:focus {
+  outline: none;
+
+  border-color: #1E3A8A;
+
+  box-shadow:
+    0 0 0 4px rgba(
+      30,
+      58,
+      138,
+      0.15
+    );
+}
+
+/* Firefox y Chrome */
+
+.login-form input:-webkit-autofill,
+.login-form input:-webkit-autofill:hover,
+.login-form input:-webkit-autofill:focus {
+  -webkit-box-shadow:
+    0 0 0 1000px white inset !important;
+
+  -webkit-text-fill-color:
+    #1E3A8A !important;
+}
+
+.login-form button {
+  width: 100%;
+
+  padding: 16px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: #0F172A;
+
+  color: white;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.login-form button:hover {
+  background: #1E3A8A;
+
+  transform: translateY(-2px);
+}
+
+.login-form button:disabled {
+  opacity: 0.7;
+
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+
+  .login-card {
+    padding: 30px;
+  }
+
+  .logo-login {
+    width: 140px;
+  }
+
+  .login-card h1 {
+    font-size: 28px;
+  }
+
+  .subtitulo {
+    font-size: 15px;
+  }
+
+}

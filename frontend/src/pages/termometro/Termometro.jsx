@@ -9,67 +9,133 @@ import MiniTermometro from "./MiniTermometro";
 import api from "../../services/api";
 
 function Termometro() {
-  const [mostrarDetalle, setMostrarDetalle] =
+
+  const [mostrarDetalle,
+    setMostrarDetalle] =
     useState(false);
 
-  const [alumnoSeleccionado, setAlumnoSeleccionado] =
+  const [alumnoSeleccionado,
+    setAlumnoSeleccionado] =
     useState(null);
 
-  const [registros, setRegistros] = useState([]);
+  const [registros,
+    setRegistros] =
+    useState([]);
 
   useEffect(() => {
+
     obtenerRegistros();
+
   }, []);
 
   const obtenerRegistros = async () => {
-    try {
-      const [termometroRes, usuariosRes] =
-        await Promise.all([
-          api.get("/termometro/"),
-          api.get("/usuarios/"),
-        ]);
 
-      const registrosConNombre =
-        termometroRes.data.map((registro) => {
-          const alumno = usuariosRes.data.find(
-            (usuario) =>
-              usuario.id_usuario ===
-              registro.usuario_id
+    try {
+
+      const [
+        termometroRes,
+        usuariosRes,
+      ] = await Promise.all([
+        api.get("/termometro/"),
+        api.get("/usuarios/"),
+      ]);
+
+      const agrupados = {};
+
+      termometroRes.data.forEach(
+        (registro) => {
+
+          const alumno =
+            usuariosRes.data.find(
+              (usuario) =>
+                usuario.id_usuario ===
+                registro.usuario_id
+            );
+
+          if (!alumno) return;
+
+          if (
+            !agrupados[
+              alumno.id_usuario
+            ]
+          ) {
+
+            agrupados[
+              alumno.id_usuario
+            ] = {
+
+              id_usuario:
+                alumno.id_usuario,
+
+              nombreAlumno:
+                `${alumno.nombre} ${alumno.apellido_paterno}`,
+
+              grupo:
+                `${alumno.grado || ""}${alumno.grupo || ""}`,
+
+              librosLeidos: 0,
+
+              registros: [],
+
+            };
+
+          }
+
+          agrupados[
+            alumno.id_usuario
+          ].librosLeidos++;
+
+          agrupados[
+            alumno.id_usuario
+          ].registros.push(
+            registro
           );
 
-          return {
-            ...registro,
-            nombreAlumno: alumno
-              ? `${alumno.nombre} ${alumno.apellido_paterno}`
-              : "Alumno no encontrado",
+        }
+      );
 
-            grupo: alumno
-              ? `${alumno.grado || ""}${alumno.grupo || ""}`
-              : "",
-          };
-        });
+      setRegistros(
+        Object.values(
+          agrupados
+        )
+      );
 
-      setRegistros(registrosConNombre);
     } catch (error) {
+
       console.error(
         "Error al obtener registros:",
         error
       );
+
     }
+
   };
 
-  const abrirDetalle = (alumno) => {
-    setAlumnoSeleccionado(alumno);
-    setMostrarDetalle(true);
+  const abrirDetalle = (
+    alumno
+  ) => {
+
+    setAlumnoSeleccionado(
+      alumno
+    );
+
+    setMostrarDetalle(
+      true
+    );
+
   };
 
   return (
+
     <Layout>
+
       <div className="termometro-container">
 
         <div className="termometro-header">
 
-          <h1>Termómetro escolar</h1>
+          <h1>
+            Termómetro escolar
+          </h1>
 
           <input
             type="text"
@@ -81,53 +147,80 @@ function Termometro() {
 
         <div className="cards-termometro">
 
-          {registros.map((registro) => (
-            <div
-              key={registro.id_termometro}
-              className="card-termometro"
-              onClick={() =>
-                abrirDetalle(registro)
-              }
-            >
+          {registros.map(
+            (registro) => (
 
-              <h3>
-                {registro.nombreAlumno}
-              </h3>
+              <div
+                key={
+                  registro.id_usuario
+                }
+                className="card-termometro"
+                onClick={() =>
+                  abrirDetalle(
+                    registro
+                  )
+                }
+              >
 
-              <p>
-                Grupo {registro.grupo}
-              </p>
+                <h3>
+                  {
+                    registro.nombreAlumno
+                  }
+                </h3>
 
-              <div className="contenido-card">
+                <p>
+                  Grupo {
+                    registro.grupo
+                  }
+                </p>
 
-                <MiniTermometro
-                  libros={1}
-                />
+                <div className="contenido-card">
+
+                  <MiniTermometro
+                    libros={
+                      registro.librosLeidos
+                    }
+                  />
+
+                </div>
+
+                <p className="libros-card">
+
+                  {
+                    registro.librosLeidos
+                  } 
+
+                </p>
 
               </div>
 
-              <p className="libros-card">
-                Libro #{registro.libro_id}
-              </p>
-
-            </div>
-          ))}
+            )
+          )}
 
         </div>
 
         {mostrarDetalle &&
           alumnoSeleccionado && (
+
             <DetailTermometro
-              alumno={alumnoSeleccionado}
+              alumno={
+                alumnoSeleccionado
+              }
               onClose={() =>
-                setMostrarDetalle(false)
+                setMostrarDetalle(
+                  false
+                )
               }
             />
+
           )}
 
       </div>
+
     </Layout>
+
   );
+
 }
 
 export default Termometro;

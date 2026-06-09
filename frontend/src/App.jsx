@@ -1,47 +1,174 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
+import Login from "./pages/login/Login";
 
 import Dashboard from "./pages/dashboard/Dashboard";
 
 import Libros from "./pages/libros/Libros";
-import CreateLibro from "./pages/libros/CreateLibro";
-import EditLibro from "./pages/libros/EditLibro";
-import DeleteLibro from "./pages/libros/DeleteLibro";
-
 import Alumnos from "./pages/alumnos/Alumnos";
-import CreateAlumno from "./pages/alumnos/CreateAlumno";
-import EditAlumno from "./pages/alumnos/EditAlumno";
-import DeleteAlumno from "./pages/alumnos/DeleteAlumno";
-
 import Docentes from "./pages/docentes/Docentes";
-import CreateDocente from "./pages/docentes/CreateDocente";
-import EditDocente from "./pages/docentes/EditDocente";
-import DeleteDocente from "./pages/docentes/DeleteDocente";
-
 import Termometro from "./pages/termometro/Termometro";
 
 import Prestamos from "./pages/Prestamos/Prestamos";
 import Historial from "./pages/Historial/Historial";
 
 function App() {
+
+  const usuario = JSON.parse(
+    localStorage.getItem("usuario")
+  );
+
   return (
+
     <BrowserRouter>
+
       <Routes>
+
+        {/* Login */}
+        <Route
+          path="/"
+          element={
+            usuario
+              ? (
+                <Navigate
+                  to="/dashboard"
+                  replace
+                />
+              )
+              : (
+                <Login />
+              )
+          }
+        />
+
         {/* Dashboard */}
-        <Route path="/" element={<Dashboard />} />
+        <Route
+          path="/dashboard"
+          element={
+            usuario
+              ? (
+                <Dashboard />
+              )
+              : (
+                <Navigate
+                  to="/"
+                  replace
+                />
+              )
+          }
+        />
 
         {/* Libros */}
-        <Route path="/libros" element={<Libros />} />
+        <Route
+          path="/libros"
+          element={
+            usuario
+              ? (
+                <Libros />
+              )
+              : (
+                <Navigate
+                  to="/"
+                  replace
+                />
+              )
+          }
+        />
+
         {/* Alumnos */}
-        <Route path="/alumnos" element={<Alumnos />} />
+        <Route
+          path="/alumnos"
+          element={
+            usuario
+              ? (
+                <Alumnos />
+              )
+              : (
+                <Navigate
+                  to="/"
+                  replace
+                />
+              )
+          }
+        />
+
         {/* Docentes */}
-        <Route path="/docentes" element={<Docentes />} />
+        <Route
+          path="/docentes"
+          element={
+            usuario
+              ? (
+                <Docentes />
+              )
+              : (
+                <Navigate
+                  to="/"
+                  replace
+                />
+              )
+          }
+        />
+
         {/* Termómetro */}
-        <Route path="/termometro" element={<Termometro />} />
-        {/* Libros submenu */}
-        <Route path="/prestamos" element={<Prestamos />} />
-        <Route path="/historial" element={<Historial />} />
+        <Route
+          path="/termometro"
+          element={
+            usuario
+              ? (
+                <Termometro />
+              )
+              : (
+                <Navigate
+                  to="/"
+                  replace
+                />
+              )
+          }
+        />
+
+        {/* Préstamos */}
+        <Route
+          path="/prestamos"
+          element={
+            usuario
+              ? (
+                <Prestamos />
+              )
+              : (
+                <Navigate
+                  to="/"
+                  replace
+                />
+              )
+          }
+        />
+
+        {/* Historial */}
+        <Route
+          path="/historial"
+          element={
+            usuario
+              ? (
+                <Historial />
+              )
+              : (
+                <Navigate
+                  to="/"
+                  replace
+                />
+              )
+          }
+        />
+
       </Routes>
+
     </BrowserRouter>
+
   );
 }
 

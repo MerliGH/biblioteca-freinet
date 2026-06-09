@@ -13,26 +13,39 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import api from "../../services/api";
 
 function Alumnos() {
-  const [alumnos, setAlumnos] = useState([]);
 
-  const [mostrarCreate, setMostrarCreate] =
+  const [alumnos, setAlumnos] =
+    useState([]);
+
+  const [mostrarCreate,
+    setMostrarCreate] =
     useState(false);
 
-  const [mostrarEdit, setMostrarEdit] =
+  const [mostrarEdit,
+    setMostrarEdit] =
     useState(false);
 
-  const [mostrarDelete, setMostrarDelete] =
+  const [mostrarDelete,
+    setMostrarDelete] =
     useState(false);
 
   const [alumnoSeleccionado,
     setAlumnoSeleccionado] =
     useState(null);
 
+  const usuario = JSON.parse(
+    localStorage.getItem("usuario")
+  );
+
+  const esDirectora =
+    usuario?.rol === "DIRECTORA";
+
   useEffect(() => {
     obtenerAlumnos();
   }, []);
 
   const obtenerAlumnos = async () => {
+
     try {
 
       const response =
@@ -44,7 +57,9 @@ function Alumnos() {
             usuario.rol === "ALUMNO"
         );
 
-      setAlumnos(alumnosFiltrados);
+      setAlumnos(
+        alumnosFiltrados
+      );
 
     } catch (error) {
 
@@ -54,16 +69,20 @@ function Alumnos() {
       );
 
     }
+
   };
 
   return (
+
     <Layout>
 
       <div className="alumnos-container">
 
         <div className="alumnos-header">
 
-          <h1>Gestión de Alumnos</h1>
+          <h1>
+            Gestión de Alumnos
+          </h1>
 
           <div className="acciones">
 
@@ -73,14 +92,18 @@ function Alumnos() {
               className="buscador"
             />
 
-            <button
-              className="btn-agregar"
-              onClick={() =>
-                setMostrarCreate(true)
-              }
-            >
-              Añadir Alumno
-            </button>
+            {esDirectora && (
+
+              <button
+                className="btn-agregar"
+                onClick={() =>
+                  setMostrarCreate(true)
+                }
+              >
+                Añadir Alumno
+              </button>
+
+            )}
 
           </div>
 
@@ -105,90 +128,110 @@ function Alumnos() {
 
           <tbody>
 
-            {alumnos.map((alumno) => (
+            {alumnos.map(
+              (alumno) => (
 
-              <tr key={alumno.id_usuario}>
+                <tr
+                  key={
+                    alumno.id_usuario
+                  }
+                >
 
-                <td>
-                  {alumno.nombre}
-                </td>
+                  <td>
+                    {alumno.nombre}
+                  </td>
 
-                <td>
-                  {alumno.apellido_paterno}
-                </td>
+                  <td>
+                    {
+                      alumno.apellido_paterno
+                    }
+                  </td>
 
-                <td>
-                  {alumno.correo}
-                </td>
+                  <td>
+                    {alumno.correo}
+                  </td>
 
-                <td>
-                  {alumno.matricula}
-                </td>
+                  <td>
+                    {
+                      alumno.matricula
+                    }
+                  </td>
 
-                <td>
-                  {alumno.grado}
-                  {alumno.grupo}
-                </td>
+                  <td>
+                    {alumno.grado}
+                    {alumno.grupo}
+                  </td>
 
-                <td>
-                  {alumno.estado
-                    ? "Activo"
-                    : "Inactivo"}
-                </td>
+                  <td>
 
-                <td>
+                    {alumno.estado
+                      ? "Activo"
+                      : "Inactivo"}
 
-                  <span className="fecha-pill">
+                  </td>
 
-                    {new Date(
-                      alumno.fecha_registro
-                    ).toLocaleDateString()}
+                  <td>
 
-                  </span>
+                    <span className="fecha-pill">
 
-                </td>
+                      {new Date(
+                        alumno.fecha_registro
+                      ).toLocaleDateString()}
 
-                <td>
+                    </span>
 
-                  <div className="acciones-tabla">
+                  </td>
 
-                    <button
-                      className="btn-editar"
-                      onClick={() => {
+                  <td>
 
-                        setAlumnoSeleccionado(
-                          alumno
-                        );
+                    <div className="acciones-tabla">
 
-                        setMostrarEdit(true);
+                      <button
+                        className="btn-editar"
+                        onClick={() => {
 
-                      }}
-                    >
-                      <FaRegEdit />
-                    </button>
+                          setAlumnoSeleccionado(
+                            alumno
+                          );
 
-                    <button
-                      className="btn-eliminar"
-                      onClick={() => {
+                          setMostrarEdit(
+                            true
+                          );
 
-                        setAlumnoSeleccionado(
-                          alumno
-                        );
+                        }}
+                      >
+                        <FaRegEdit />
+                      </button>
 
-                        setMostrarDelete(true);
+                      {esDirectora && (
 
-                      }}
-                    >
-                      <RiDeleteBinLine />
-                    </button>
+                        <button
+                          className="btn-eliminar"
+                          onClick={() => {
 
-                  </div>
+                            setAlumnoSeleccionado(
+                              alumno
+                            );
 
-                </td>
+                            setMostrarDelete(
+                              true
+                            );
 
-              </tr>
+                          }}
+                        >
+                          <RiDeleteBinLine />
+                        </button>
 
-            ))}
+                      )}
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              )
+            )}
 
           </tbody>
 
@@ -235,6 +278,7 @@ function Alumnos() {
       </div>
 
     </Layout>
+
   );
 }
 

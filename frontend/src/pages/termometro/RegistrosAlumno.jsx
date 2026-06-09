@@ -1,57 +1,106 @@
 import "./RegistrosAlumno.css";
 
-function RegistrosAlumno({ onClose }) {
+function RegistrosAlumno({
+  alumno,
+  onClose,
+}) {
+
   return (
+
     <div
       className="modal-overlay"
       onClick={onClose}
     >
+
       <div
         className="registros-modal"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) =>
+          e.stopPropagation()
+        }
       >
 
         <h2>
-          Registros de María López 3A
+
+          Registros de {
+            alumno.nombreAlumno
+          }
+
         </h2>
 
         <table className="tabla-registros">
 
           <thead>
+
             <tr>
               <th>#</th>
-              <th>Libro</th>
               <th>Fecha</th>
+              <th>Observaciones</th>
             </tr>
+
           </thead>
 
           <tbody>
 
-            <tr>
-              <td>1</td>
-              <td>El Principito</td>
-              <td>10/01/2026</td>
-            </tr>
+            {alumno.registros &&
+            alumno.registros.length > 0 ? (
 
-            <tr>
-              <td>2</td>
-              <td>Matilda</td>
-              <td>15/01/2026</td>
-            </tr>
+              alumno.registros.map(
+                (
+                  registro,
+                  index
+                ) => (
 
-            <tr>
-              <td>3</td>
-              <td>
-                Harry Potter y la Piedra Filosofal
-              </td>
-              <td>20/01/2026</td>
-            </tr>
+                  <tr
+                    key={
+                      registro.id_termometro
+                    }
+                  >
 
-            <tr>
-              <td>18</td>
-              <td>Diario de Greg</td>
-              <td>15/05/2026</td>
-            </tr>
+                    <td>
+                      {index + 1}
+                    </td>
+
+                    <td>
+
+                      {new Date(
+                        registro.fecha_acreditacion
+                      ).toLocaleDateString()}
+
+                    </td>
+
+                    <td>
+
+                      {
+                        registro.observaciones ||
+                        "-"
+                      }
+
+                    </td>
+
+                  </tr>
+
+                )
+              )
+
+            ) : (
+
+              <tr>
+
+                <td
+                  colSpan="3"
+                  style={{
+                    textAlign:
+                      "center",
+                  }}
+                >
+
+                  No existen registros
+
+                </td>
+
+              </tr>
+
+            )}
 
           </tbody>
 
@@ -65,8 +114,11 @@ function RegistrosAlumno({ onClose }) {
         </button>
 
       </div>
+
     </div>
+
   );
+
 }
 
 export default RegistrosAlumno;

@@ -33,6 +33,13 @@ function Historial() {
     setRegistroSeleccionado] =
     useState(null);
 
+  const usuario = JSON.parse(
+    localStorage.getItem("usuario")
+  );
+
+  const esDirectora =
+    usuario?.rol === "DIRECTORA";
+
   useEffect(() => {
     obtenerHistorial();
   }, []);
@@ -115,6 +122,7 @@ function Historial() {
   };
 
   return (
+
     <Layout>
 
       <div className="historial-container">
@@ -133,14 +141,18 @@ function Historial() {
               className="buscador"
             />
 
-            <button
-              className="btn-agregar"
-              onClick={() =>
-                setMostrarCreate(true)
-              }
-            >
-              Añadir Historial
-            </button>
+            {esDirectora && (
+
+              <button
+                className="btn-agregar"
+                onClick={() =>
+                  setMostrarCreate(true)
+                }
+              >
+                Añadir Historial
+              </button>
+
+            )}
 
           </div>
 
@@ -244,22 +256,26 @@ function Historial() {
                         <FaRegEdit />
                       </button>
 
-                      <button
-                        className="btn-eliminar"
-                        onClick={() => {
+                      {esDirectora && (
 
-                          setRegistroSeleccionado(
-                            registro
-                          );
+                        <button
+                          className="btn-eliminar"
+                          onClick={() => {
 
-                          setMostrarDelete(
-                            true
-                          );
+                            setRegistroSeleccionado(
+                              registro
+                            );
 
-                        }}
-                      >
-                        <RiDeleteBinLine />
-                      </button>
+                            setMostrarDelete(
+                              true
+                            );
+
+                          }}
+                        >
+                          <RiDeleteBinLine />
+                        </button>
+
+                      )}
 
                     </div>
 
@@ -315,6 +331,7 @@ function Historial() {
       </div>
 
     </Layout>
+
   );
 }
 

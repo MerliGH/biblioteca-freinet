@@ -13,41 +13,77 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import api from "../../services/api";
 
 function Libros() {
-  const [libros, setLibros] = useState([]);
 
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [mostrarEdit, setMostrarEdit] = useState(false);
-  const [mostrarDelete, setMostrarDelete] = useState(false);
+  const [libros, setLibros] =
+    useState([]);
 
-  const [libroSeleccionado, setLibroSeleccionado] =
+  const [mostrarModal,
+    setMostrarModal] =
+    useState(false);
+
+  const [mostrarEdit,
+    setMostrarEdit] =
+    useState(false);
+
+  const [mostrarDelete,
+    setMostrarDelete] =
+    useState(false);
+
+  const [libroSeleccionado,
+    setLibroSeleccionado] =
     useState(null);
+
+  const usuario = JSON.parse(
+    localStorage.getItem("usuario")
+  );
+
+  const esDirectora =
+    usuario?.rol === "DIRECTORA";
 
   useEffect(() => {
     obtenerLibros();
   }, []);
 
   const obtenerLibros = async () => {
-    try {
-      const response = await api.get("/libros/");
 
-      setLibros(response.data);
+    try {
+
+      const response =
+        await api.get("/libros/");
+
+      setLibros(
+        response.data
+      );
+
     } catch (error) {
+
       console.error(
         "Error al obtener libros:",
         error
       );
+
     }
+
   };
 
   return (
+
     <Layout>
+
       <div className="libros-container">
 
         <div className="libros-header">
 
           <div>
-            <h1>Gestión de Libros</h1>
-            <p>Ver clasificación ▼</p>
+
+            <h1>
+              Gestión de Libros
+            </h1>
+
+            <p>
+              Ver clasificación ▼
+            </p>
+
           </div>
 
           <div className="acciones">
@@ -58,12 +94,20 @@ function Libros() {
               className="buscador"
             />
 
-            <button
-              className="btn-agregar"
-              onClick={() => setMostrarModal(true)}
-            >
-              Añadir Libro
-            </button>
+            {esDirectora && (
+
+              <button
+                className="btn-agregar"
+                onClick={() =>
+                  setMostrarModal(
+                    true
+                  )
+                }
+              >
+                Añadir Libro
+              </button>
+
+            )}
 
           </div>
 
@@ -72,6 +116,7 @@ function Libros() {
         <table className="tabla-libros">
 
           <thead>
+
             <tr>
               <th>Número</th>
               <th>Clasificación</th>
@@ -83,94 +128,171 @@ function Libros() {
               <th>Sección</th>
               <th>Acciones</th>
             </tr>
+
           </thead>
 
           <tbody>
 
-            {libros.map((libro) => (
-              <tr key={libro.id_libro}>
+            {libros.map(
+              (libro) => (
 
-                <td>{libro.id_libro}</td>
+                <tr
+                  key={
+                    libro.id_libro
+                  }
+                >
 
-                <td>{libro.categoria_id}</td>
+                  <td>
+                    {
+                      libro.id_libro
+                    }
+                  </td>
 
-                <td>{libro.titulo}</td>
+                  <td>
+                    {
+                      libro.categoria_id
+                    }
+                  </td>
 
-                <td>{libro.autor_ilustrador}</td>
+                  <td>
+                    {
+                      libro.titulo
+                    }
+                  </td>
 
-                <td>{libro.serie}</td>
+                  <td>
+                    {
+                      libro.autor_ilustrador
+                    }
+                  </td>
 
-                <td>{libro.procedencia}</td>
+                  <td>
+                    {
+                      libro.serie
+                    }
+                  </td>
 
-                <td>{libro.cantidad_total}</td>
+                  <td>
+                    {
+                      libro.procedencia
+                    }
+                  </td>
 
-                <td>{libro.seccion}</td>
+                  <td>
+                    {
+                      libro.cantidad_total
+                    }
+                  </td>
 
-                <td>
+                  <td>
+                    {
+                      libro.seccion
+                    }
+                  </td>
 
-                  <div className="acciones-tabla">
+                  <td>
 
-                    <button
-                      className="btn-editar"
-                      onClick={() => {
-                        setLibroSeleccionado(libro);
-                        setMostrarEdit(true);
-                      }}
-                    >
-                      <FaRegEdit />
-                    </button>
+                    <div className="acciones-tabla">
 
-                    <button
-                      className="btn-eliminar"
-                      onClick={() => {
-                        setLibroSeleccionado(libro);
-                        setMostrarDelete(true);
-                      }}
-                    >
-                      <RiDeleteBinLine />
-                    </button>
+                      <button
+                        className="btn-editar"
+                        onClick={() => {
 
-                  </div>
+                          setLibroSeleccionado(
+                            libro
+                          );
 
-                </td>
+                          setMostrarEdit(
+                            true
+                          );
 
-              </tr>
-            ))}
+                        }}
+                      >
+                        <FaRegEdit />
+                      </button>
+
+                      {esDirectora && (
+
+                        <button
+                          className="btn-eliminar"
+                          onClick={() => {
+
+                            setLibroSeleccionado(
+                              libro
+                            );
+
+                            setMostrarDelete(
+                              true
+                            );
+
+                          }}
+                        >
+                          <RiDeleteBinLine />
+                        </button>
+
+                      )}
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              )
+            )}
 
           </tbody>
 
         </table>
 
         {mostrarModal && (
+
           <CreateLibro
             onClose={() =>
-              setMostrarModal(false)
+              setMostrarModal(
+                false
+              )
             }
           />
+
         )}
 
         {mostrarEdit &&
           libroSeleccionado && (
+
             <EditLibro
-              libro={libroSeleccionado}
+              libro={
+                libroSeleccionado
+              }
               onClose={() =>
-                setMostrarEdit(false)
+                setMostrarEdit(
+                  false
+                )
               }
             />
+
           )}
 
         {mostrarDelete &&
           libroSeleccionado && (
+
             <DeleteLibro
-              libro={libroSeleccionado}
+              libro={
+                libroSeleccionado
+              }
               onClose={() =>
-                setMostrarDelete(false)
+                setMostrarDelete(
+                  false
+                )
               }
             />
+
           )}
 
       </div>
+
     </Layout>
+
   );
 }
 

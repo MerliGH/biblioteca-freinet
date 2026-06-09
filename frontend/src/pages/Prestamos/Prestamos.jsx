@@ -14,26 +14,39 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import api from "../../services/api";
 
 function Prestamos() {
-  const [prestamos, setPrestamos] = useState([]);
 
-  const [mostrarCreate, setMostrarCreate] =
+  const [prestamos, setPrestamos] =
+    useState([]);
+
+  const [mostrarCreate,
+    setMostrarCreate] =
     useState(false);
 
-  const [mostrarEdit, setMostrarEdit] =
+  const [mostrarEdit,
+    setMostrarEdit] =
     useState(false);
 
-  const [mostrarDelete, setMostrarDelete] =
+  const [mostrarDelete,
+    setMostrarDelete] =
     useState(false);
 
   const [prestamoSeleccionado,
     setPrestamoSeleccionado] =
     useState(null);
 
+  const usuario = JSON.parse(
+    localStorage.getItem("usuario")
+  );
+
+  const esDirectora =
+    usuario?.rol === "DIRECTORA";
+
   useEffect(() => {
     obtenerPrestamos();
   }, []);
 
   const obtenerPrestamos = async () => {
+
     try {
 
       const [
@@ -86,6 +99,7 @@ function Prestamos() {
                 ? libro.titulo
                 : "No encontrado",
             };
+
           })
           .filter(
             (prestamo) =>
@@ -107,9 +121,11 @@ function Prestamos() {
       );
 
     }
+
   };
 
   return (
+
     <Layout>
 
       <div className="prestamos-container">
@@ -237,22 +253,26 @@ function Prestamos() {
                         <FaRegEdit />
                       </button>
 
-                      <button
-                        className="btn-eliminar"
-                        onClick={() => {
+                      {esDirectora && (
 
-                          setPrestamoSeleccionado(
-                            prestamo
-                          );
+                        <button
+                          className="btn-eliminar"
+                          onClick={() => {
 
-                          setMostrarDelete(
-                            true
-                          );
+                            setPrestamoSeleccionado(
+                              prestamo
+                            );
 
-                        }}
-                      >
-                        <RiDeleteBinLine />
-                      </button>
+                            setMostrarDelete(
+                              true
+                            );
+
+                          }}
+                        >
+                          <RiDeleteBinLine />
+                        </button>
+
+                      )}
 
                     </div>
 
@@ -268,11 +288,13 @@ function Prestamos() {
         </table>
 
         {mostrarCreate && (
+
           <CreatePrestamo
             onClose={() =>
               setMostrarCreate(false)
             }
           />
+
         )}
 
         {mostrarEdit &&
@@ -306,6 +328,7 @@ function Prestamos() {
       </div>
 
     </Layout>
+
   );
 }
 
