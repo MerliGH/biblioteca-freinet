@@ -44,6 +44,17 @@ function Historial() {
     obtenerHistorial();
   }, []);
 
+  const formatearFecha = (fecha) => {
+
+    if (!fecha) return "-";
+
+    const [year, month, day] =
+      fecha.split("T")[0].split("-");
+
+    return `${day}/${month}/${year}`;
+
+  };
+
   const obtenerHistorial = async () => {
 
     try {
@@ -201,9 +212,9 @@ function Historial() {
 
                     <span className="fecha-pill">
 
-                      {new Date(
+                      {formatearFecha(
                         registro.fecha_prestamo
-                      ).toLocaleDateString()}
+                      )}
 
                     </span>
 
@@ -213,11 +224,9 @@ function Historial() {
 
                     <span className="fecha-pill">
 
-                      {registro.fecha_devolucion
-                        ? new Date(
-                            registro.fecha_devolucion
-                          ).toLocaleDateString()
-                        : "-"}
+                      {formatearFecha(
+                        registro.fecha_devolucion
+                      )}
 
                     </span>
 

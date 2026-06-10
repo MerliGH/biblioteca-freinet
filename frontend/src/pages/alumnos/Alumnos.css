@@ -1,30 +1,35 @@
-/* Contenedor principal */
 .alumnos-container {
   width: 100%;
   min-height: calc(100vh - 110px);
+
   padding: 25px;
+
   box-sizing: border-box;
 }
 
-/* Cabecera */
+
 .alumnos-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+
   margin-bottom: 25px;
 }
 
 .alumnos-header h1 {
   color: #173b70;
+
   font-size: 28px;
   font-weight: 700;
+
   margin-bottom: 8px;
 }
 
-/* Buscador y botón */
+
 .acciones {
   display: flex;
   align-items: center;
+
   gap: 20px;
 }
 
@@ -38,7 +43,10 @@
   padding: 0 15px;
 
   font-size: 14px;
+
   outline: none;
+
+  color: #173b70;
 }
 
 .btn-agregar {
@@ -62,11 +70,14 @@
   background-color: #e58f1c;
 }
 
-/* Tabla */
+
 .tabla-alumnos {
   width: 100%;
+
   border-collapse: collapse;
+
   table-layout: fixed;
+
   margin-top: 15px;
 }
 
@@ -77,8 +88,8 @@
 .tabla-alumnos th {
   color: white;
 
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
 
   padding: 14px 8px;
 
@@ -94,7 +105,7 @@
 .tabla-alumnos td {
   color: #173b70;
 
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
 
   text-align: center;
@@ -104,17 +115,33 @@
   border-bottom: 1px solid #dcdcdc;
 
   word-wrap: break-word;
+
+  vertical-align: middle;
 }
 
 .tabla-alumnos tbody tr:hover {
   background-color: #f7f7f7;
 }
 
-/* Acciones */
+
+.tabla-alumnos td:nth-child(1) {
+  font-weight: 700;
+}
+
+.tabla-alumnos td:nth-child(2) {
+  font-weight: 700;
+}
+
+.tabla-alumnos td:nth-child(3) {
+  font-weight: 700;
+}
+
+
 .acciones-tabla {
   display: flex;
   justify-content: center;
   align-items: center;
+
   gap: 12px;
 }
 
@@ -143,29 +170,13 @@
 .btn-editar:hover,
 .btn-eliminar:hover {
   background-color: #173b70;
+
   color: white;
 
   transform: scale(1.08);
 }
 
-/* Responsive */
-@media (max-width: 1200px) {
-  .alumnos-header {
-    flex-direction: column;
-    gap: 15px;
-  }
 
-  .acciones {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .tabla-alumnos {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
 .fecha-pill {
   background: #e8e8e8;
 
@@ -176,6 +187,32 @@
   border-radius: 15px;
 
   font-size: 14px;
+  font-weight: 600;
 
   display: inline-block;
+}
+
+
+@media (max-width: 1200px) {
+
+  .alumnos-header {
+    flex-direction: column;
+
+    gap: 15px;
+  }
+
+  .acciones {
+    width: 100%;
+
+    justify-content: space-between;
+  }
+
+  .tabla-alumnos {
+    display: block;
+
+    overflow-x: auto;
+
+    white-space: nowrap;
+  }
+
 }

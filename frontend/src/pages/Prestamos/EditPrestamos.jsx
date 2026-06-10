@@ -17,6 +17,12 @@ function EditPrestamo({
   const [libros, setLibros] =
     useState([]);
 
+  const [fechaPrestamo] =
+    useState(
+      prestamo?.fecha_prestamo
+        ?.split("T")[0] || ""
+    );
+
   const [formData, setFormData] =
     useState({
       usuario_id:
@@ -26,15 +32,15 @@ function EditPrestamo({
         prestamo?.libro_id || "",
 
       autorizado_por:
-        prestamo?.autorizado_por ||
-        "",
+        prestamo?.autorizado_por || "",
 
       fecha_limite:
-        prestamo?.fecha_limite || "",
+        prestamo?.fecha_limite
+          ?.split("T")[0] || "",
 
       fecha_devolucion:
-        prestamo?.fecha_devolucion ||
-        "",
+        prestamo?.fecha_devolucion
+          ?.split("T")[0] || "",
 
       estado:
         prestamo?.estado ||
@@ -77,7 +83,10 @@ function EditPrestamo({
 
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        "Error al cargar datos:",
+        error
+      );
 
     }
 
@@ -147,24 +156,31 @@ function EditPrestamo({
   };
 
   return (
+
     <div
       className="modal-overlay"
       onClick={onClose}
     >
+
       <div
         className="modal-content"
         onClick={(e) =>
           e.stopPropagation()
         }
       >
-        <h1>EDITAR PRÉSTAMO</h1>
+
+        <h1>
+          EDITAR PRÉSTAMO
+        </h1>
 
         <form
           className="prestamo-form"
           onSubmit={handleSubmit}
         >
 
-          <label>Alumno:</label>
+          <label>
+            Alumno:
+          </label>
 
           <select
             name="usuario_id"
@@ -192,7 +208,9 @@ function EditPrestamo({
             )}
           </select>
 
-          <label>Libro:</label>
+          <label>
+            Libro:
+          </label>
 
           <select
             name="libro_id"
@@ -248,6 +266,16 @@ function EditPrestamo({
           </select>
 
           <label>
+            Fecha de préstamo:
+          </label>
+
+          <input
+            type="date"
+            value={fechaPrestamo}
+            disabled
+          />
+
+          <label>
             Fecha límite:
           </label>
 
@@ -273,7 +301,9 @@ function EditPrestamo({
             onChange={handleChange}
           />
 
-          <label>Estado:</label>
+          <label>
+            Estado:
+          </label>
 
           <select
             name="estado"
@@ -317,8 +347,11 @@ function EditPrestamo({
         </form>
 
       </div>
+
     </div>
+
   );
+
 }
 
 export default EditPrestamo;

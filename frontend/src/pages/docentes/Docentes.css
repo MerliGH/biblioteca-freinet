@@ -39,6 +39,8 @@
   padding: 0 15px;
 
   outline: none;
+
+  color: #173b70;
 }
 
 .btn-agregar {
@@ -53,11 +55,14 @@
   cursor: pointer;
 
   transition: 0.2s;
+
+  font-weight: 600;
 }
 
 .btn-agregar:hover {
   opacity: 0.9;
 }
+
 
 .tabla-docentes {
   width: 100%;
@@ -78,7 +83,8 @@
 
   text-align: center;
 
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .tabla-docentes td {
@@ -87,12 +93,35 @@
   border-bottom: 1px solid #dcdcdc;
 
   text-align: center;
+  vertical-align: middle;
 
-  /* SOLO ESTO ES NUEVO */
   color: #173b70;
-  font-size: 13px;
-  font-weight: 600;
+
+  font-size: 14px;
+  font-weight: 700;
 }
+
+
+.tabla-docentes td:nth-child(1) {
+  font-weight: 700;
+}
+
+.tabla-docentes td:nth-child(2) {
+  font-weight: 700;
+}
+
+.tabla-docentes td:nth-child(3) {
+  font-weight: 700;
+}
+
+.tabla-docentes td:nth-child(4) {
+  font-weight: 700;
+}
+
+.tabla-docentes td:nth-child(5) {
+  font-weight: 700;
+}
+
 
 .acciones-tabla {
   display: flex;
@@ -138,6 +167,7 @@
   color: white;
 }
 
+
 .fecha-pill {
   background: #e8e8e8;
 
@@ -148,12 +178,14 @@
   border-radius: 15px;
 
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
 
   display: inline-block;
 }
 
+
 @media (max-width: 768px) {
+
   .docentes-header {
     flex-direction: column;
 
@@ -176,4 +208,12 @@
 
     overflow-x: auto;
   }
+
+}
+
+
+.tabla-docentes th,
+.tabla-docentes td {
+  text-align: center;
+  vertical-align: middle;
 }

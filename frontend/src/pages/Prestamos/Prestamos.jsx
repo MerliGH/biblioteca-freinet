@@ -45,6 +45,17 @@ function Prestamos() {
     obtenerPrestamos();
   }, []);
 
+  const formatearFecha = (fecha) => {
+
+    if (!fecha) return "-";
+
+    const [year, month, day] =
+      fecha.split("T")[0].split("-");
+
+    return `${day}/${month}/${year}`;
+
+  };
+
   const obtenerPrestamos = async () => {
 
     try {
@@ -133,8 +144,6 @@ function Prestamos() {
         <div className="prestamos-header">
 
           <h1>
-            Gestión de Libros
-            <br />
             Préstamos Activos
           </h1>
 
@@ -208,9 +217,9 @@ function Prestamos() {
 
                     <span className="fecha-pill">
 
-                      {new Date(
+                      {formatearFecha(
                         prestamo.fecha_prestamo
-                      ).toLocaleDateString()}
+                      )}
 
                     </span>
 
@@ -220,9 +229,9 @@ function Prestamos() {
 
                     <span className="fecha-pill">
 
-                      {new Date(
+                      {formatearFecha(
                         prestamo.fecha_limite
-                      ).toLocaleDateString()}
+                      )}
 
                     </span>
 
@@ -330,6 +339,7 @@ function Prestamos() {
     </Layout>
 
   );
+
 }
 
 export default Prestamos;

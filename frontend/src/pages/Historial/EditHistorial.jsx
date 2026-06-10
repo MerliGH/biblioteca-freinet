@@ -8,6 +8,12 @@ function EditHistorial({
   onClose,
 }) {
 
+  const [fechaPrestamo] =
+    useState(
+      historial.fecha_prestamo
+        ?.split("T")[0] || ""
+    );
+
   const [fechaLimite,
     setFechaLimite] =
     useState(
@@ -76,10 +82,12 @@ function EditHistorial({
   };
 
   return (
+
     <div
       className="modal-overlay"
       onClick={onClose}
     >
+
       <div
         className="modal-content"
         onClick={(e) =>
@@ -115,6 +123,16 @@ function EditHistorial({
             value={
               historial.tituloLibro
             }
+            disabled
+          />
+
+          <label>
+            Fecha de préstamo:
+          </label>
+
+          <input
+            type="date"
+            value={fechaPrestamo}
             disabled
           />
 
@@ -208,8 +226,11 @@ function EditHistorial({
         </form>
 
       </div>
+
     </div>
+
   );
+
 }
 
 export default EditHistorial;
