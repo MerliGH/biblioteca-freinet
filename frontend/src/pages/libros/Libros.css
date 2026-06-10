@@ -25,7 +25,22 @@
   font-weight: 600;
   cursor: pointer;
 }
+.filtro-clasificacion {
+  border: none;
 
+  background: transparent;
+
+  color: #173b70;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  outline: none;
+
+  padding: 0;
+}
 .acciones {
   display: flex;
   align-items: center;

@@ -17,6 +17,10 @@ function Libros() {
   const [libros, setLibros] =
     useState([]);
 
+  const [clasificacionSeleccionada,
+    setClasificacionSeleccionada] =
+    useState("TODOS");
+
   const [mostrarModal,
     setMostrarModal] =
     useState(false);
@@ -66,6 +70,17 @@ function Libros() {
 
   };
 
+  const librosFiltrados =
+    clasificacionSeleccionada === "TODOS"
+      ? libros
+      : libros.filter(
+          (libro) =>
+            String(
+              libro.categoria_id
+            ) ===
+            clasificacionSeleccionada
+        );
+
   return (
 
     <Layout>
@@ -80,9 +95,35 @@ function Libros() {
               Gestión de Libros
             </h1>
 
-            <p>
-              Ver clasificación ▼
-            </p>
+            <select
+              className="filtro-clasificacion"
+              value={
+                clasificacionSeleccionada
+              }
+              onChange={(e) =>
+                setClasificacionSeleccionada(
+                  e.target.value
+                )
+              }
+            >
+
+              <option value="TODOS">
+                Todas las clasificaciones
+              </option>
+
+              <option value="1">
+                Cuentos
+              </option>
+
+              <option value="2">
+                Novela
+              </option>
+
+              <option value="3">
+                Infantil
+              </option>
+
+            </select>
 
           </div>
 
@@ -133,7 +174,7 @@ function Libros() {
 
           <tbody>
 
-            {libros.map(
+            {librosFiltrados.map(
               (libro) => (
 
                 <tr
@@ -294,6 +335,7 @@ function Libros() {
     </Layout>
 
   );
+
 }
 
 export default Libros;
