@@ -3,6 +3,7 @@ import "./DetailTermometro.css";
 import { useState } from "react";
 
 import RegistrosAlumno from "./RegistrosAlumno";
+import AcreditarLibro from "./AcreditarLibro";
 import TermometroVisual from "./TermometroVisual";
 
 function DetailTermometro({
@@ -12,6 +13,10 @@ function DetailTermometro({
 
   const [mostrarRegistros,
     setMostrarRegistros] =
+    useState(false);
+
+  const [mostrarAcreditar,
+    setMostrarAcreditar] =
     useState(false);
 
   const libros =
@@ -179,6 +184,17 @@ function DetailTermometro({
           <div className="botones-detalle">
 
             <button
+              className="btn-acreditar"
+              onClick={() =>
+                setMostrarAcreditar(
+                  true
+                )
+              }
+            >
+              Acreditar libro
+            </button>
+
+            <button
               className="btn-ver-registros"
               onClick={() =>
                 setMostrarRegistros(
@@ -208,6 +224,19 @@ function DetailTermometro({
           alumno={alumno}
           onClose={() =>
             setMostrarRegistros(
+              false
+            )
+          }
+        />
+
+      )}
+
+      {mostrarAcreditar && (
+
+        <AcreditarLibro
+          alumno={alumno}
+          onClose={() =>
+            setMostrarAcreditar(
               false
             )
           }

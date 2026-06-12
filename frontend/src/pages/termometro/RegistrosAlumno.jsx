@@ -3,7 +3,6 @@ import "./RegistrosAlumno.css";
 function RegistrosAlumno({
   alumno,
   onClose,
-  onAcreditar,
 }) {
 
   return (
@@ -37,8 +36,6 @@ function RegistrosAlumno({
               <th>Estado</th>
 
               <th>Fecha</th>
-
-              <th>Acción</th>
 
             </tr>
 
@@ -84,25 +81,6 @@ function RegistrosAlumno({
                         : "-"}
                     </td>
 
-                    <td>
-
-                      {!registro.estado && (
-
-                        <button
-                          className="btn-acreditar"
-                          onClick={() =>
-                            onAcreditar(
-                              registro
-                            )
-                          }
-                        >
-                          Acreditar
-                        </button>
-
-                      )}
-
-                    </td>
-
                   </tr>
 
                 )
@@ -113,7 +91,7 @@ function RegistrosAlumno({
               <tr>
 
                 <td
-                  colSpan="5"
+                  colSpan="4"
                   style={{
                     textAlign:
                       "center",
