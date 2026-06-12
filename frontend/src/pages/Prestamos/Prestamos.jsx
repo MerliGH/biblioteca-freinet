@@ -18,6 +18,10 @@ function Prestamos() {
   const [prestamos, setPrestamos] =
     useState([]);
 
+  const [busqueda,
+    setBusqueda] =
+    useState("");
+
   const [mostrarCreate,
     setMostrarCreate] =
     useState(false);
@@ -135,6 +139,58 @@ function Prestamos() {
 
   };
 
+  const prestamosFiltrados =
+    prestamos.filter(
+      (prestamo) => {
+
+        const texto =
+          busqueda.toLowerCase();
+
+        return (
+
+          (prestamo.nombreAlumno || "")
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          (prestamo.tituloLibro || "")
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          (prestamo.autorizadoPor || "")
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          formatearFecha(
+            prestamo.fecha_prestamo
+          )
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          formatearFecha(
+            prestamo.fecha_limite
+          )
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          (prestamo.estado || "")
+            .toLowerCase()
+            .includes(texto)
+
+        );
+
+      }
+    );
+
   return (
 
     <Layout>
@@ -153,6 +209,12 @@ function Prestamos() {
               type="text"
               placeholder="Buscar..."
               className="buscador"
+              value={busqueda}
+              onChange={(e) =>
+                setBusqueda(
+                  e.target.value
+                )
+              }
             />
 
             <button
@@ -186,7 +248,7 @@ function Prestamos() {
 
           <tbody>
 
-            {prestamos.map(
+            {prestamosFiltrados.map(
               (prestamo) => (
 
                 <tr

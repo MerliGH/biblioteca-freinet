@@ -1,6 +1,83 @@
 import "./EditDocente.css";
 
-function EditDocente({ onClose }) {
+import { useState } from "react";
+import Swal from "sweetalert2";
+import api from "../../services/api";
+
+function EditDocente({
+  docente,
+  onClose,
+}) {
+
+  const [formData, setFormData] =
+    useState({
+      nombre: docente?.nombre || "",
+      apellido_paterno:
+        docente?.apellido_paterno || "",
+      apellido_materno:
+        docente?.apellido_materno || "",
+      correo:
+        docente?.correo || "",
+      password:
+        docente?.password || "",
+      matricula:
+        docente?.matricula || "",
+      rol: "DOCENTE",
+      estado:
+        docente?.estado ?? true,
+    });
+
+  const handleChange = (e) => {
+
+    const { name, value } =
+      e.target;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+  };
+
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    try {
+
+      await api.put(
+        `/usuarios/${docente.id_usuario}`,
+        formData
+      );
+
+      await Swal.fire({
+        icon: "success",
+        title: "¡Docente actualizado!",
+        text:
+          "Los datos fueron actualizados correctamente.",
+        confirmButtonColor:
+          "#173b70",
+      });
+
+      window.location.reload();
+
+    } catch (error) {
+
+      console.error(error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text:
+          "No se pudo actualizar el docente.",
+        confirmButtonColor:
+          "#173b70",
+      });
+
+    }
+
+  };
+
   return (
     <div
       className="modal-overlay"
@@ -8,30 +85,136 @@ function EditDocente({ onClose }) {
     >
       <div
         className="modal-content"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) =>
+          e.stopPropagation()
+        }
       >
 
-        <h1>EDITAR DOCENTE</h1>
+        <h1>
+          EDITAR DOCENTE
+        </h1>
 
-        <form className="docente-form">
+        <form
+          className="docente-form"
+          onSubmit={handleSubmit}
+        >
 
-          <label>Nombre:</label>
-          <input defaultValue="Laura" />
+          <label>
+            Nombre:
+          </label>
 
-          <label>Apellido:</label>
-          <input defaultValue="Gómez" />
+          <input
+            type="text"
+            name="nombre"
+            value={
+              formData.nombre
+            }
+            onChange={
+              handleChange
+            }
+          />
 
-          <label>Correo:</label>
-          <input defaultValue="laura.gomez@escuela.edu" />
+          <label>
+            Apellido:
+          </label>
 
-          <label>Matrícula:</label>
-          <input defaultValue="DOC001" />
+          <input
+            type="text"
+            name="apellido_paterno"
+            value={
+              formData.apellido_paterno
+            }
+            onChange={
+              handleChange
+            }
+          />
 
-          <label>Estado:</label>
+          <label>
+            Apellido Materno:
+          </label>
 
-          <select defaultValue="Activo">
-            <option>Activo</option>
-            <option>Inactivo</option>
+          <input
+            type="text"
+            name="apellido_materno"
+            value={
+              formData.apellido_materno
+            }
+            onChange={
+              handleChange
+            }
+          />
+
+          <label>
+            Correo:
+          </label>
+
+          <input
+            type="email"
+            name="correo"
+            value={
+              formData.correo
+            }
+            onChange={
+              handleChange
+            }
+          />
+
+          <label>
+            Contraseña:
+          </label>
+
+          <input
+            type="password"
+            name="password"
+            value={
+              formData.password
+            }
+            onChange={
+              handleChange
+            }
+          />
+
+          <label>
+            Matrícula:
+          </label>
+
+          <input
+            type="text"
+            name="matricula"
+            value={
+              formData.matricula
+            }
+            onChange={
+              handleChange
+            }
+          />
+
+          <label>
+            Estado:
+          </label>
+
+          <select
+            value={
+              formData.estado
+                ? "Activo"
+                : "Inactivo"
+            }
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                estado:
+                  e.target.value ===
+                  "Activo",
+              })
+            }
+          >
+            <option value="Activo">
+              Activo
+            </option>
+
+            <option value="Inactivo">
+              Inactivo
+            </option>
           </select>
 
           <div className="botones-form">

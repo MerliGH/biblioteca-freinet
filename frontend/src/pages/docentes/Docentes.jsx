@@ -13,37 +13,112 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import api from "../../services/api";
 
 function Docentes() {
-  const [docentes, setDocentes] = useState([]);
 
-  const [mostrarCreate, setMostrarCreate] = useState(false);
-  const [mostrarEdit, setMostrarEdit] = useState(false);
-  const [mostrarDelete, setMostrarDelete] = useState(false);
+  const [docentes, setDocentes] =
+    useState([]);
+
+  const [busqueda,
+    setBusqueda] =
+    useState("");
+
+  const [mostrarCreate,
+    setMostrarCreate] =
+    useState(false);
+
+  const [mostrarEdit,
+    setMostrarEdit] =
+    useState(false);
+
+  const [mostrarDelete,
+    setMostrarDelete] =
+    useState(false);
+
+  const [docenteSeleccionado,
+    setDocenteSeleccionado] =
+    useState(null);
 
   useEffect(() => {
     obtenerDocentes();
   }, []);
 
   const obtenerDocentes = async () => {
-    try {
-      const response = await api.get("/usuarios/");
 
-      const docentesFiltrados = response.data.filter(
-        (usuario) => usuario.rol === "DOCENTE"
+    try {
+
+      const response =
+        await api.get("/usuarios/");
+
+      const docentesFiltrados =
+        response.data.filter(
+          (usuario) =>
+            usuario.rol ===
+            "DOCENTE"
+        );
+
+      setDocentes(
+        docentesFiltrados
       );
 
-      setDocentes(docentesFiltrados);
     } catch (error) {
-      console.error("Error al obtener docentes:", error);
+
+      console.error(
+        "Error al obtener docentes:",
+        error
+      );
+
     }
+
   };
 
+  const docentesBusqueda =
+    docentes.filter(
+      (docente) => {
+
+        const texto =
+          busqueda.toLowerCase();
+
+        return (
+
+          (docente.nombre || "")
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          (
+            docente.apellido_paterno || ""
+          )
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          (docente.correo || "")
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          (docente.matricula || "")
+            .toLowerCase()
+            .includes(texto)
+
+        );
+
+      }
+    );
+
   return (
+
     <Layout>
+
       <div className="docentes-container">
 
         <div className="docentes-header">
 
-          <h1>Gestión de Docentes</h1>
+          <h1>
+            Gestión de Docentes
+          </h1>
 
           <div className="acciones">
 
@@ -51,11 +126,19 @@ function Docentes() {
               type="text"
               placeholder="Buscar..."
               className="buscador"
+              value={busqueda}
+              onChange={(e) =>
+                setBusqueda(
+                  e.target.value
+                )
+              }
             />
 
             <button
               className="btn-agregar"
-              onClick={() => setMostrarCreate(true)}
+              onClick={() =>
+                setMostrarCreate(true)
+              }
             >
               Añadir Docente
             </button>
@@ -67,6 +150,7 @@ function Docentes() {
         <table className="tabla-docentes">
 
           <thead>
+
             <tr>
               <th>Nombre</th>
               <th>Apellido</th>
@@ -76,91 +160,153 @@ function Docentes() {
               <th>Fecha de registro</th>
               <th>Acciones</th>
             </tr>
+
           </thead>
 
           <tbody>
 
-            {docentes.map((docente) => (
-              <tr key={docente.id_usuario}>
+            {docentesBusqueda.map(
+              (docente) => (
 
-                <td>{docente.nombre}</td>
+                <tr
+                  key={
+                    docente.id_usuario
+                  }
+                >
 
-                <td>{docente.apellido_paterno}</td>
+                  <td>
+                    {docente.nombre}
+                  </td>
 
-                <td>{docente.correo}</td>
+                  <td>
+                    {
+                      docente.apellido_paterno
+                    }
+                  </td>
 
-                <td>{docente.matricula}</td>
+                  <td>
+                    {docente.correo}
+                  </td>
 
-                <td>
-                  {docente.estado
-                    ? "Activo"
-                    : "Inactivo"}
-                </td>
+                  <td>
+                    {docente.matricula}
+                  </td>
 
-                <td>
-                  <span className="fecha-pill">
-                    {new Date(
-                      docente.fecha_registro
-                    ).toLocaleDateString()}
-                  </span>
-                </td>
+                  <td>
 
-                <td>
+                    {docente.estado
+                      ? "Activo"
+                      : "Inactivo"}
 
-                  <div className="acciones-tabla">
+                  </td>
 
-                    <button
-                      className="btn-editar"
-                      onClick={() => setMostrarEdit(true)}
-                    >
-                      <FaRegEdit />
-                    </button>
+                  <td>
 
-                    <button
-                      className="btn-eliminar"
-                      onClick={() => setMostrarDelete(true)}
-                    >
-                      <RiDeleteBinLine />
-                    </button>
+                    <span className="fecha-pill">
 
-                  </div>
+                      {new Date(
+                        docente.fecha_registro
+                      ).toLocaleDateString()}
 
-                </td>
+                    </span>
 
-              </tr>
-            ))}
+                  </td>
+
+                  <td>
+
+                    <div className="acciones-tabla">
+
+                      <button
+                        className="btn-editar"
+                        onClick={() => {
+
+                          setDocenteSeleccionado(
+                            docente
+                          );
+
+                          setMostrarEdit(
+                            true
+                          );
+
+                        }}
+                      >
+                        <FaRegEdit />
+                      </button>
+
+                      <button
+                        className="btn-eliminar"
+                        onClick={() => {
+
+                          setDocenteSeleccionado(
+                            docente
+                          );
+
+                          setMostrarDelete(
+                            true
+                          );
+
+                        }}
+                      >
+                        <RiDeleteBinLine />
+                      </button>
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              )
+            )}
 
           </tbody>
 
         </table>
 
         {mostrarCreate && (
+
           <CreateDocente
             onClose={() =>
               setMostrarCreate(false)
             }
           />
+
         )}
 
-        {mostrarEdit && (
-          <EditDocente
-            onClose={() =>
-              setMostrarEdit(false)
-            }
-          />
-        )}
+        {mostrarEdit &&
+          docenteSeleccionado && (
 
-        {mostrarDelete && (
-          <DeleteDocente
-            onClose={() =>
-              setMostrarDelete(false)
-            }
-          />
-        )}
+            <EditDocente
+              docente={
+                docenteSeleccionado
+              }
+              onClose={() =>
+                setMostrarEdit(false)
+              }
+            />
+
+          )}
+
+        {mostrarDelete &&
+          docenteSeleccionado && (
+
+            <DeleteDocente
+              docente={
+                docenteSeleccionado
+              }
+              onClose={() =>
+                setMostrarDelete(false)
+              }
+            />
+
+          )}
 
       </div>
+
     </Layout>
+
   );
+
 }
 
 export default Docentes;

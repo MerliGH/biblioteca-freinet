@@ -17,6 +17,10 @@ function Alumnos() {
   const [alumnos, setAlumnos] =
     useState([]);
 
+  const [busqueda,
+    setBusqueda] =
+    useState("");
+
   const [mostrarCreate,
     setMostrarCreate] =
     useState(false);
@@ -72,6 +76,46 @@ function Alumnos() {
 
   };
 
+  const alumnosFiltrados =
+    alumnos.filter((alumno) => {
+
+      const texto =
+        busqueda.toLowerCase();
+
+      return (
+
+        (alumno.nombre || "")
+          .toLowerCase()
+          .includes(texto)
+
+        ||
+
+        (alumno.apellido_paterno || "")
+          .toLowerCase()
+          .includes(texto)
+
+        ||
+
+        (alumno.correo || "")
+          .toLowerCase()
+          .includes(texto)
+
+        ||
+
+        (alumno.matricula || "")
+          .toLowerCase()
+          .includes(texto)
+
+        ||
+
+        `${alumno.grado || ""}${alumno.grupo || ""}`
+          .toLowerCase()
+          .includes(texto)
+
+      );
+
+    });
+
   return (
 
     <Layout>
@@ -90,6 +134,12 @@ function Alumnos() {
               type="text"
               placeholder="Buscar..."
               className="buscador"
+              value={busqueda}
+              onChange={(e) =>
+                setBusqueda(
+                  e.target.value
+                )
+              }
             />
 
             {esDirectora && (
@@ -128,7 +178,7 @@ function Alumnos() {
 
           <tbody>
 
-            {alumnos.map(
+            {alumnosFiltrados.map(
               (alumno) => (
 
                 <tr
@@ -280,6 +330,7 @@ function Alumnos() {
     </Layout>
 
   );
+
 }
 
 export default Alumnos;

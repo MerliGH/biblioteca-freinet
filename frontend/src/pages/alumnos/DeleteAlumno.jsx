@@ -1,38 +1,44 @@
 import "./DeleteAlumno.css";
 
 import api from "../../services/api";
+import Swal from "sweetalert2";
 
 function DeleteAlumno({
   alumno,
   onClose,
 }) {
 
-  const eliminarAlumno =
-    async () => {
+  const eliminarAlumno = async () => {
 
-      try {
+    try {
 
-        await api.delete(
-          `/usuarios/${alumno.id_usuario}`
-        );
+      await api.delete(
+        `/usuarios/${alumno.id_usuario}`
+      );
 
-        alert(
-          "Alumno eliminado correctamente"
-        );
+      await Swal.fire({
+        icon: "success",
+        title: "¡Alumno eliminado!",
+        text: "El alumno fue eliminado correctamente.",
+        confirmButtonColor: "#173b70",
+      });
 
-        window.location.reload();
+      window.location.reload();
 
-      } catch (error) {
+    } catch (error) {
 
-        console.error(error);
+      console.error(error);
 
-        alert(
-          "Error al eliminar alumno"
-        );
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo eliminar el alumno.",
+        confirmButtonColor: "#173b70",
+      });
 
-      }
+    }
 
-    };
+  };
 
   return (
     <div
@@ -48,15 +54,12 @@ function DeleteAlumno({
 
         <p>
           ¿Estás seguro de que deseas
-          eliminar al alumno
+          eliminar al alumno?
           <br />
           <strong>
             {alumno?.nombre}{" "}
-            {
-              alumno?.apellido_paterno
-            }
+            {alumno?.apellido_paterno}
           </strong>
-          ?
         </p>
 
         <div className="botones-delete">

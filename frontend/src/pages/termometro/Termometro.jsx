@@ -22,6 +22,10 @@ function Termometro() {
     setRegistros] =
     useState([]);
 
+  const [busqueda,
+    setBusqueda] =
+    useState("");
+
   useEffect(() => {
 
     obtenerRegistros();
@@ -35,9 +39,11 @@ function Termometro() {
       const [
         termometroRes,
         usuariosRes,
+        librosRes,
       ] = await Promise.all([
         api.get("/termometro/"),
         api.get("/usuarios/"),
+        api.get("/libros/"),
       ]);
 
       const agrupados = {};
@@ -53,6 +59,13 @@ function Termometro() {
             );
 
           if (!alumno) return;
+
+          const libro =
+            librosRes.data.find(
+              (libro) =>
+                libro.id_libro ===
+                registro.libro_id
+            );
 
           if (
             !agrupados[
@@ -87,9 +100,15 @@ function Termometro() {
 
           agrupados[
             alumno.id_usuario
-          ].registros.push(
-            registro
-          );
+          ].registros.push({
+
+            ...registro,
+
+            nombreLibro:
+              libro?.titulo ||
+              "Libro no encontrado",
+
+          });
 
         }
       );
@@ -125,6 +144,30 @@ function Termometro() {
 
   };
 
+  const registrosFiltrados =
+    registros.filter(
+      (registro) => {
+
+        const texto =
+          busqueda.toLowerCase();
+
+        return (
+
+          registro.nombreAlumno
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          registro.grupo
+            .toLowerCase()
+            .includes(texto)
+
+        );
+
+      }
+    );
+
   return (
 
     <Layout>
@@ -139,15 +182,21 @@ function Termometro() {
 
           <input
             type="text"
-            placeholder="Buscar..."
+            placeholder="Buscar alumno o grupo..."
             className="buscador"
+            value={busqueda}
+            onChange={(e) =>
+              setBusqueda(
+                e.target.value
+              )
+            }
           />
 
         </div>
 
         <div className="cards-termometro">
 
-          {registros.map(
+          {registrosFiltrados.map(
             (registro) => (
 
               <div
@@ -188,7 +237,9 @@ function Termometro() {
 
                   {
                     registro.librosLeidos
-                  } 
+                  }
+
+                  {" "}libros
 
                 </p>
 

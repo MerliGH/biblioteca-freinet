@@ -1,6 +1,7 @@
 import "./EditPrestamo.css";
 
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 import api from "../../services/api";
 
 function EditPrestamo({
@@ -137,9 +138,12 @@ function EditPrestamo({
         }
       );
 
-      alert(
-        "Préstamo actualizado correctamente"
-      );
+      await Swal.fire({
+        icon: "success",
+        title: "¡Préstamo actualizado!",
+        text: "Los datos fueron actualizados correctamente.",
+        confirmButtonColor: "#173b70",
+      });
 
       window.location.reload();
 
@@ -147,9 +151,12 @@ function EditPrestamo({
 
       console.error(error);
 
-      alert(
-        "Error al actualizar préstamo"
-      );
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo actualizar el préstamo.",
+        confirmButtonColor: "#173b70",
+      });
 
     }
 
@@ -189,8 +196,10 @@ function EditPrestamo({
             }
             onChange={handleChange}
           >
+
             {alumnos.map(
               (alumno) => (
+
                 <option
                   key={
                     alumno.id_usuario
@@ -204,8 +213,10 @@ function EditPrestamo({
                     alumno.apellido_paterno
                   }
                 </option>
+
               )
             )}
+
           </select>
 
           <label>
@@ -219,8 +230,10 @@ function EditPrestamo({
             }
             onChange={handleChange}
           >
+
             {libros.map(
               (libro) => (
+
                 <option
                   key={
                     libro.id_libro
@@ -231,8 +244,10 @@ function EditPrestamo({
                 >
                   {libro.titulo}
                 </option>
+
               )
             )}
+
           </select>
 
           <label>
@@ -246,8 +261,10 @@ function EditPrestamo({
             }
             onChange={handleChange}
           >
+
             {docentes.map(
               (docente) => (
+
                 <option
                   key={
                     docente.id_usuario
@@ -261,8 +278,10 @@ function EditPrestamo({
                     docente.apellido_paterno
                   }
                 </option>
+
               )
             )}
+
           </select>
 
           <label>
@@ -312,6 +331,7 @@ function EditPrestamo({
             }
             onChange={handleChange}
           >
+
             <option value="PRESTADO">
               PRESTADO
             </option>
@@ -323,6 +343,7 @@ function EditPrestamo({
             <option value="VENCIDO">
               VENCIDO
             </option>
+
           </select>
 
           <div className="botones-form">

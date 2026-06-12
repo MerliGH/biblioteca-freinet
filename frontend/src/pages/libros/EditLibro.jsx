@@ -3,7 +3,10 @@ import "./CreateLibro.css";
 import { useState } from "react";
 import api from "../../services/api";
 
+import Swal from "sweetalert2";
+
 function EditLibro({ libro, onClose }) {
+
   const [formData, setFormData] = useState({
     categoria_id: libro?.categoria_id || "",
     titulo: libro?.titulo || "",
@@ -18,55 +21,98 @@ function EditLibro({ libro, onClose }) {
   });
 
   const handleChange = (e) => {
+
     const { name, value } = e.target;
+
+    if (name === "cantidad_total") {
+
+      const cantidad = Number(value);
+
+      setFormData({
+        ...formData,
+        cantidad_total: cantidad,
+
+        cantidad_disponible: Math.min(
+          formData.cantidad_disponible,
+          cantidad
+        ),
+      });
+
+      return;
+    }
 
     setFormData({
       ...formData,
       [name]:
-        name === "categoria_id" ||
-        name === "cantidad_total" ||
-        name === "cantidad_disponible"
+        name === "categoria_id"
           ? Number(value)
           : value,
     });
+
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     try {
+
+      const datosActualizados = {
+        ...formData,
+
+        cantidad_disponible: Math.min(
+          formData.cantidad_disponible,
+          formData.cantidad_total
+        ),
+      };
+
       await api.put(
         `/libros/${libro.id_libro}`,
-        formData
+        datosActualizados
       );
 
-      alert(
-        "Libro actualizado correctamente"
-      );
+      await Swal.fire({
+        icon: "success",
+        title: "¡Libro actualizado!",
+        text: "Los cambios fueron guardados correctamente.",
+        confirmButtonColor: "#173b70",
+      });
+
+      onClose();
 
       window.location.reload();
 
-      onClose();
     } catch (error) {
+
       console.error(error);
 
-      alert(
-        "Error al actualizar el libro"
-      );
+      Swal.fire({
+        icon: "error",
+        title: "Error al actualizar",
+        text:
+          error.response?.data?.detail ||
+          "No se pudo actualizar el libro.",
+        confirmButtonColor: "#173b70",
+      });
+
     }
+
   };
 
   return (
+
     <div
       className="modal-overlay"
       onClick={onClose}
     >
+
       <div
         className="modal-content"
         onClick={(e) =>
           e.stopPropagation()
         }
       >
+
         <h1>EDITAR LIBRO</h1>
 
         <form
@@ -78,11 +124,10 @@ function EditLibro({ libro, onClose }) {
 
           <select
             name="categoria_id"
-            value={
-              formData.categoria_id
-            }
+            value={formData.categoria_id}
             onChange={handleChange}
           >
+
             <option value="1">
               Cuentos
             </option>
@@ -94,6 +139,7 @@ function EditLibro({ libro, onClose }) {
             <option value="3">
               Infantil
             </option>
+
           </select>
 
           <label>Título:</label>
@@ -132,9 +178,7 @@ function EditLibro({ libro, onClose }) {
           <input
             type="text"
             name="procedencia"
-            value={
-              formData.procedencia
-            }
+            value={formData.procedencia}
             onChange={handleChange}
           />
 
@@ -145,9 +189,8 @@ function EditLibro({ libro, onClose }) {
           <input
             type="number"
             name="cantidad_total"
-            value={
-              formData.cantidad_total
-            }
+            min="1"
+            value={formData.cantidad_total}
             onChange={handleChange}
           />
 
@@ -182,8 +225,11 @@ function EditLibro({ libro, onClose }) {
         </form>
 
       </div>
+
     </div>
+
   );
+
 }
 
 export default EditLibro;

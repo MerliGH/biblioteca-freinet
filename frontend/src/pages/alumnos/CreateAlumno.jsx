@@ -2,8 +2,10 @@ import "./CreateAlumno.css";
 
 import { useState } from "react";
 import api from "../../services/api";
+import Swal from "sweetalert2";
 
 function CreateAlumno({ onClose }) {
+
   const [formData, setFormData] = useState({
     nombre: "",
     apellido_paterno: "",
@@ -18,30 +20,49 @@ function CreateAlumno({ onClose }) {
   });
 
   const handleChange = (e) => {
+
     const { name, value } = e.target;
 
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     try {
+
       await api.post("/usuarios/", {
         ...formData,
         estado: Boolean(formData.estado),
       });
 
-      alert("Alumno creado correctamente");
+      await Swal.fire({
+        icon: "success",
+        title: "¡Alumno creado!",
+        text: "El alumno fue registrado correctamente.",
+        confirmButtonColor: "#173b70",
+      });
 
       window.location.reload();
+
     } catch (error) {
+
       console.error(error);
-      alert("Error al crear alumno");
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo crear el alumno.",
+        confirmButtonColor: "#173b70",
+      });
+
     }
+
   };
 
   return (
@@ -59,6 +80,7 @@ function CreateAlumno({ onClose }) {
           className="alumno-form"
           onSubmit={handleSubmit}
         >
+
           <label>Nombre:</label>
 
           <input
@@ -66,7 +88,6 @@ function CreateAlumno({ onClose }) {
             name="nombre"
             value={formData.nombre}
             onChange={handleChange}
-            placeholder="Ingrese nombre"
           />
 
           <label>Apellido:</label>
@@ -76,7 +97,6 @@ function CreateAlumno({ onClose }) {
             name="apellido_paterno"
             value={formData.apellido_paterno}
             onChange={handleChange}
-            placeholder="Ingrese apellido"
           />
 
           <label>Apellido Materno:</label>
@@ -86,7 +106,6 @@ function CreateAlumno({ onClose }) {
             name="apellido_materno"
             value={formData.apellido_materno}
             onChange={handleChange}
-            placeholder="Ingrese apellido materno"
           />
 
           <label>Correo:</label>
@@ -96,7 +115,6 @@ function CreateAlumno({ onClose }) {
             name="correo"
             value={formData.correo}
             onChange={handleChange}
-            placeholder="correo@ejemplo.com"
           />
 
           <label>Contraseña:</label>
@@ -106,7 +124,6 @@ function CreateAlumno({ onClose }) {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            placeholder="********"
           />
 
           <label>Matrícula:</label>
@@ -116,7 +133,6 @@ function CreateAlumno({ onClose }) {
             name="matricula"
             value={formData.matricula}
             onChange={handleChange}
-            placeholder="A2025001"
           />
 
           <label>Grado:</label>
@@ -126,7 +142,6 @@ function CreateAlumno({ onClose }) {
             name="grado"
             value={formData.grado}
             onChange={handleChange}
-            placeholder="3"
           />
 
           <label>Grupo:</label>
@@ -136,36 +151,25 @@ function CreateAlumno({ onClose }) {
             name="grupo"
             value={formData.grupo}
             onChange={handleChange}
-            placeholder="A"
           />
 
           <label>Estado:</label>
 
           <select
-            value={
-              formData.estado
-                ? "Activo"
-                : "Inactivo"
-            }
+            value={formData.estado ? "Activo" : "Inactivo"}
             onChange={(e) =>
               setFormData({
                 ...formData,
-                estado:
-                  e.target.value ===
-                  "Activo",
+                estado: e.target.value === "Activo",
               })
             }
           >
-            <option value="Activo">
-              Activo
-            </option>
-
-            <option value="Inactivo">
-              Inactivo
-            </option>
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
           </select>
 
           <div className="botones-form">
+
             <button
               type="submit"
               className="btn-guardar"
@@ -180,11 +184,14 @@ function CreateAlumno({ onClose }) {
             >
               Cancelar
             </button>
+
           </div>
+
         </form>
+
       </div>
     </div>
   );
 }
 
-export default CreateAlumno;  
+export default CreateAlumno;

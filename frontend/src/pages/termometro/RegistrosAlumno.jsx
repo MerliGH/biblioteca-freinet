@@ -3,6 +3,7 @@ import "./RegistrosAlumno.css";
 function RegistrosAlumno({
   alumno,
   onClose,
+  onAcreditar,
 }) {
 
   return (
@@ -20,11 +21,7 @@ function RegistrosAlumno({
       >
 
         <h2>
-
-          Registros de {
-            alumno.nombreAlumno
-          }
-
+          Libros de {alumno.nombreAlumno}
         </h2>
 
         <table className="tabla-registros">
@@ -32,9 +29,17 @@ function RegistrosAlumno({
           <thead>
 
             <tr>
+
               <th>#</th>
+
+              <th>Libro</th>
+
+              <th>Estado</th>
+
               <th>Fecha</th>
-              <th>Observaciones</th>
+
+              <th>Acción</th>
+
             </tr>
 
           </thead>
@@ -52,7 +57,8 @@ function RegistrosAlumno({
 
                   <tr
                     key={
-                      registro.id_termometro
+                      registro.id_termometro ||
+                      registro.libro_id
                     }
                   >
 
@@ -61,19 +67,39 @@ function RegistrosAlumno({
                     </td>
 
                     <td>
+                      {registro.nombreLibro}
+                    </td>
 
-                      {new Date(
-                        registro.fecha_acreditacion
-                      ).toLocaleDateString()}
+                    <td>
+                      {registro.estado
+                        ? "✅ Acreditado"
+                        : "⏳ Pendiente"}
+                    </td>
 
+                    <td>
+                      {registro.fecha_acreditacion
+                        ? new Date(
+                            registro.fecha_acreditacion
+                          ).toLocaleDateString()
+                        : "-"}
                     </td>
 
                     <td>
 
-                      {
-                        registro.observaciones ||
-                        "-"
-                      }
+                      {!registro.estado && (
+
+                        <button
+                          className="btn-acreditar"
+                          onClick={() =>
+                            onAcreditar(
+                              registro
+                            )
+                          }
+                        >
+                          Acreditar
+                        </button>
+
+                      )}
 
                     </td>
 
@@ -87,15 +113,13 @@ function RegistrosAlumno({
               <tr>
 
                 <td
-                  colSpan="3"
+                  colSpan="5"
                   style={{
                     textAlign:
                       "center",
                   }}
                 >
-
                   No existen registros
-
                 </td>
 
               </tr>

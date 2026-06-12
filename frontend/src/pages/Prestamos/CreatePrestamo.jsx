@@ -1,28 +1,36 @@
 import "./CreatePrestamo.css";
 
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 import api from "../../services/api";
 
 function CreatePrestamo({ onClose }) {
 
-  const [alumnos, setAlumnos] = useState([]);
-  const [docentes, setDocentes] = useState([]);
-  const [libros, setLibros] = useState([]);
+  const [alumnos, setAlumnos] =
+    useState([]);
 
-  const [formData, setFormData] = useState({
-    usuario_id: "",
-    libro_id: "",
-    autorizado_por: "",
-    fecha_limite: "",
-    fecha_devolucion: "",
-    estado: "PRESTADO",
-  });
+  const [docentes, setDocentes] =
+    useState([]);
+
+  const [libros, setLibros] =
+    useState([]);
+
+  const [formData, setFormData] =
+    useState({
+      usuario_id: "",
+      libro_id: "",
+      autorizado_por: "",
+      fecha_limite: "",
+      fecha_devolucion: "",
+      estado: "PRESTADO",
+    });
 
   useEffect(() => {
     cargarDatos();
   }, []);
 
   const cargarDatos = async () => {
+
     try {
 
       const [
@@ -47,18 +55,22 @@ function CreatePrestamo({ onClose }) {
         )
       );
 
-      setLibros(librosResponse.data);
+      setLibros(
+        librosResponse.data
+      );
 
     } catch (error) {
 
       console.error(error);
 
     }
+
   };
 
   const handleChange = (e) => {
 
-    const { name, value } = e.target;
+    const { name, value } =
+      e.target;
 
     setFormData({
       ...formData,
@@ -100,9 +112,12 @@ function CreatePrestamo({ onClose }) {
         }
       );
 
-      alert(
-        "Préstamo creado correctamente"
-      );
+      await Swal.fire({
+        icon: "success",
+        title: "¡Préstamo creado!",
+        text: "El préstamo fue registrado correctamente.",
+        confirmButtonColor: "#173b70",
+      });
 
       window.location.reload();
 
@@ -110,26 +125,34 @@ function CreatePrestamo({ onClose }) {
 
       console.error(error);
 
-      alert(
-        "Error al crear préstamo"
-      );
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo crear el préstamo.",
+        confirmButtonColor: "#173b70",
+      });
 
     }
 
   };
 
   return (
+
     <div
       className="modal-overlay"
       onClick={onClose}
     >
+
       <div
         className="modal-content"
         onClick={(e) =>
           e.stopPropagation()
         }
       >
-        <h1>AGREGAR PRÉSTAMO</h1>
+
+        <h1>
+          AGREGAR PRÉSTAMO
+        </h1>
 
         <form
           className="prestamo-form"
@@ -267,13 +290,16 @@ function CreatePrestamo({ onClose }) {
             onChange={handleChange}
           />
 
-          <label>Estado:</label>
+          <label>
+            Estado:
+          </label>
 
           <select
             name="estado"
             value={formData.estado}
             onChange={handleChange}
           >
+
             <option value="PRESTADO">
               PRESTADO
             </option>
@@ -285,6 +311,7 @@ function CreatePrestamo({ onClose }) {
             <option value="VENCIDO">
               VENCIDO
             </option>
+
           </select>
 
           <div className="botones-form">
@@ -309,8 +336,11 @@ function CreatePrestamo({ onClose }) {
         </form>
 
       </div>
+
     </div>
+
   );
+
 }
 
 export default CreatePrestamo;

@@ -2,21 +2,27 @@ import "./DeleteLibro.css";
 
 import api from "../../services/api";
 
+import Swal from "sweetalert2";
+
 function DeleteLibro({
   libro,
   onClose,
 }) {
 
   const eliminarLibro = async () => {
+
     try {
 
       await api.delete(
         `/libros/${libro.id_libro}`
       );
 
-      alert(
-        "Libro eliminado correctamente"
-      );
+      await Swal.fire({
+        icon: "success",
+        title: "¡Libro eliminado!",
+        text: "El libro fue eliminado correctamente.",
+        confirmButtonColor: "#173b70",
+      });
 
       window.location.reload();
 
@@ -24,24 +30,31 @@ function DeleteLibro({
 
       console.error(error);
 
-      alert(
-        "Error al eliminar el libro"
-      );
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo eliminar el libro.",
+        confirmButtonColor: "#173b70",
+      });
 
     }
+
   };
 
   return (
+
     <div
       className="delete-overlay"
       onClick={onClose}
     >
+
       <div
         className="delete-modal"
         onClick={(e) =>
           e.stopPropagation()
         }
       >
+
         <h2>
           ¿Deseas eliminar el libro?
           <br />
@@ -67,8 +80,11 @@ function DeleteLibro({
         </div>
 
       </div>
+
     </div>
+
   );
+
 }
 
 export default DeleteLibro;

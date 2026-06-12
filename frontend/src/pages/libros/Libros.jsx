@@ -17,6 +17,10 @@ function Libros() {
   const [libros, setLibros] =
     useState([]);
 
+  const [busqueda,
+    setBusqueda] =
+    useState("");
+
   const [clasificacionSeleccionada,
     setClasificacionSeleccionada] =
     useState("TODOS");
@@ -71,15 +75,83 @@ function Libros() {
   };
 
   const librosFiltrados =
-    clasificacionSeleccionada === "TODOS"
-      ? libros
-      : libros.filter(
-          (libro) =>
-            String(
+    libros.filter((libro) => {
+
+      const coincideClasificacion =
+        clasificacionSeleccionada ===
+        "TODOS"
+          ? true
+          : String(
               libro.categoria_id
             ) ===
-            clasificacionSeleccionada
-        );
+            clasificacionSeleccionada;
+
+      const textoBusqueda =
+        busqueda.toLowerCase();
+
+      const nombreCategoria =
+        libro.categoria_id === 1
+          ? "cuentos"
+          : libro.categoria_id === 2
+          ? "novela"
+          : libro.categoria_id === 3
+          ? "infantil"
+          : "";
+
+      const coincideBusqueda =
+
+        nombreCategoria
+          .toLowerCase()
+          .includes(textoBusqueda)
+
+        ||
+
+        (libro.titulo || "")
+          .toLowerCase()
+          .includes(textoBusqueda)
+
+        ||
+
+        (
+          libro.autor_ilustrador || ""
+        )
+          .toLowerCase()
+          .includes(textoBusqueda)
+
+        ||
+
+        (libro.serie || "")
+          .toLowerCase()
+          .includes(textoBusqueda)
+
+        ||
+
+        (
+          libro.procedencia || ""
+        )
+          .toLowerCase()
+          .includes(textoBusqueda)
+
+        ||
+
+        String(
+          libro.cantidad_total
+        ).includes(
+          textoBusqueda
+        )
+
+        ||
+
+        (libro.seccion || "")
+          .toLowerCase()
+          .includes(textoBusqueda);
+
+      return (
+        coincideClasificacion &&
+        coincideBusqueda
+      );
+
+    });
 
   return (
 
@@ -133,6 +205,12 @@ function Libros() {
               type="text"
               placeholder="Buscar..."
               className="buscador"
+              value={busqueda}
+              onChange={(e) =>
+                setBusqueda(
+                  e.target.value
+                )
+              }
             />
 
             {esDirectora && (
@@ -190,9 +268,13 @@ function Libros() {
                   </td>
 
                   <td>
-                    {
-                      libro.categoria_id
-                    }
+                    {libro.categoria_id === 1
+                      ? "Cuentos"
+                      : libro.categoria_id === 2
+                      ? "Novela"
+                      : libro.categoria_id === 3
+                      ? "Infantil"
+                      : "Sin categoría"}
                   </td>
 
                   <td>

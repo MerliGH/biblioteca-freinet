@@ -2,6 +2,7 @@ import "./CreateAlumno.css";
 
 import { useState } from "react";
 import api from "../../services/api";
+import Swal from "sweetalert2";
 
 function EditAlumno({
   alumno,
@@ -28,15 +29,19 @@ function EditAlumno({
     });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+
+    const { name, value } =
+      e.target;
 
     setFormData({
       ...formData,
       [name]: value,
     });
+
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     try {
@@ -46,9 +51,12 @@ function EditAlumno({
         formData
       );
 
-      alert(
-        "Alumno actualizado correctamente"
-      );
+      await Swal.fire({
+        icon: "success",
+        title: "¡Alumno actualizado!",
+        text: "Los datos fueron actualizados correctamente.",
+        confirmButtonColor: "#173b70",
+      });
 
       window.location.reload();
 
@@ -56,11 +64,15 @@ function EditAlumno({
 
       console.error(error);
 
-      alert(
-        "Error al actualizar alumno"
-      );
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo actualizar el alumno.",
+        confirmButtonColor: "#173b70",
+      });
 
     }
+
   };
 
   return (
@@ -96,9 +108,16 @@ function EditAlumno({
           <input
             type="text"
             name="apellido_paterno"
-            value={
-              formData.apellido_paterno
-            }
+            value={formData.apellido_paterno}
+            onChange={handleChange}
+          />
+
+          <label>Apellido Materno:</label>
+
+          <input
+            type="text"
+            name="apellido_materno"
+            value={formData.apellido_materno}
             onChange={handleChange}
           />
 

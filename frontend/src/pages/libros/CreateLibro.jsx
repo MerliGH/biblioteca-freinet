@@ -3,7 +3,10 @@ import "./CreateLibro.css";
 import { useState } from "react";
 import api from "../../services/api";
 
+import Swal from "sweetalert2";
+
 function CreateLibro({ onClose }) {
+
   const [formData, setFormData] = useState({
     categoria_id: "",
     titulo: "",
@@ -17,6 +20,7 @@ function CreateLibro({ onClose }) {
   });
 
   const handleChange = (e) => {
+
     const { name, value } = e.target;
 
     setFormData({
@@ -28,35 +32,60 @@ function CreateLibro({ onClose }) {
           ? Number(value)
           : value,
     });
+
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     try {
-      await api.post("/libros/", formData);
 
-      alert("Libro creado correctamente");
+      await api.post(
+        "/libros/",
+        formData
+      );
+
+      await Swal.fire({
+        icon: "success",
+        title: "¡Libro creado!",
+        text: "El libro fue registrado correctamente.",
+        confirmButtonColor: "#173b70",
+      });
 
       onClose();
 
       window.location.reload();
+
     } catch (error) {
+
       console.error(error);
 
-      alert("Error al crear libro");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo crear el libro.",
+        confirmButtonColor: "#173b70",
+      });
+
     }
+
   };
 
   return (
+
     <div
       className="modal-overlay"
       onClick={onClose}
     >
+
       <div
         className="modal-content"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) =>
+          e.stopPropagation()
+        }
       >
+
         <h1>AGREGAR LIBRO</h1>
 
         <form
@@ -72,6 +101,7 @@ function CreateLibro({ onClose }) {
             onChange={handleChange}
             required
           >
+
             <option value="">
               Seleccionar clasificación
             </option>
@@ -87,6 +117,7 @@ function CreateLibro({ onClose }) {
             <option value="3">
               Infantil
             </option>
+
           </select>
 
           <label>Título:</label>
@@ -100,7 +131,9 @@ function CreateLibro({ onClose }) {
             required
           />
 
-          <label>Autor e ilustrador:</label>
+          <label>
+            Autor e ilustrador:
+          </label>
 
           <input
             type="text"
@@ -175,8 +208,11 @@ function CreateLibro({ onClose }) {
         </form>
 
       </div>
+
     </div>
+
   );
+
 }
 
 export default CreateLibro;

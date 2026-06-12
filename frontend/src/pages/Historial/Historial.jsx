@@ -17,6 +17,9 @@ function Historial() {
   const [historial, setHistorial] =
     useState([]);
 
+  const [busqueda, setBusqueda] =
+    useState("");
+
   const [mostrarCreate,
     setMostrarCreate] =
     useState(false);
@@ -132,6 +135,57 @@ function Historial() {
 
   };
 
+  const historialFiltrado =
+    historial.filter(
+      (registro) => {
+
+        const texto =
+          busqueda.toLowerCase();
+
+        return (
+
+          (registro.nombreAlumno || "")
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          (registro.tituloLibro || "")
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          (registro.estado || "")
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          (registro.autorizadoPor || "")
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          formatearFecha(
+            registro.fecha_prestamo
+          )
+            .toLowerCase()
+            .includes(texto)
+
+          ||
+
+          formatearFecha(
+            registro.fecha_devolucion
+          )
+            .toLowerCase()
+            .includes(texto)
+        );
+
+      }
+    );
+
   return (
 
     <Layout>
@@ -150,6 +204,12 @@ function Historial() {
               type="text"
               placeholder="Buscar..."
               className="buscador"
+              value={busqueda}
+              onChange={(e) =>
+                setBusqueda(
+                  e.target.value
+                )
+              }
             />
 
             {esDirectora && (
@@ -187,7 +247,7 @@ function Historial() {
 
           <tbody>
 
-            {historial.map(
+            {historialFiltrado.map(
               (registro) => (
 
                 <tr
@@ -342,6 +402,7 @@ function Historial() {
     </Layout>
 
   );
+
 }
 
 export default Historial;
