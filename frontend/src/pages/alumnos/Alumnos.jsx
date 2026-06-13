@@ -45,7 +45,9 @@ function Alumnos() {
     usuario?.rol === "DIRECTORA";
 
   useEffect(() => {
+
     obtenerAlumnos();
+
   }, []);
 
   const obtenerAlumnos = async () => {
@@ -55,11 +57,54 @@ function Alumnos() {
       const response =
         await api.get("/usuarios/");
 
-      const alumnosFiltrados =
+      let alumnosFiltrados =
         response.data.filter(
-          (usuario) =>
-            usuario.rol === "ALUMNO"
+          (usuarioItem) =>
+            usuarioItem.rol ===
+            "ALUMNO"
         );
+
+      // Si es docente y tiene grupo asignado,
+      // solo verá los alumnos de su grupo
+      if (
+        usuario?.rol ===
+          "DOCENTE" &&
+        usuario?.grado &&
+        usuario?.grupo
+      ) {
+
+        alumnosFiltrados =
+          alumnosFiltrados.filter(
+            (alumno) =>
+              String(
+                alumno.grado
+              ) ===
+                String(
+                  usuario.grado
+                ) &&
+              String(
+                alumno.grupo
+              )
+                .trim()
+                .toUpperCase() ===
+              String(
+                usuario.grupo
+              )
+                .trim()
+                .toUpperCase()
+          );
+
+      }
+
+      console.log(
+        "USUARIO:",
+        usuario
+      );
+
+      console.log(
+        "ALUMNOS FILTRADOS:",
+        alumnosFiltrados
+      );
 
       setAlumnos(
         alumnosFiltrados
@@ -164,6 +209,7 @@ function Alumnos() {
           <thead>
 
             <tr>
+
               <th>Nombre</th>
               <th>Apellido</th>
               <th>Correo</th>
@@ -172,6 +218,7 @@ function Alumnos() {
               <th>Estado</th>
               <th>Fecha de registro</th>
               <th>Acciones</th>
+
             </tr>
 
           </thead>
