@@ -3,6 +3,8 @@ import logoICF from "../assets/LOGO_RECORTADO.png";
 
 import { FiLogOut } from "react-icons/fi";
 
+import Swal from "sweetalert2";
+
 function Header() {
 
   const usuario = JSON.parse(
@@ -14,21 +16,50 @@ function Header() {
     ${usuario?.apellido_paterno || ""}
   `.trim();
 
-  const cerrarSesion = () => {
+  const cerrarSesion =
+    async () => {
 
-    const confirmar =
-      window.confirm(
-        "¿Deseas cerrar sesión?"
-      );
+      const resultado =
+        await Swal.fire({
 
-    if (!confirmar) return;
+          title:
+            "¿Cerrar sesión?",
 
-    localStorage.clear();
+          text:
+            "Tu sesión actual se cerrará.",
 
-    window.location.href =
-      "/";
+          icon:
+            "question",
 
-  };
+          showCancelButton:
+            true,
+
+          confirmButtonText:
+            "Sí, cerrar sesión",
+
+          cancelButtonText:
+            "Cancelar",
+
+          confirmButtonColor:
+            "#173b70",
+
+          cancelButtonColor:
+            "#8dc63f",
+
+        });
+
+      if (
+        resultado.isConfirmed
+      ) {
+
+        localStorage.clear();
+
+        window.location.href =
+          "/";
+
+      }
+
+    };
 
   return (
 
@@ -68,6 +99,7 @@ function Header() {
     </header>
 
   );
+
 }
 
 export default Header;
