@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 
 import DetailTermometro from "./DetailTermometro";
 import MiniTermometro from "./MiniTermometro";
-
+import CrearPRegistro from "./CrearPRegistro";
 import api from "../../services/api";
 
 function Termometro() {
@@ -25,6 +25,10 @@ function Termometro() {
   const [busqueda,
     setBusqueda] =
     useState("");
+
+  const [mostrarCreate,
+  setMostrarCreate] =
+  useState(false);
 
   useEffect(() => {
 
@@ -113,11 +117,38 @@ function Termometro() {
         }
       );
 
-      setRegistros(
-        Object.values(
-          agrupados
-        )
-      );
+let registrosFiltrados =
+  Object.values(
+    agrupados
+  );
+
+const usuario = JSON.parse(
+  localStorage.getItem(
+    "usuario"
+  )
+);
+
+if (
+  usuario?.rol ===
+    "DOCENTE" &&
+  usuario?.grado &&
+  usuario?.grupo
+) {
+
+  registrosFiltrados =
+    registrosFiltrados.filter(
+      (alumno) =>
+        String(
+          alumno.grupo
+        ) ===
+        `${usuario.grado}${usuario.grupo}`
+    );
+
+}
+
+setRegistros(
+  registrosFiltrados
+);
 
     } catch (error) {
 
@@ -174,25 +205,39 @@ function Termometro() {
 
       <div className="termometro-container">
 
-        <div className="termometro-header">
+      <div className="termometro-header">
 
-          <h1>
-            Termómetro escolar
-          </h1>
+        <h1>
+          Termómetro escolar
+        </h1>
 
-          <input
-            type="text"
-            placeholder="Buscar alumno o grupo..."
-            className="buscador"
-            value={busqueda}
-            onChange={(e) =>
-              setBusqueda(
-                e.target.value
-              )
-            }
-          />
+        <div className="acciones">
+
+      <input
+        type="text"
+        placeholder="Buscar alumno o grupo..."
+        className="buscador"
+        value={busqueda}
+        onChange={(e) =>
+          setBusqueda(
+            e.target.value
+          )
+        }
+      />
+
+      <button
+        className="btn-agregar"
+        onClick={() =>
+          setMostrarCreate(true)
+        }
+      >
+        Iniciar Termómetro
+      </button>
 
         </div>
+
+      </div>
+
 
         <div className="cards-termometro">
 
@@ -261,6 +306,15 @@ function Termometro() {
                 setMostrarDetalle(
                   false
                 )
+              }
+            />
+
+          )}
+          {mostrarCreate && (
+
+            <CrearPRegistro
+              onClose={() =>
+                setMostrarCreate(false)
               }
             />
 

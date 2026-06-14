@@ -57,83 +57,121 @@ function Historial() {
     return `${day}/${month}/${year}`;
 
   };
+const obtenerHistorial = async () => {
 
-  const obtenerHistorial = async () => {
+try {
 
-    try {
+const [
+  prestamosResponse,
+  usuariosResponse,
+  librosResponse,
+] = await Promise.all([
+  api.get("/prestamos/"),
+  api.get("/usuarios/"),
+  api.get("/libros/"),
+]);
 
-      const [
-        prestamosResponse,
-        usuariosResponse,
-        librosResponse,
-      ] = await Promise.all([
-        api.get("/prestamos/"),
-        api.get("/usuarios/"),
-        api.get("/libros/"),
-      ]);
+let historialPrestamos =
+  prestamosResponse.data
+    .filter(
+      (prestamo) =>
+        prestamo.estado ===
+        "DEVUELTO"
+    )
+    .map((prestamo) => {
 
-      const historialPrestamos =
-        prestamosResponse.data
-          .filter(
-            (prestamo) =>
-              prestamo.estado ===
-              "DEVUELTO"
-          )
-          .map((prestamo) => {
+      const alumno =
+        usuariosResponse.data.find(
+          (usuarioItem) =>
+            usuarioItem.id_usuario ===
+            prestamo.usuario_id
+        );
 
-            const alumno =
-              usuariosResponse.data.find(
-                (usuario) =>
-                  usuario.id_usuario ===
-                  prestamo.usuario_id
-              );
+      const docente =
+        usuariosResponse.data.find(
+          (usuarioItem) =>
+            usuarioItem.id_usuario ===
+            prestamo.autorizado_por
+        );
 
-            const docente =
-              usuariosResponse.data.find(
-                (usuario) =>
-                  usuario.id_usuario ===
-                  prestamo.autorizado_por
-              );
+      const libro =
+        librosResponse.data.find(
+          (lib) =>
+            lib.id_libro ===
+            prestamo.libro_id
+        );
 
-            const libro =
-              librosResponse.data.find(
-                (lib) =>
-                  lib.id_libro ===
-                  prestamo.libro_id
-              );
+      return {
 
-            return {
-              ...prestamo,
+        ...prestamo,
 
-              nombreAlumno: alumno
-                ? `${alumno.nombre} ${alumno.apellido_paterno}`
-                : "No encontrado",
+        nombreAlumno: alumno
+          ? `${alumno.nombre} ${alumno.apellido_paterno}`
+          : "No encontrado",
 
-              autorizadoPor: docente
-                ? `${docente.nombre} ${docente.apellido_paterno}`
-                : "No encontrado",
+        autorizadoPor: docente
+          ? `${docente.nombre} ${docente.apellido_paterno}`
+          : "No encontrado",
 
-              tituloLibro: libro
-                ? libro.titulo
-                : "No encontrado",
-            };
+        tituloLibro: libro
+          ? libro.titulo
+          : "No encontrado",
 
-          });
+        gradoAlumno:
+          alumno?.grado || "",
 
-      setHistorial(
-        historialPrestamos
-      );
+        grupoAlumno:
+          alumno?.grupo || "",
 
-    } catch (error) {
+      };
 
-      console.error(
-        "Error al obtener historial:",
-        error
-      );
+    });
 
-    }
+if (
+  usuario?.rol ===
+    "DOCENTE" &&
+  usuario?.grado &&
+  usuario?.grupo
+) {
 
-  };
+  historialPrestamos =
+    historialPrestamos.filter(
+      (registro) =>
+        String(
+          registro.gradoAlumno
+        ) ===
+          String(
+            usuario.grado
+          ) &&
+        String(
+          registro.grupoAlumno
+        )
+          .trim()
+          .toUpperCase() ===
+        String(
+          usuario.grupo
+        )
+          .trim()
+          .toUpperCase()
+    );
+
+}
+
+setHistorial(
+  historialPrestamos
+);
+
+} catch (error) {
+
+console.error(
+  "Error al obtener historial:",
+  error
+);
+
+}
+
+};
+
 
   const historialFiltrado =
     historial.filter(

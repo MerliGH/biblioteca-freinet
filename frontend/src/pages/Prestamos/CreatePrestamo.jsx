@@ -5,12 +5,17 @@ import Swal from "sweetalert2";
 import api from "../../services/api";
 
 function CreatePrestamo({ onClose }) {
+  const usuarioLogueado =
+  JSON.parse(
+    localStorage.getItem(
+      "usuario"
+    )
+  );
 
   const [alumnos, setAlumnos] =
     useState([]);
 
-  const [docentes, setDocentes] =
-    useState([]);
+
 
   const [libros, setLibros] =
     useState([]);
@@ -41,19 +46,55 @@ function CreatePrestamo({ onClose }) {
         api.get("/libros/"),
       ]);
 
-      setAlumnos(
-        usuariosResponse.data.filter(
-          (u) => u.rol === "ALUMNO"
-        )
-      );
+const usuarioLogueado =
+  JSON.parse(
+    localStorage.getItem(
+      "usuario"
+    )
+  );
 
-      setDocentes(
-        usuariosResponse.data.filter(
-          (u) =>
-            u.rol === "DOCENTE" ||
-            u.rol === "DIRECTORA"
+let alumnosFiltrados =
+  usuariosResponse.data.filter(
+    (u) =>
+      u.rol === "ALUMNO"
+  );
+
+// Si es docente con grupo asignado
+if (
+  usuarioLogueado?.rol ===
+    "DOCENTE" &&
+  usuarioLogueado?.grado &&
+  usuarioLogueado?.grupo
+) {
+
+  alumnosFiltrados =
+    alumnosFiltrados.filter(
+      (alumno) =>
+        String(
+          alumno.grado
+        ) ===
+          String(
+            usuarioLogueado.grado
+          ) &&
+        String(
+          alumno.grupo
         )
-      );
+          .trim()
+          .toUpperCase() ===
+        String(
+          usuarioLogueado.grupo
+        )
+          .trim()
+          .toUpperCase()
+    );
+
+}
+
+setAlumnos(
+  alumnosFiltrados
+);
+
+
 
       setLibros(
         librosResponse.data
@@ -97,7 +138,7 @@ function CreatePrestamo({ onClose }) {
           ),
 
           autorizado_por: Number(
-            formData.autorizado_por
+            usuarioLogueado.id_usuario
           ),
 
           fecha_limite:
@@ -230,38 +271,11 @@ function CreatePrestamo({ onClose }) {
             Autorizado por:
           </label>
 
-          <select
-            name="autorizado_por"
-            value={
-              formData.autorizado_por
-            }
-            onChange={handleChange}
-            required
-          >
-
-            <option value="">
-              Seleccionar docente
-            </option>
-
-            {docentes.map(
-              (docente) => (
-                <option
-                  key={
-                    docente.id_usuario
-                  }
-                  value={
-                    docente.id_usuario
-                  }
-                >
-                  {docente.nombre}{" "}
-                  {
-                    docente.apellido_paterno
-                  }
-                </option>
-              )
-            )}
-
-          </select>
+          <input
+            type="text"
+            value={`${usuarioLogueado.nombre} ${usuarioLogueado.apellido_paterno || ""}`}
+            disabled
+          />
 
           <label>
             Fecha límite:

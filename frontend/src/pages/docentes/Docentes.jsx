@@ -151,15 +151,16 @@ function Docentes() {
 
           <thead>
 
-            <tr>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Correo</th>
-              <th>Matrícula</th>
-              <th>Estado</th>
-              <th>Fecha de registro</th>
-              <th>Acciones</th>
-            </tr>
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Correo</th>
+          <th>Matrícula</th>
+          <th>Grupo</th>
+          <th>Estado</th>
+          <th>Fecha de registro</th>
+          <th>Acciones</th>
+        </tr>
 
           </thead>
 
@@ -190,6 +191,14 @@ function Docentes() {
 
                   <td>
                     {docente.matricula}
+                  </td>
+                  <td>
+
+                    {docente.grado &&
+                    docente.grupo
+                      ? `${docente.grado}${docente.grupo}`
+                      : "Todos"}
+
                   </td>
 
                   <td>

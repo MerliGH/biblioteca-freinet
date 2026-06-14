@@ -74,59 +74,100 @@ function Prestamos() {
         api.get("/libros/"),
       ]);
 
-      const prestamosConDatos =
-        prestamosResponse.data
-          .map((prestamo) => {
+ // Dentro de obtenerPrestamos(), REEMPLAZA esta parte:
 
-            const alumno =
-              usuariosResponse.data.find(
-                (usuario) =>
-                  usuario.id_usuario ===
-                  prestamo.usuario_id
-              );
+const prestamosConDatos =
+  prestamosResponse.data
+    .map((prestamo) => {
 
-            const docente =
-              usuariosResponse.data.find(
-                (usuario) =>
-                  usuario.id_usuario ===
-                  prestamo.autorizado_por
-              );
+      const alumno =
+        usuariosResponse.data.find(
+          (usuario) =>
+            usuario.id_usuario ===
+            prestamo.usuario_id
+        );
 
-            const libro =
-              librosResponse.data.find(
-                (lib) =>
-                  lib.id_libro ===
-                  prestamo.libro_id
-              );
+      const docente =
+        usuariosResponse.data.find(
+          (usuario) =>
+            usuario.id_usuario ===
+            prestamo.autorizado_por
+        );
 
-            return {
-              ...prestamo,
+      const libro =
+        librosResponse.data.find(
+          (lib) =>
+            lib.id_libro ===
+            prestamo.libro_id
+        );
 
-              nombreAlumno: alumno
-                ? `${alumno.nombre} ${alumno.apellido_paterno}`
-                : "No encontrado",
+      return {
+        ...prestamo,
 
-              autorizadoPor: docente
-                ? `${docente.nombre} ${docente.apellido_paterno}`
-                : "No encontrado",
+        nombreAlumno: alumno
+          ? `${alumno.nombre} ${alumno.apellido_paterno}`
+          : "No encontrado",
 
-              tituloLibro: libro
-                ? libro.titulo
-                : "No encontrado",
-            };
+        autorizadoPor: docente
+          ? `${docente.nombre} ${docente.apellido_paterno}`
+          : "No encontrado",
 
-          })
-          .filter(
-            (prestamo) =>
-              prestamo.estado ===
-                "PRESTADO" ||
-              prestamo.estado ===
-                "VENCIDO"
-          );
+        tituloLibro: libro
+          ? libro.titulo
+          : "No encontrado",
 
-      setPrestamos(
-        prestamosConDatos
-      );
+        gradoAlumno:
+          alumno?.grado || "",
+
+        grupoAlumno:
+          alumno?.grupo || "",
+      };
+
+    })
+    .filter(
+      (prestamo) =>
+        prestamo.estado ===
+          "PRESTADO" ||
+        prestamo.estado ===
+          "VENCIDO"
+    );
+
+let prestamosFiltradosPorGrupo =
+  prestamosConDatos;
+
+if (
+  usuario?.rol ===
+    "DOCENTE" &&
+  usuario?.grado &&
+  usuario?.grupo
+) {
+
+  prestamosFiltradosPorGrupo =
+    prestamosConDatos.filter(
+      (prestamo) =>
+        String(
+          prestamo.gradoAlumno
+        ) ===
+          String(
+            usuario.grado
+          ) &&
+        String(
+          prestamo.grupoAlumno
+        )
+          .trim()
+          .toUpperCase() ===
+        String(
+          usuario.grupo
+        )
+          .trim()
+          .toUpperCase()
+    );
+
+}
+
+setPrestamos(
+  prestamosFiltradosPorGrupo
+);
 
     } catch (error) {
 

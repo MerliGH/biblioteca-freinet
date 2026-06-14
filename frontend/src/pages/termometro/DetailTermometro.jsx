@@ -116,7 +116,6 @@ function DetailTermometro({
                 Nivel {nivel}
 
               </h2>
-
               {nivel === "Platino" ? (
 
                 <p className="nivel-maximo">
@@ -131,7 +130,27 @@ function DetailTermometro({
 
                   Faltan {faltan} libro
                   {faltan !== 1 ? "s" : ""}
-                  para el siguiente nivel
+
+                  {" "}para alcanzar el nivel{" "}
+
+                  <strong>
+
+                    {nivel === "Sin nivel" &&
+                      "Verde"}
+
+                    {nivel === "Verde" &&
+                      "Amarillo"}
+
+                    {nivel === "Amarillo" &&
+                      "Rojo"}
+
+                    {nivel === "Rojo" &&
+                      "Dorado"}
+
+                    {nivel === "Dorado" &&
+                      "Platino"}
+
+                  </strong>
 
                 </p>
 
