@@ -1,25 +1,28 @@
 import "./CrearPRegistro.css";
 
 import { useState, useEffect } from "react";
+
 import Swal from "sweetalert2";
+
 import api from "../../services/api";
+
+import Select from "react-select";
 
 function CrearPRegistro({ onClose }) {
 
-  const [alumnos,
-    setAlumnos] =
+  const [alumnos, setAlumnos] =
     useState([]);
 
-  const [libros,
-    setLibros] =
+  const [libros, setLibros] =
     useState([]);
 
-  const [formData,
-    setFormData] =
+  const [formData, setFormData] =
     useState({
 
       usuario_id: "",
+
       libro_id: "",
+
       observaciones:
         "Primer registro",
 
@@ -37,41 +40,69 @@ function CrearPRegistro({ onClose }) {
       try {
 
         const [
+
           usuariosRes,
+
           librosRes,
+
           termometroRes,
+
         ] = await Promise.all([
+
           api.get("/usuarios/"),
+
           api.get("/libros/"),
+
           api.get("/termometro/"),
+
         ]);
 
         const alumnosConTermometro =
+
           [
+
             ...new Set(
+
               termometroRes.data.map(
+
                 (t) =>
+
                   t.usuario_id
+
               )
+
             ),
+
           ];
 
         const alumnosSinTermometro =
+
           usuariosRes.data.filter(
+
             (u) =>
+
               u.rol ===
+
                 "ALUMNO" &&
+
               !alumnosConTermometro.includes(
+
                 u.id_usuario
+
               )
+
           );
 
         setAlumnos(
+
           alumnosSinTermometro
+
         );
 
         setLibros(
+
           librosRes.data
+
         );
 
       } catch (error) {
@@ -83,11 +114,15 @@ function CrearPRegistro({ onClose }) {
     };
 
   const handleChange =
+
     (e) => {
 
       const {
+
         name,
+
         value,
+
       } = e.target;
 
       setFormData({
@@ -101,6 +136,7 @@ function CrearPRegistro({ onClose }) {
     };
 
   const handleSubmit =
+
     async (e) => {
 
       e.preventDefault();
@@ -108,52 +144,75 @@ function CrearPRegistro({ onClose }) {
       try {
 
         const usuario =
+
           JSON.parse(
+
             localStorage.getItem(
+
               "usuario"
+
             )
+
           );
 
         await api.post(
+
           "/termometro/",
+
           {
 
             usuario_id:
+
               Number(
+
                 formData.usuario_id
+
               ),
 
             libro_id:
+
               Number(
+
                 formData.libro_id
+
               ),
 
             registrado_por:
+
               usuario.id_usuario,
 
             fecha_acreditacion:
+
               new Date()
+
                 .toISOString()
+
                 .split("T")[0],
 
             observaciones:
+
               formData.observaciones,
 
           }
+
         );
 
         await Swal.fire({
 
           icon:
+
             "success",
 
           title:
+
             "Registro creado",
 
           text:
+
             "El termómetro fue iniciado correctamente.",
 
           confirmButtonColor:
+
             "#173b70",
 
         });
@@ -167,15 +226,19 @@ function CrearPRegistro({ onClose }) {
         Swal.fire({
 
           icon:
+
             "error",
 
           title:
+
             "Error",
 
           text:
+
             "No fue posible crear el registro.",
 
           confirmButtonColor:
+
             "#173b70",
 
         });
@@ -184,147 +247,258 @@ function CrearPRegistro({ onClose }) {
 
     };
 
+  const opcionesAlumnos =
+
+    alumnos.map(
+
+      (alumno) => ({
+
+        value:
+
+          alumno.id_usuario,
+
+        label:
+
+          `${alumno.nombre} ${alumno.apellido_paterno}`,
+
+      })
+
+    );
+
+  const opcionesLibros =
+
+    libros.map(
+
+      (libro) => ({
+
+        value:
+
+          libro.id_libro,
+
+        label:
+
+          libro.titulo,
+
+      })
+
+    );
+
   return (
 
     <div
+
       className="modal-overlay"
+
       onClick={onClose}
+
     >
 
       <div
+
         className="modal-content"
+
         onClick={(e) =>
+
           e.stopPropagation()
+
         }
+
       >
 
         <h1>
+
           Iniciar Termómetro
+
         </h1>
 
         <form
+
           className="termometro-form"
+
           onSubmit={
+
             handleSubmit
+
           }
+
         >
 
           <label>
+
             Alumno:
+
           </label>
 
-          <select
-            name="usuario_id"
+          <Select
+
+            classNamePrefix="biblioteca"
+
+            options={
+
+              opcionesAlumnos
+
+            }
+
+            placeholder="Buscar alumno..."
+
+            isSearchable
+
             value={
-              formData.usuario_id
+
+              opcionesAlumnos.find(
+
+                (opcion) =>
+
+                  opcion.value ===
+
+                  Number(
+
+                    formData.usuario_id
+
+                  )
+
+              ) || null
+
             }
-            onChange={
-              handleChange
+
+            onChange={(opcion) =>
+
+              setFormData({
+
+                ...formData,
+
+                usuario_id:
+
+                  opcion.value,
+
+              })
+
             }
-            required
-          >
 
-            <option value="">
-              Seleccionar alumno
-            </option>
+            noOptionsMessage={() =>
 
-            {alumnos.map(
-              (alumno) => (
+              "No se encontraron resultados"
 
-                <option
-                  key={
-                    alumno.id_usuario
-                  }
-                  value={
-                    alumno.id_usuario
-                  }
-                >
+            }
 
-                  {alumno.nombre}
-                  {" "}
-                  {
-                    alumno.apellido_paterno
-                  }
-
-                </option>
-
-              )
-            )}
-
-          </select>
+          />
 
           <label>
+
             Primer libro:
+
           </label>
 
-          <select
-            name="libro_id"
+          <Select
+
+            classNamePrefix="biblioteca"
+
+            options={
+
+              opcionesLibros
+
+            }
+
+            placeholder="Buscar libro..."
+
+            isSearchable
+
             value={
-              formData.libro_id
+
+              opcionesLibros.find(
+
+                (opcion) =>
+
+                  opcion.value ===
+
+                  Number(
+
+                    formData.libro_id
+
+                  )
+
+              ) || null
+
             }
+
+            onChange={(opcion) =>
+
+              setFormData({
+
+                ...formData,
+
+                libro_id:
+
+                  opcion.value,
+
+              })
+
+            }
+
+            noOptionsMessage={() =>
+
+              "No se encontraron resultados"
+
+            }
+
+          />
+
+          <label>
+
+            Observaciones:
+
+          </label>
+
+          <input
+
+            type="text"
+
+            name="observaciones"
+
+            value={
+
+              formData.observaciones
+
+            }
+
             onChange={
+
               handleChange
+
             }
-            required
+
+          />
+
+          <div
+
+            className="botones-form"
+
           >
 
-            <option value="">
-              Seleccionar libro
-            </option>
-
-            {libros.map(
-              (libro) => (
-
-                <option
-                  key={
-                    libro.id_libro
-                  }
-                  value={
-                    libro.id_libro
-                  }
-                >
-
-                  {
-                    libro.titulo
-                  }
-
-                </option>
-
-              )
-            )}
-
-          </select>
-
-        <label>
-        Observaciones:
-        </label>
-
-        <input
-        type="text"
-        name="observaciones"
-        value={
-            formData.observaciones
-        }
-        onChange={
-            handleChange
-        }
-        />
-
-          <div className="botones-form">
-
             <button
+
               type="submit"
+
               className="btn-guardar"
+
             >
+
               Guardar
+
             </button>
 
             <button
+
               type="button"
+
               className="btn-cancelar"
+
               onClick={onClose}
+
             >
+
               Cancelar
+
             </button>
 
           </div>

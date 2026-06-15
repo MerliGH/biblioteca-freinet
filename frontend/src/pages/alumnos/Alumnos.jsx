@@ -66,6 +66,7 @@ function Alumnos() {
 
       // Si es docente y tiene grupo asignado,
       // solo verá los alumnos de su grupo
+
       if (
         usuario?.rol ===
           "DOCENTE" &&
@@ -96,14 +97,12 @@ function Alumnos() {
 
       }
 
-      console.log(
-        "USUARIO:",
-        usuario
-      );
+      
 
-      console.log(
-        "ALUMNOS FILTRADOS:",
-        alumnosFiltrados
+      alumnosFiltrados.sort(
+        (a, b) =>
+          b.id_usuario -
+          a.id_usuario
       );
 
       setAlumnos(

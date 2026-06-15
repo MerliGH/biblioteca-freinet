@@ -74,7 +74,6 @@
   outline: none;
 }
 
-/* BOTONES */
 
 .botones-form {
   display: flex;
@@ -128,4 +127,91 @@
     opacity: 1;
     transform: scale(1);
   }
+}
+
+.css-b62m3t-container {
+  margin-bottom: 8px;
+}
+
+.css-13cymwt-control,
+.css-t3ipsp-control {
+
+  width: 100%;
+
+  min-height: 40px;
+
+  border: none !important;
+
+  border-radius: 12px !important;
+
+  box-shadow: none !important;
+
+  background: #fff !important;
+
+  cursor: text;
+}
+
+.css-13cymwt-control:hover,
+.css-t3ipsp-control:hover {
+  border: none !important;
+}
+
+.css-1fdsijx-ValueContainer {
+  padding: 0 10px !important;
+}
+
+.css-1dimb5e-singleValue {
+  color: #173b70 !important;
+
+  font-size: 14px;
+}
+
+.css-19bb58m {
+  color: #173b70 !important;
+}
+
+.css-1jqq78o-placeholder {
+  color: #7b7b7b !important;
+
+  font-size: 14px;
+}
+
+.css-1u9des2-indicatorSeparator {
+  display: none;
+}
+
+.css-1xc3v61-indicatorContainer {
+  color: #173b70 !important;
+}
+
+.css-1xc3v61-indicatorContainer:hover {
+  color: #173b70 !important;
+}
+
+.css-qr46ko {
+
+  border-radius: 12px !important;
+
+  overflow: hidden;
+
+  border: none !important;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.css-d7l1ni-option {
+
+  color: #173b70;
+
+  font-size: 14px;
+}
+
+.css-d7l1ni-option:hover {
+  background: #f5c27c !important;
+}
+
+.css-tr4s17-option {
+  background: #173b70 !important;
+
+  color: white !important;
 }

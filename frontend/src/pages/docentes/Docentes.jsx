@@ -38,7 +38,9 @@ function Docentes() {
     useState(null);
 
   useEffect(() => {
+
     obtenerDocentes();
+
   }, []);
 
   const obtenerDocentes = async () => {
@@ -48,12 +50,19 @@ function Docentes() {
       const response =
         await api.get("/usuarios/");
 
-      const docentesFiltrados =
+      let docentesFiltrados =
         response.data.filter(
           (usuario) =>
             usuario.rol ===
             "DOCENTE"
         );
+
+
+      docentesFiltrados.sort(
+        (a, b) =>
+          b.id_usuario -
+          a.id_usuario
+      );
 
       setDocentes(
         docentesFiltrados
@@ -151,16 +160,25 @@ function Docentes() {
 
           <thead>
 
-        <tr>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Correo</th>
-          <th>Matrícula</th>
-          <th>Grupo</th>
-          <th>Estado</th>
-          <th>Fecha de registro</th>
-          <th>Acciones</th>
-        </tr>
+            <tr>
+
+              <th>Nombre</th>
+
+              <th>Apellido</th>
+
+              <th>Correo</th>
+
+              <th>Matrícula</th>
+
+              <th>Grupo</th>
+
+              <th>Estado</th>
+
+              <th>Fecha de registro</th>
+
+              <th>Acciones</th>
+
+            </tr>
 
           </thead>
 
@@ -176,27 +194,38 @@ function Docentes() {
                 >
 
                   <td>
+
                     {docente.nombre}
+
                   </td>
 
                   <td>
+
                     {
                       docente.apellido_paterno
                     }
+
                   </td>
 
                   <td>
+
                     {docente.correo}
+
                   </td>
 
                   <td>
+
                     {docente.matricula}
+
                   </td>
+
                   <td>
 
                     {docente.grado &&
                     docente.grupo
+
                       ? `${docente.grado}${docente.grupo}`
+
                       : "Todos"}
 
                   </td>
@@ -204,7 +233,9 @@ function Docentes() {
                   <td>
 
                     {docente.estado
+
                       ? "Activo"
+
                       : "Inactivo"}
 
                   </td>
@@ -214,7 +245,9 @@ function Docentes() {
                     <span className="fecha-pill">
 
                       {new Date(
+
                         docente.fecha_registro
+
                       ).toLocaleDateString()}
 
                     </span>
@@ -226,37 +259,55 @@ function Docentes() {
                     <div className="acciones-tabla">
 
                       <button
+
                         className="btn-editar"
+
                         onClick={() => {
 
                           setDocenteSeleccionado(
+
                             docente
+
                           );
 
                           setMostrarEdit(
+
                             true
+
                           );
 
                         }}
+
                       >
+
                         <FaRegEdit />
+
                       </button>
 
                       <button
+
                         className="btn-eliminar"
+
                         onClick={() => {
 
                           setDocenteSeleccionado(
+
                             docente
+
                           );
 
                           setMostrarDelete(
+
                             true
+
                           );
 
                         }}
+
                       >
+
                         <RiDeleteBinLine />
+
                       </button>
 
                     </div>
@@ -275,37 +326,69 @@ function Docentes() {
         {mostrarCreate && (
 
           <CreateDocente
+
             onClose={() =>
-              setMostrarCreate(false)
+
+              setMostrarCreate(
+
+                false
+
+              )
+
             }
+
           />
 
         )}
 
         {mostrarEdit &&
+
           docenteSeleccionado && (
 
             <EditDocente
+
               docente={
+
                 docenteSeleccionado
+
               }
+
               onClose={() =>
-                setMostrarEdit(false)
+
+                setMostrarEdit(
+
+                  false
+
+                )
+
               }
+
             />
 
           )}
 
         {mostrarDelete &&
+
           docenteSeleccionado && (
 
             <DeleteDocente
+
               docente={
+
                 docenteSeleccionado
+
               }
+
               onClose={() =>
-                setMostrarDelete(false)
+
+                setMostrarDelete(
+
+                  false
+
+                )
+
               }
+
             />
 
           )}

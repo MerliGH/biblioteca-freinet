@@ -133,3 +133,10 @@
     transform: scale(1);
   }
 }
+.alumno-form input::placeholder {
+
+  color: #7d93b5;
+
+  opacity: 1;
+
+}

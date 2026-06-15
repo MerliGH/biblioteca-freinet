@@ -26,7 +26,6 @@
   margin-bottom: 35px;
 }
 
-/* CARDS */
 
 .cards-dashboard {
   width: 100%;
@@ -98,7 +97,6 @@
   background: #707070;
 }
 
-/* TABLA */
 
 .ultimos-prestamos {
   width: 100%;
@@ -153,7 +151,6 @@
   background: #f7f7f7;
 }
 
-/* RESPONSIVE */
 
 @media (max-width: 1200px) {
   .cards-dashboard {

@@ -73,7 +73,6 @@
   background-color: #e58f1c;
 }
 
-/* Tabla */
 .tabla-libros {
   width: 100%;
   border-collapse: collapse;
@@ -131,7 +130,6 @@
   font-size: 16px;
 }
 
-/* Responsive */
 @media (max-width: 1200px) {
   .libros-header {
     flex-direction: column;
@@ -149,7 +147,6 @@
     white-space: nowrap;
   }
 }
-/* Botones de acciones */
 
 .acciones-tabla {
   display: flex;

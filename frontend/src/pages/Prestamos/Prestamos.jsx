@@ -60,125 +60,213 @@ function Prestamos() {
 
   };
 
-  const obtenerPrestamos = async () => {
 
-    try {
+const obtenerPrestamos = async () => {
 
-      const [
-        prestamosResponse,
-        usuariosResponse,
-        librosResponse,
-      ] = await Promise.all([
-        api.get("/prestamos/"),
-        api.get("/usuarios/"),
-        api.get("/libros/"),
-      ]);
+  try {
 
- // Dentro de obtenerPrestamos(), REEMPLAZA esta parte:
+    const [
 
-const prestamosConDatos =
-  prestamosResponse.data
-    .map((prestamo) => {
+      prestamosResponse,
 
-      const alumno =
-        usuariosResponse.data.find(
-          (usuario) =>
-            usuario.id_usuario ===
-            prestamo.usuario_id
+      usuariosResponse,
+
+      librosResponse,
+
+    ] = await Promise.all([
+
+      api.get("/prestamos/"),
+
+      api.get("/usuarios/"),
+
+      api.get("/libros/"),
+
+    ]);
+
+    const prestamosConDatos =
+
+      prestamosResponse.data
+
+        .map((prestamo) => {
+
+          const alumno =
+
+            usuariosResponse.data.find(
+
+              (usuario) =>
+
+                usuario.id_usuario ===
+
+                prestamo.usuario_id
+
+            );
+
+          const docente =
+
+            usuariosResponse.data.find(
+
+              (usuario) =>
+
+                usuario.id_usuario ===
+
+                prestamo.autorizado_por
+
+            );
+
+          const libro =
+
+            librosResponse.data.find(
+
+              (lib) =>
+
+                lib.id_libro ===
+
+                prestamo.libro_id
+
+            );
+
+          return {
+
+            ...prestamo,
+
+            nombreAlumno:
+
+              alumno
+
+                ? `${alumno.nombre} ${alumno.apellido_paterno}`
+
+                : "No encontrado",
+
+            autorizadoPor:
+
+              docente
+
+                ? `${docente.nombre} ${docente.apellido_paterno}`
+
+                : "No encontrado",
+
+            tituloLibro:
+
+              libro
+
+                ? libro.titulo
+
+                : "No encontrado",
+
+            gradoAlumno:
+
+              alumno?.grado || "",
+
+            grupoAlumno:
+
+              alumno?.grupo || "",
+
+          };
+
+        })
+
+        .filter(
+
+          (prestamo) =>
+
+            prestamo.estado ===
+
+              "PRESTADO" ||
+
+            prestamo.estado ===
+
+              "VENCIDO"
+
         );
 
-      const docente =
-        usuariosResponse.data.find(
-          (usuario) =>
-            usuario.id_usuario ===
-            prestamo.autorizado_por
+    let prestamosFiltradosPorGrupo =
+
+      prestamosConDatos;
+
+    if (
+
+      usuario?.rol ===
+
+        "DOCENTE" &&
+
+      usuario?.grado &&
+
+      usuario?.grupo
+
+    ) {
+
+      prestamosFiltradosPorGrupo =
+
+        prestamosConDatos.filter(
+
+          (prestamo) =>
+
+            String(
+
+              prestamo.gradoAlumno
+
+            ) ===
+
+              String(
+
+                usuario.grado
+
+              ) &&
+
+            String(
+
+              prestamo.grupoAlumno
+
+            )
+
+              .trim()
+
+              .toUpperCase() ===
+
+            String(
+
+              usuario.grupo
+
+            )
+
+              .trim()
+
+              .toUpperCase()
+
         );
-
-      const libro =
-        librosResponse.data.find(
-          (lib) =>
-            lib.id_libro ===
-            prestamo.libro_id
-        );
-
-      return {
-        ...prestamo,
-
-        nombreAlumno: alumno
-          ? `${alumno.nombre} ${alumno.apellido_paterno}`
-          : "No encontrado",
-
-        autorizadoPor: docente
-          ? `${docente.nombre} ${docente.apellido_paterno}`
-          : "No encontrado",
-
-        tituloLibro: libro
-          ? libro.titulo
-          : "No encontrado",
-
-        gradoAlumno:
-          alumno?.grado || "",
-
-        grupoAlumno:
-          alumno?.grupo || "",
-      };
-
-    })
-    .filter(
-      (prestamo) =>
-        prestamo.estado ===
-          "PRESTADO" ||
-        prestamo.estado ===
-          "VENCIDO"
-    );
-
-let prestamosFiltradosPorGrupo =
-  prestamosConDatos;
-
-if (
-  usuario?.rol ===
-    "DOCENTE" &&
-  usuario?.grado &&
-  usuario?.grupo
-) {
-
-  prestamosFiltradosPorGrupo =
-    prestamosConDatos.filter(
-      (prestamo) =>
-        String(
-          prestamo.gradoAlumno
-        ) ===
-          String(
-            usuario.grado
-          ) &&
-        String(
-          prestamo.grupoAlumno
-        )
-          .trim()
-          .toUpperCase() ===
-        String(
-          usuario.grupo
-        )
-          .trim()
-          .toUpperCase()
-    );
-
-}
-
-setPrestamos(
-  prestamosFiltradosPorGrupo
-);
-
-    } catch (error) {
-
-      console.error(
-        "Error al obtener préstamos:",
-        error
-      );
 
     }
 
-  };
+
+    prestamosFiltradosPorGrupo.sort(
+
+      (a, b) =>
+
+        b.id_prestamo -
+
+        a.id_prestamo
+
+    );
+
+    setPrestamos(
+
+      prestamosFiltradosPorGrupo
+
+    );
+
+  } catch (error) {
+
+    console.error(
+
+      "Error al obtener préstamos:",
+
+      error
+
+    );
+
+  }
+
+};
 
   const prestamosFiltrados =
     prestamos.filter(

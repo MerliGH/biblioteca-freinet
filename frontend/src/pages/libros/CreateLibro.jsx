@@ -4,6 +4,7 @@ import { useState } from "react";
 import api from "../../services/api";
 
 import Swal from "sweetalert2";
+import Select from "react-select";
 
 function CreateLibro({ onClose }) {
 
@@ -19,6 +20,21 @@ function CreateLibro({ onClose }) {
     estado: true,
   });
 
+  const opcionesCategorias = [
+    {
+      value: 1,
+      label: "Cuentos",
+    },
+    {
+      value: 2,
+      label: "Novela",
+    },
+    {
+      value: 3,
+      label: "Infantil",
+    },
+  ];
+
   const handleChange = (e) => {
 
     const { name, value } = e.target;
@@ -26,7 +42,6 @@ function CreateLibro({ onClose }) {
     setFormData({
       ...formData,
       [name]:
-        name === "categoria_id" ||
         name === "cantidad_total" ||
         name === "cantidad_disponible"
           ? Number(value)
@@ -95,30 +110,35 @@ function CreateLibro({ onClose }) {
 
           <label>Clasificación:</label>
 
-          <select
-            name="categoria_id"
-            value={formData.categoria_id}
-            onChange={handleChange}
-            required
-          >
+          <Select
 
-            <option value="">
-              Seleccionar clasificación
-            </option>
+            options={opcionesCategorias}
 
-            <option value="1">
-              Cuentos
-            </option>
+            placeholder="Buscar clasificación..."
 
-            <option value="2">
-              Novela
-            </option>
+            isSearchable={true}
 
-            <option value="3">
-              Infantil
-            </option>
+            value={
+              opcionesCategorias.find(
+                (opcion) =>
+                  opcion.value === formData.categoria_id
+              ) || null
+            }
 
-          </select>
+            onChange={(opcion) =>
+
+              setFormData({
+                ...formData,
+                categoria_id: opcion.value,
+              })
+
+            }
+
+            noOptionsMessage={() =>
+              "No se encontraron resultados"
+            }
+
+          />
 
           <label>Título:</label>
 
