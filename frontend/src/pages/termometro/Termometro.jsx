@@ -27,6 +27,14 @@ function Termometro() {
     setBusqueda] =
     useState("");
 
+  const [filtroGrado,
+  setFiltroGrado] =
+  useState("");
+
+  const [filtroGrupo,
+    setFiltroGrupo] =
+    useState("");
+
   const [mostrarCreate,
     setMostrarCreate] =
     useState(false);
@@ -118,6 +126,13 @@ function Termometro() {
               grupo:
 
                 `${alumno.grado || ""}${alumno.grupo || ""}`,
+              grado:
+
+                alumno?.grado || "",
+
+              grupoLetra:
+
+                alumno?.grupo || "",
 
               librosLeidos: 0,
 
@@ -257,6 +272,74 @@ function Termometro() {
     }
 
   };
+  const usuario = JSON.parse(
+  localStorage.getItem(
+    "usuario"
+  )
+);
+const grados = [
+
+  ...new Set(
+
+    registros
+
+      .map(
+
+        (r) =>
+
+          r.grado
+
+      )
+
+      .filter(Boolean)
+
+  )
+
+].sort();
+
+const grupos = [
+
+  ...new Set(
+
+    registros
+
+      .map(
+
+        (r) =>
+
+          r.grupoLetra
+
+      )
+
+      .filter(Boolean)
+
+  )
+
+].sort();
+
+const mostrarFiltros =
+
+  usuario?.rol === "DIRECTORA"
+
+  ||
+
+  (
+
+    usuario?.rol === "DOCENTE"
+
+    &&
+
+    (
+
+      !usuario?.grado
+
+      ||
+
+      !usuario?.grupo
+
+    )
+
+  );
 
   const abrirDetalle = (
 
@@ -278,37 +361,73 @@ function Termometro() {
 
   };
 
-  const registrosFiltrados =
+const registrosFiltrados =
 
-    registros.filter(
+  registros.filter(
 
-      (registro) => {
+    (registro) => {
 
-        const texto =
+      const texto =
 
-          busqueda.toLowerCase();
+        busqueda.toLowerCase();
 
-        return (
+      const coincideBusqueda =
 
-          registro.nombreAlumno
+        registro.nombreAlumno
 
-            .toLowerCase()
+          .toLowerCase()
 
-            .includes(texto)
+          .includes(texto)
 
-          ||
+        ||
 
-          registro.grupo
+        registro.grupo
 
-            .toLowerCase()
+          .toLowerCase()
 
-            .includes(texto)
+          .includes(texto);
 
-        );
+      const coincideGrado =
 
-      }
+        filtroGrado === ""
 
-    );
+        ||
+
+        String(
+
+          registro.grado
+
+        ) === filtroGrado;
+
+      const coincideGrupo =
+
+        filtroGrupo === ""
+
+        ||
+
+        String(
+
+          registro.grupoLetra
+
+        ) === filtroGrupo;
+
+      return (
+
+        coincideBusqueda
+
+        &&
+
+        coincideGrado
+
+        &&
+
+        coincideGrupo
+
+      );
+
+    }
+
+  ); 
 
   return (
 
@@ -324,7 +443,9 @@ function Termometro() {
 
           </h1>
 
-          <div className="acciones">
+        <div className="acciones">
+
+          <div className="barra-filtros">
 
             <input
 
@@ -348,27 +469,130 @@ function Termometro() {
 
             />
 
-            <button
+            {mostrarFiltros && (
 
-              className="btn-agregar"
+              <>
 
-              onClick={() =>
+                <select
 
-                setMostrarCreate(
+                  className="filtro-select"
 
-                  true
+                  value={filtroGrado}
 
-                )
+                  onChange={(e) =>
 
-              }
+                    setFiltroGrado(
 
-            >
+                      e.target.value
 
-              Iniciar Termómetro
+                    )
 
-            </button>
+                  }
+
+                >
+
+                  <option value="">
+
+                    Todos los grados
+
+                  </option>
+
+                  {grados.map(
+
+                    (grado) => (
+
+                      <option
+
+                        key={grado}
+
+                        value={grado}
+
+                      >
+
+                        {grado}°
+
+                      </option>
+
+                    )
+
+                  )}
+
+                </select>
+
+
+                <select
+
+                  className="filtro-select"
+
+                  value={filtroGrupo}
+
+                  onChange={(e) =>
+
+                    setFiltroGrupo(
+
+                      e.target.value
+
+                    )
+
+                  }
+
+                >
+
+                  <option value="">
+
+                    Todos los grupos
+
+                  </option>
+
+                  {grupos.map(
+
+                    (grupo) => (
+
+                      <option
+
+                        key={grupo}
+
+                        value={grupo}
+
+                      >
+
+                        {grupo}
+
+                      </option>
+
+                    )
+
+                  )}
+
+                </select>
+
+              </>
+
+            )}
 
           </div>
+
+          <button
+
+            className="btn-agregar"
+
+            onClick={() =>
+
+              setMostrarCreate(
+
+                true
+
+              )
+
+            }
+
+          >
+
+            Iniciar Termómetro
+
+          </button>
+
+        </div>
 
         </div>
 

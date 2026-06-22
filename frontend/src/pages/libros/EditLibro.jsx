@@ -1,11 +1,8 @@
 import "./CreateLibro.css";
 
 import { useState } from "react";
-
 import api from "../../services/api";
-
 import Swal from "sweetalert2";
-
 import Select from "react-select";
 
 function EditLibro({ libro, onClose }) {
@@ -28,10 +25,10 @@ function EditLibro({ libro, onClose }) {
       libro?.procedencia || "",
 
     cantidad_total:
-      libro?.cantidad_total || 1,
+      libro?.cantidad_total ?? 1,
 
     cantidad_disponible:
-      libro?.cantidad_disponible || 1,
+      libro?.cantidad_disponible ?? 1,
 
     seccion:
       libro?.seccion || "",
@@ -81,6 +78,28 @@ function EditLibro({ libro, onClose }) {
             formData.cantidad_disponible,
 
             cantidad
+
+          ),
+
+      });
+
+      return;
+
+    }
+
+    if (name === "cantidad_disponible") {
+
+      setFormData({
+
+        ...formData,
+
+        cantidad_disponible:
+
+          Math.min(
+
+            Number(value),
+
+            formData.cantidad_total
 
           ),
 
@@ -192,7 +211,11 @@ function EditLibro({ libro, onClose }) {
 
       >
 
-        <h1>EDITAR LIBRO</h1>
+        <h1>
+
+          EDITAR LIBRO
+
+        </h1>
 
         <form
 
@@ -254,7 +277,11 @@ function EditLibro({ libro, onClose }) {
 
           />
 
-          <label>Título:</label>
+          <label>
+
+            Título:
+
+          </label>
 
           <input
 
@@ -290,7 +317,11 @@ function EditLibro({ libro, onClose }) {
 
           />
 
-          <label>Serie:</label>
+          <label>
+
+            Serie:
+
+          </label>
 
           <input
 
@@ -324,7 +355,7 @@ function EditLibro({ libro, onClose }) {
 
           <label>
 
-            Cantidad en Existencia:
+            Cantidad total:
 
           </label>
 
@@ -339,6 +370,32 @@ function EditLibro({ libro, onClose }) {
             value={formData.cantidad_total}
 
             onChange={handleChange}
+
+            required
+
+          />
+
+          <label>
+
+            Cantidad disponible:
+
+          </label>
+
+          <input
+
+            type="number"
+
+            name="cantidad_disponible"
+
+            min="0"
+
+            max={formData.cantidad_total}
+
+            value={formData.cantidad_disponible}
+
+            onChange={handleChange}
+
+            required
 
           />
 

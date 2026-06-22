@@ -1,12 +1,17 @@
 import "./EditPrestamo.css";
 
 import { useState, useEffect } from "react";
+
 import Swal from "sweetalert2";
+
 import api from "../../services/api";
 
 function EditPrestamo({
+
   prestamo,
+
   onClose,
+
 }) {
 
   const [alumnos, setAlumnos] =
@@ -26,6 +31,7 @@ function EditPrestamo({
 
   const [formData, setFormData] =
     useState({
+
       usuario_id:
         prestamo?.usuario_id || "",
 
@@ -46,10 +52,13 @@ function EditPrestamo({
       estado:
         prestamo?.estado ||
         "PRESTADO",
+
     });
 
   useEffect(() => {
+
     cargarDatos();
+
   }, []);
 
   const cargarDatos = async () => {
@@ -57,36 +66,73 @@ function EditPrestamo({
     try {
 
       const [
+
         usuariosResponse,
+
         librosResponse,
+
       ] = await Promise.all([
+
         api.get("/usuarios/"),
+
         api.get("/libros/"),
+
       ]);
 
       setAlumnos(
+
         usuariosResponse.data.filter(
-          (u) => u.rol === "ALUMNO"
+
+          (u) =>
+
+            u.rol === "ALUMNO"
+
         )
+
       );
 
       setDocentes(
+
         usuariosResponse.data.filter(
+
           (u) =>
-            u.rol === "DOCENTE" ||
+
+            u.rol === "DOCENTE"
+
+            ||
+
             u.rol === "DIRECTORA"
+
         )
+
       );
 
       setLibros(
-        librosResponse.data
+
+        librosResponse.data.filter(
+
+          (libro) =>
+
+            libro.cantidad_disponible > 0
+
+            ||
+
+            libro.id_libro ===
+
+            prestamo.libro_id
+
+        )
+
       );
 
     } catch (error) {
 
       console.error(
+
         "Error al cargar datos:",
+
         error
+
       );
 
     }
@@ -95,12 +141,20 @@ function EditPrestamo({
 
   const handleChange = (e) => {
 
-    const { name, value } =
-      e.target;
+    const {
+
+      name,
+
+      value,
+
+    } = e.target;
 
     setFormData({
+
       ...formData,
+
       [name]: value,
+
     });
 
   };
@@ -112,37 +166,69 @@ function EditPrestamo({
     try {
 
       await api.put(
+
         `/prestamos/${prestamo.id_prestamo}`,
+
         {
-          usuario_id: Number(
-            formData.usuario_id
-          ),
 
-          libro_id: Number(
-            formData.libro_id
-          ),
+          usuario_id:
 
-          autorizado_por: Number(
-            formData.autorizado_por
-          ),
+            Number(
+
+              formData.usuario_id
+
+            ),
+
+          libro_id:
+
+            Number(
+
+              formData.libro_id
+
+            ),
+
+          autorizado_por:
+
+            Number(
+
+              formData.autorizado_por
+
+            ),
 
           fecha_limite:
+
             formData.fecha_limite,
 
           fecha_devolucion:
+
             formData.fecha_devolucion ||
+
             null,
 
           estado:
+
             formData.estado,
+
         }
+
       );
 
       await Swal.fire({
+
         icon: "success",
-        title: "¡Préstamo actualizado!",
-        text: "Los datos fueron actualizados correctamente.",
-        confirmButtonColor: "#173b70",
+
+        title:
+
+          "¡Préstamo actualizado!",
+
+        text:
+
+          "Los datos fueron actualizados correctamente.",
+
+        confirmButtonColor:
+
+          "#173b70",
+
       });
 
       window.location.reload();
@@ -152,10 +238,19 @@ function EditPrestamo({
       console.error(error);
 
       Swal.fire({
+
         icon: "error",
+
         title: "Error",
-        text: "No se pudo actualizar el préstamo.",
-        confirmButtonColor: "#173b70",
+
+        text:
+
+          "No se pudo actualizar el préstamo.",
+
+        confirmButtonColor:
+
+          "#173b70",
+
       });
 
     }
@@ -165,202 +260,369 @@ function EditPrestamo({
   return (
 
     <div
+
       className="modal-overlay"
+
       onClick={onClose}
+
     >
 
       <div
+
         className="modal-content"
+
         onClick={(e) =>
+
           e.stopPropagation()
+
         }
+
       >
 
         <h1>
+
           EDITAR PRÉSTAMO
+
         </h1>
 
         <form
+
           className="prestamo-form"
+
           onSubmit={handleSubmit}
+
         >
 
           <label>
+
             Alumno:
+
           </label>
 
           <select
+
             name="usuario_id"
+
             value={
+
               formData.usuario_id
+
             }
-            onChange={handleChange}
+
+            onChange={
+
+              handleChange
+
+            }
+
           >
 
             {alumnos.map(
+
               (alumno) => (
 
                 <option
+
                   key={
+
                     alumno.id_usuario
+
                   }
+
                   value={
+
                     alumno.id_usuario
+
                   }
+
                 >
+
                   {alumno.nombre}{" "}
+
                   {
+
                     alumno.apellido_paterno
+
                   }
+
                 </option>
 
               )
+
             )}
 
           </select>
 
           <label>
+
             Libro:
+
           </label>
 
           <select
+
             name="libro_id"
+
             value={
+
               formData.libro_id
+
             }
-            onChange={handleChange}
+
+            onChange={
+
+              handleChange
+
+            }
+
           >
 
             {libros.map(
+
               (libro) => (
 
                 <option
+
                   key={
+
                     libro.id_libro
+
                   }
+
                   value={
+
                     libro.id_libro
+
                   }
+
                 >
+
                   {libro.titulo}
+
+                  {" ("}
+
+                  {
+
+                    libro.cantidad_disponible
+
+                  }
+
+                  {" disponibles)"}
+
                 </option>
 
               )
+
             )}
 
           </select>
 
           <label>
+
             Autorizado por:
+
           </label>
 
           <select
+
             name="autorizado_por"
+
             value={
+
               formData.autorizado_por
+
             }
-            onChange={handleChange}
+
+            onChange={
+
+              handleChange
+
+            }
+
           >
 
             {docentes.map(
+
               (docente) => (
 
                 <option
+
                   key={
+
                     docente.id_usuario
+
                   }
+
                   value={
+
                     docente.id_usuario
+
                   }
+
                 >
+
                   {docente.nombre}{" "}
+
                   {
+
                     docente.apellido_paterno
+
                   }
+
                 </option>
 
               )
+
             )}
 
           </select>
 
           <label>
+
             Fecha de préstamo:
+
           </label>
 
           <input
+
             type="date"
-            value={fechaPrestamo}
+
+            value={
+
+              fechaPrestamo
+
+            }
+
             disabled
+
           />
 
           <label>
+
             Fecha límite:
+
           </label>
 
           <input
+
             type="date"
+
             name="fecha_limite"
+
             value={
+
               formData.fecha_limite
+
             }
-            onChange={handleChange}
+
+            onChange={
+
+              handleChange
+
+            }
+
           />
 
           <label>
+
             Fecha devolución:
+
           </label>
 
           <input
+
             type="date"
+
             name="fecha_devolucion"
+
             value={
+
               formData.fecha_devolucion
+
             }
-            onChange={handleChange}
+
+            onChange={
+
+              handleChange
+
+            }
+
           />
 
           <label>
+
             Estado:
+
           </label>
 
           <select
+
             name="estado"
+
             value={
+
               formData.estado
+
             }
-            onChange={handleChange}
+
+            onChange={
+
+              handleChange
+
+            }
+
           >
 
             <option value="PRESTADO">
+
               PRESTADO
+
             </option>
 
             <option value="DEVUELTO">
+
               DEVUELTO
+
             </option>
 
             <option value="VENCIDO">
+
               VENCIDO
+
             </option>
 
           </select>
 
-          <div className="botones-form">
+          <div
+
+            className="botones-form"
+
+          >
 
             <button
+
               type="submit"
+
               className="btn-guardar"
+
             >
+
               Actualizar
+
             </button>
 
             <button
+
               type="button"
+
               className="btn-cancelar"
+
               onClick={onClose}
+
             >
+
               Cancelar
+
             </button>
 
           </div>

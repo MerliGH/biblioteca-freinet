@@ -224,9 +224,9 @@ function Docentes() {
                     {docente.grado &&
                     docente.grupo
 
-                      ? `${docente.grado}${docente.grupo}`
+                      ? `${docente.grado}° ${docente.grupo}`
 
-                      : "Todos"}
+                      : "Todos los grupos"}
 
                   </td>
 

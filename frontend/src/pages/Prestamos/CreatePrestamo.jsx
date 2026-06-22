@@ -144,7 +144,13 @@ function CreatePrestamo({ onClose }) {
 
       setLibros(
 
-        librosResponse.data
+        librosResponse.data.filter(
+
+          (libro) =>
+
+            libro.cantidad_disponible > 0
+
+        )
 
       );
 
@@ -302,7 +308,7 @@ function CreatePrestamo({ onClose }) {
 
         label:
 
-          libro.titulo,
+          `${libro.titulo} (${libro.cantidad_disponible} disponibles)`,
 
       })
 

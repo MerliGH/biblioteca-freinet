@@ -12,9 +12,16 @@ import { RiDeleteBinLine } from "react-icons/ri";
 
 import api from "../../services/api";
 
+import CreateCategoria from "./CreateCategoria";
+import AdministrarCategorias from "./AdministrarCategorias";
+
 function Libros() {
 
   const [libros, setLibros] =
+    useState([]);
+
+  const [categorias,
+    setCategorias] =
     useState([]);
 
   const [busqueda,
@@ -28,6 +35,14 @@ function Libros() {
   const [mostrarModal,
     setMostrarModal] =
     useState(false);
+    
+  const [mostrarCategoria,
+  setMostrarCategoria] =
+  useState(false);
+
+  const [mostrarAdministrar,
+  setMostrarAdministrar] =
+  useState(false);
 
   const [mostrarEdit,
     setMostrarEdit] =
@@ -49,25 +64,49 @@ function Libros() {
     usuario?.rol === "DIRECTORA";
 
   useEffect(() => {
+
     obtenerLibros();
+
   }, []);
 
   const obtenerLibros = async () => {
 
     try {
 
-      const response =
-        await api.get("/libros/");
+      const [
+
+        librosResponse,
+
+        categoriasResponse
+
+      ] = await Promise.all([
+
+        api.get("/libros/"),
+
+        api.get("/categorias/")
+
+      ]);
 
       setLibros(
-        response.data
+
+        librosResponse.data
+
+      );
+
+      setCategorias(
+
+        categoriasResponse.data
+
       );
 
     } catch (error) {
 
       console.error(
+
         "Error al obtener libros:",
+
         error
+
       );
 
     }
@@ -75,83 +114,152 @@ function Libros() {
   };
 
   const librosFiltrados =
-    libros.filter((libro) => {
 
-      const coincideClasificacion =
-        clasificacionSeleccionada ===
-        "TODOS"
-          ? true
-          : String(
+    libros.filter(
+
+      (libro) => {
+
+        const coincideClasificacion =
+
+          clasificacionSeleccionada ===
+
+          "TODOS"
+
+          ||
+
+          String(
+
+            libro.categoria_id
+
+          ) ===
+
+          clasificacionSeleccionada;
+
+        const categoria =
+
+          categorias.find(
+
+            (cat) =>
+
+              cat.id_categoria ===
+
               libro.categoria_id
-            ) ===
-            clasificacionSeleccionada;
 
-      const textoBusqueda =
-        busqueda.toLowerCase();
+          );
 
-      const nombreCategoria =
-        libro.categoria_id === 1
-          ? "cuentos"
-          : libro.categoria_id === 2
-          ? "novela"
-          : libro.categoria_id === 3
-          ? "infantil"
-          : "";
+        const nombreCategoria =
 
-      const coincideBusqueda =
+          categoria?.nombre || "";
 
-        nombreCategoria
-          .toLowerCase()
-          .includes(textoBusqueda)
+        const textoBusqueda =
 
-        ||
+          busqueda.toLowerCase();
 
-        (libro.titulo || "")
-          .toLowerCase()
-          .includes(textoBusqueda)
+        const coincideBusqueda =
 
-        ||
+          nombreCategoria
 
-        (
-          libro.autor_ilustrador || ""
-        )
-          .toLowerCase()
-          .includes(textoBusqueda)
+            .toLowerCase()
 
-        ||
+            .includes(
 
-        (libro.serie || "")
-          .toLowerCase()
-          .includes(textoBusqueda)
+              textoBusqueda
 
-        ||
+            )
 
-        (
-          libro.procedencia || ""
-        )
-          .toLowerCase()
-          .includes(textoBusqueda)
+          ||
 
-        ||
+          (libro.titulo || "")
 
-        String(
-          libro.cantidad_total
-        ).includes(
-          textoBusqueda
-        )
+            .toLowerCase()
 
-        ||
+            .includes(
 
-        (libro.seccion || "")
-          .toLowerCase()
-          .includes(textoBusqueda);
+              textoBusqueda
 
-      return (
-        coincideClasificacion &&
-        coincideBusqueda
-      );
+            )
 
-    });
+          ||
+
+          (
+
+            libro.autor_ilustrador || ""
+
+          )
+
+            .toLowerCase()
+
+            .includes(
+
+              textoBusqueda
+
+            )
+
+          ||
+
+          (libro.serie || "")
+
+            .toLowerCase()
+
+            .includes(
+
+              textoBusqueda
+
+            )
+
+          ||
+
+          (
+
+            libro.procedencia || ""
+
+          )
+
+            .toLowerCase()
+
+            .includes(
+
+              textoBusqueda
+
+            )
+
+          ||
+
+          String(
+
+            libro.cantidad_total
+
+          ).includes(
+
+            textoBusqueda
+
+          )
+
+          ||
+
+          (libro.seccion || "")
+
+            .toLowerCase()
+
+            .includes(
+
+              textoBusqueda
+
+            );
+
+        return (
+
+          coincideClasificacion
+
+          &&
+
+          coincideBusqueda
+
+        );
+
+      }
+
+    );
 
   return (
 
@@ -164,37 +272,98 @@ function Libros() {
           <div>
 
             <h1>
-              Gestión de Libros
-            </h1>
 
+              Gestión de Libros
+
+            </h1>
             <select
               className="filtro-clasificacion"
-              value={
-                clasificacionSeleccionada
+              value={clasificacionSeleccionada}
+              onChange={(e) => {
+
+              if (
+
+                e.target.value ===
+
+                "NUEVA_CATEGORIA"
+
+              ) {
+
+                setMostrarCategoria(
+                  true
+                );
+
+                return;
+
               }
-              onChange={(e) =>
-                setClasificacionSeleccionada(
-                  e.target.value
-                )
+
+              if (
+
+                e.target.value ===
+
+                "ADMIN_CATEGORIAS"
+
+              ) {
+
+                setMostrarAdministrar(
+                  true
+                );
+
+                return;
+
               }
-            >
+
+              setClasificacionSeleccionada(
+                e.target.value
+              );
+
+            }}
+          >
 
               <option value="TODOS">
+
                 Todas las clasificaciones
+
               </option>
 
-              <option value="1">
-                Cuentos
-              </option>
+              {categorias.map(
 
-              <option value="2">
-                Novela
-              </option>
+                (categoria) => (
 
-              <option value="3">
-                Infantil
-              </option>
+                  <option
+                    key={categoria.id_categoria}
+                    value={categoria.id_categoria}
+                  >
 
+                    {categoria.nombre}
+
+                  </option>
+
+                )
+
+              )}
+
+              {esDirectora && (
+
+                <option value="NUEVA_CATEGORIA">
+
+                  + Nueva clasificación
+
+                </option>
+
+              )}
+
+              {esDirectora && (
+
+                <option
+                  value="ADMIN_CATEGORIAS"
+                >
+
+                  Administrar clasificaciones
+
+                </option>
+
+              )}
             </select>
 
           </div>
@@ -202,28 +371,47 @@ function Libros() {
           <div className="acciones">
 
             <input
+
               type="text"
+
               placeholder="Buscar..."
+
               className="buscador"
+
               value={busqueda}
+
               onChange={(e) =>
+
                 setBusqueda(
+
                   e.target.value
+
                 )
+
               }
+
             />
 
             {esDirectora && (
 
               <button
+
                 className="btn-agregar"
+
                 onClick={() =>
+
                   setMostrarModal(
+
                     true
+
                   )
+
                 }
+
               >
+
                 Añadir Libro
+
               </button>
 
             )}
@@ -237,15 +425,25 @@ function Libros() {
           <thead>
 
             <tr>
+
               <th>Número</th>
+
               <th>Clasificación</th>
+
               <th>Título</th>
+
               <th>Autor e ilustrador</th>
+
               <th>Serie</th>
+
               <th>Procedencia</th>
-              <th>Cantidad</th>
+
+              <th>Disponibles</th>
+
               <th>Sección</th>
+
               <th>Acciones</th>
+
             </tr>
 
           </thead>
@@ -253,64 +451,75 @@ function Libros() {
           <tbody>
 
             {librosFiltrados.map(
+
               (libro) => (
 
                 <tr
+
                   key={
+
                     libro.id_libro
+
                   }
+
                 >
 
                   <td>
-                    {
-                      libro.id_libro
-                    }
+
+                    {libro.id_libro}
+
                   </td>
 
                   <td>
-                    {libro.categoria_id === 1
-                      ? "Cuentos"
-                      : libro.categoria_id === 2
-                      ? "Novela"
-                      : libro.categoria_id === 3
-                      ? "Infantil"
-                      : "Sin categoría"}
+
+                    {categorias.find(
+
+                      (categoria) =>
+
+                        categoria.id_categoria ===
+
+                        libro.categoria_id
+
+                    )?.nombre ||
+
+                    "Sin categoría"}
+
                   </td>
 
                   <td>
-                    {
-                      libro.titulo
-                    }
+
+                    {libro.titulo}
+
                   </td>
 
                   <td>
-                    {
-                      libro.autor_ilustrador
-                    }
+
+                    {libro.autor_ilustrador}
+
                   </td>
 
                   <td>
-                    {
-                      libro.serie
-                    }
+
+                    {libro.serie}
+
                   </td>
 
                   <td>
-                    {
-                      libro.procedencia
-                    }
+
+                    {libro.procedencia}
+
                   </td>
 
                   <td>
-                    {
-                      libro.cantidad_total
-                    }
+
+                    {libro.cantidad_disponible} de {libro.cantidad_total}
+
                   </td>
 
                   <td>
-                    {
-                      libro.seccion
-                    }
+
+                    {libro.seccion}
+
                   </td>
 
                   <td>
@@ -318,39 +527,57 @@ function Libros() {
                     <div className="acciones-tabla">
 
                       <button
+
                         className="btn-editar"
+
                         onClick={() => {
 
                           setLibroSeleccionado(
+
                             libro
+
                           );
 
                           setMostrarEdit(
+
                             true
+
                           );
 
                         }}
+
                       >
+
                         <FaRegEdit />
+
                       </button>
 
                       {esDirectora && (
 
                         <button
+
                           className="btn-eliminar"
+
                           onClick={() => {
 
                             setLibroSeleccionado(
+
                               libro
+
                             );
 
                             setMostrarDelete(
+
                               true
+
                             );
 
                           }}
+
                         >
+
                           <RiDeleteBinLine />
+
                         </button>
 
                       )}
@@ -362,6 +589,7 @@ function Libros() {
                 </tr>
 
               )
+
             )}
 
           </tbody>
@@ -371,43 +599,109 @@ function Libros() {
         {mostrarModal && (
 
           <CreateLibro
+
             onClose={() =>
+
               setMostrarModal(
+
                 false
+
               )
+
             }
+
           />
 
         )}
+        {mostrarCategoria && (
+
+          <CreateCategoria
+
+            onClose={() => {
+
+              setMostrarCategoria(
+
+                false
+
+              );
+
+              obtenerLibros();
+
+            }}
+
+          />
+
+        )}
+        {mostrarAdministrar && (
+
+        <AdministrarCategorias
+
+          categorias={categorias}
+
+          onClose={() =>
+
+            setMostrarAdministrar(
+              false
+            )
+
+          }
+
+          onActualizar={
+            obtenerLibros
+          }
+
+        />
+
+      )}
 
         {mostrarEdit &&
+
           libroSeleccionado && (
 
             <EditLibro
+
               libro={
+
                 libroSeleccionado
+
               }
+
               onClose={() =>
+
                 setMostrarEdit(
+
                   false
+
                 )
+
               }
+
             />
 
           )}
 
         {mostrarDelete &&
+
           libroSeleccionado && (
 
             <DeleteLibro
+
               libro={
+
                 libroSeleccionado
+
               }
+
               onClose={() =>
+
                 setMostrarDelete(
+
                   false
+
                 )
+
               }
+
             />
 
           )}

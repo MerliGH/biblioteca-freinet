@@ -1,0 +1,91 @@
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.28);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.modal-content{
+  width:430px;
+  background:#f5c27c;
+  border-radius:30px;
+  padding:28px 30px;
+  box-sizing:border-box;
+}
+
+.modal-content h2{
+  text-align:center;
+  color:#173b70;
+  font-size:28px;
+  font-weight:700;
+  margin-bottom:25px;
+}
+
+.grupo-input{
+  display:flex;
+  flex-direction:column;
+  margin-bottom:18px;
+}
+
+.grupo-input label{
+  color:#173b70;
+  font-size:15px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.grupo-input input,
+.grupo-input textarea{
+  width:100%;
+  border:none;
+  border-radius:12px;
+  padding:12px 14px;
+  font-size:14px;
+  outline:none;
+  box-sizing:border-box;
+}
+
+.grupo-input textarea{
+  min-height:90px;
+  resize:none;
+}
+
+.botones-modal{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:18px;
+  margin-top:30px;
+}
+
+.btn-guardar,
+.btn-cancelar{
+  width:130px;
+  height:42px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:18px;
+  font-weight:700;
+  color:white;
+  transition:.2s;
+}
+
+.btn-guardar{
+  background:#173b70;
+}
+
+.btn-guardar:hover{
+  background:#0f2b55;
+}
+
+.btn-cancelar{
+  background:#8dc63f;
+}
+
+.btn-cancelar:hover{
+  background:#79ad34;
+}

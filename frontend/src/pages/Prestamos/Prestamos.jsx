@@ -22,6 +22,14 @@ function Prestamos() {
     setBusqueda] =
     useState("");
 
+    const [filtroGrado,
+  setFiltroGrado] =
+  useState("");
+
+  const [filtroGrupo,
+    setFiltroGrupo] =
+    useState("");
+
   const [mostrarCreate,
     setMostrarCreate] =
     useState(false);
@@ -59,6 +67,65 @@ function Prestamos() {
     return `${day}/${month}/${year}`;
 
   };
+  const mostrarFiltros =
+
+  usuario?.rol === "DIRECTORA"
+
+  ||
+
+  (
+
+    usuario?.rol === "DOCENTE"
+
+    &&
+
+    (
+
+      !usuario?.grado
+
+      ||
+
+      !usuario?.grupo
+
+    )
+
+  );
+
+const grados = [
+
+  ...new Set(
+
+    prestamos
+
+      .map(
+
+        (p) => p.gradoAlumno
+
+      )
+
+      .filter(Boolean)
+
+  )
+
+].sort();
+
+const grupos = [
+
+  ...new Set(
+
+    prestamos
+
+      .map(
+
+        (p) => p.grupoAlumno
+
+      )
+
+      .filter(Boolean)
+
+  )
+
+].sort();
 
 
 const obtenerPrestamos = async () => {
@@ -268,57 +335,93 @@ const obtenerPrestamos = async () => {
 
 };
 
-  const prestamosFiltrados =
-    prestamos.filter(
-      (prestamo) => {
+ const prestamosFiltrados =
 
-        const texto =
-          busqueda.toLowerCase();
+  prestamos.filter(
 
-        return (
+    (prestamo) => {
 
-          (prestamo.nombreAlumno || "")
-            .toLowerCase()
-            .includes(texto)
+      const texto =
 
-          ||
+        busqueda.toLowerCase();
 
-          (prestamo.tituloLibro || "")
-            .toLowerCase()
-            .includes(texto)
+      const coincideBusqueda =
 
-          ||
+        (prestamo.nombreAlumno || "")
+          .toLowerCase()
+          .includes(texto)
 
-          (prestamo.autorizadoPor || "")
-            .toLowerCase()
-            .includes(texto)
+        ||
 
-          ||
+        (prestamo.tituloLibro || "")
+          .toLowerCase()
+          .includes(texto)
 
-          formatearFecha(
-            prestamo.fecha_prestamo
-          )
-            .toLowerCase()
-            .includes(texto)
+        ||
 
-          ||
+        (prestamo.autorizadoPor || "")
+          .toLowerCase()
+          .includes(texto)
 
-          formatearFecha(
-            prestamo.fecha_limite
-          )
-            .toLowerCase()
-            .includes(texto)
+        ||
 
-          ||
+        formatearFecha(
+          prestamo.fecha_prestamo
+        )
+          .toLowerCase()
+          .includes(texto)
 
-          (prestamo.estado || "")
-            .toLowerCase()
-            .includes(texto)
+        ||
 
-        );
+        formatearFecha(
+          prestamo.fecha_limite
+        )
+          .toLowerCase()
+          .includes(texto)
 
-      }
-    );
+        ||
+
+        (prestamo.estado || "")
+          .toLowerCase()
+          .includes(texto);
+
+      const coincideGrado =
+
+        filtroGrado === ""
+
+        ||
+
+        String(
+          prestamo.gradoAlumno
+        ) === filtroGrado;
+
+      const coincideGrupo =
+
+        filtroGrupo === ""
+
+        ||
+
+        String(
+          prestamo.grupoAlumno
+        ) === filtroGrupo;
+
+      return (
+
+        coincideBusqueda
+
+        &&
+
+        coincideGrado
+
+        &&
+
+        coincideGrupo
+
+      );
+
+    }
+
+  );
 
   return (
 
@@ -331,31 +434,157 @@ const obtenerPrestamos = async () => {
           <h1>
             Préstamos Activos
           </h1>
+      <div className="acciones">
 
-          <div className="acciones">
+          <div className="barra-filtros">
 
             <input
+
               type="text"
+
               placeholder="Buscar..."
+
               className="buscador"
+
               value={busqueda}
+
               onChange={(e) =>
+
                 setBusqueda(
+
                   e.target.value
+
                 )
+
               }
+
             />
 
-            <button
-              className="btn-agregar"
-              onClick={() =>
-                setMostrarCreate(true)
-              }
-            >
-              Añadir Préstamo
-            </button>
+            {mostrarFiltros && (
+
+              <>
+
+                <select
+
+                  className="filtro-select"
+
+                  value={filtroGrado}
+
+                  onChange={(e) =>
+
+                    setFiltroGrado(
+
+                      e.target.value
+
+                    )
+
+                  }
+
+                >
+
+                  <option value="">
+
+                    Todos los grados
+
+                  </option>
+
+                  {grados.map(
+
+                    (grado) => (
+
+                      <option
+
+                        key={grado}
+
+                        value={grado}
+
+                      >
+
+                        {grado}°
+
+                      </option>
+
+                    )
+
+                  )}
+
+                </select>
+
+
+                <select
+
+                  className="filtro-select"
+
+                  value={filtroGrupo}
+
+                  onChange={(e) =>
+
+                    setFiltroGrupo(
+
+                      e.target.value
+
+                    )
+
+                  }
+
+                >
+
+                  <option value="">
+
+                    Todos los grupos
+
+                  </option>
+
+                  {grupos.map(
+
+                    (grupo) => (
+
+                      <option
+
+                        key={grupo}
+
+                        value={grupo}
+
+                      >
+
+                        {grupo}
+
+                      </option>
+
+                    )
+
+                  )}
+
+                </select>
+
+              </>
+
+            )}
 
           </div>
+
+
+          <button
+
+            className="btn-agregar"
+
+            onClick={() =>
+
+              setMostrarCreate(
+
+                true
+
+              )
+
+            }
+
+          >
+
+            Añadir Préstamo
+
+          </button>
+
+        </div>
 
         </div>
 
@@ -363,15 +592,25 @@ const obtenerPrestamos = async () => {
 
           <thead>
 
-            <tr>
-              <th>Nombre del alumno</th>
-              <th>Libro</th>
-              <th>Autorizado por</th>
-              <th>Fecha préstamo</th>
-              <th>Fecha límite</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
+          <tr>
+
+            <th>Nombre del alumno</th>
+
+            <th>Grupo</th>
+
+            <th>Libro</th>
+
+            <th>Autorizado por</th>
+
+            <th>Fecha préstamo</th>
+
+            <th>Fecha límite</th>
+
+            <th>Estado</th>
+
+            <th>Acciones</th>
+
+          </tr>
 
           </thead>
 
@@ -386,17 +625,28 @@ const obtenerPrestamos = async () => {
                   }
                 >
 
-                  <td>
-                    {
-                      prestamo.nombreAlumno
-                    }
-                  </td>
+                 <td>
 
-                  <td>
-                    {
-                      prestamo.tituloLibro
-                    }
-                  </td>
+                  {prestamo.nombreAlumno}
+
+                </td>
+
+              <td>
+
+                {prestamo.gradoAlumno &&
+                prestamo.grupoAlumno
+
+                  ? `${prestamo.gradoAlumno}° ${prestamo.grupoAlumno}`
+
+                  : "Sin grupo"}
+
+              </td>
+
+              <td>
+
+                {prestamo.tituloLibro}
+
+              </td>
 
                   <td>
                     {

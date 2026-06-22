@@ -21,31 +21,47 @@ function CreateLibro({ onClose }) {
   });
 
   const opcionesCategorias = [
-    {
-      value: 1,
-      label: "Cuentos",
-    },
-    {
-      value: 2,
-      label: "Novela",
-    },
-    {
-      value: 3,
-      label: "Infantil",
-    },
+    { value: 1, label: "Cuentos" },
+    { value: 2, label: "Novela" },
+    { value: 3, label: "Infantil" },
   ];
 
   const handleChange = (e) => {
 
     const { name, value } = e.target;
 
+    if (name === "cantidad_total") {
+
+      const cantidad = Number(value);
+
+      setFormData({
+        ...formData,
+        cantidad_total: cantidad,
+        cantidad_disponible: Math.min(
+          formData.cantidad_disponible,
+          cantidad
+        ),
+      });
+
+      return;
+    }
+
+    if (name === "cantidad_disponible") {
+
+      setFormData({
+        ...formData,
+        cantidad_disponible: Math.min(
+          Number(value),
+          formData.cantidad_total
+        ),
+      });
+
+      return;
+    }
+
     setFormData({
       ...formData,
-      [name]:
-        name === "cantidad_total" ||
-        name === "cantidad_disponible"
-          ? Number(value)
-          : value,
+      [name]: value,
     });
 
   };
@@ -58,7 +74,13 @@ function CreateLibro({ onClose }) {
 
       await api.post(
         "/libros/",
-        formData
+        {
+          ...formData,
+          cantidad_disponible: Math.min(
+            formData.cantidad_disponible,
+            formData.cantidad_total
+          ),
+        }
       );
 
       await Swal.fire({
@@ -116,7 +138,7 @@ function CreateLibro({ onClose }) {
 
             placeholder="Buscar clasificación..."
 
-            isSearchable={true}
+            isSearchable
 
             value={
               opcionesCategorias.find(
@@ -143,84 +165,157 @@ function CreateLibro({ onClose }) {
           <label>Título:</label>
 
           <input
+
             type="text"
+
             name="titulo"
+
             value={formData.titulo}
+
             onChange={handleChange}
+
             placeholder="Ingrese el título"
+
             required
+
           />
 
-          <label>
-            Autor e ilustrador:
-          </label>
+          <label>Autor e ilustrador:</label>
 
           <input
+
             type="text"
+
             name="autor_ilustrador"
+
             value={formData.autor_ilustrador}
+
             onChange={handleChange}
+
             placeholder="Ingrese autor"
+
           />
 
           <label>Serie:</label>
 
           <input
+
             type="text"
+
             name="serie"
+
             value={formData.serie}
+
             onChange={handleChange}
+
             placeholder="Serie"
+
           />
 
           <label>Procedencia:</label>
 
           <input
+
             type="text"
+
             name="procedencia"
+
             value={formData.procedencia}
+
             onChange={handleChange}
+
             placeholder="Procedencia"
+
           />
 
           <label>
+
             Cantidad en Existencia:
+
           </label>
 
           <input
+
             type="number"
+
             name="cantidad_total"
+
             min="1"
+
             value={formData.cantidad_total}
+
             onChange={handleChange}
+
             required
+
+          />
+
+          <label>
+
+            Cantidad disponible:
+
+          </label>
+
+          <input
+
+            type="number"
+
+            name="cantidad_disponible"
+
+            min="0"
+
+            max={formData.cantidad_total}
+
+            value={formData.cantidad_disponible}
+
+            onChange={handleChange}
+
+            required
+
           />
 
           <label>Sección:</label>
 
           <input
+
             type="text"
+
             name="seccion"
+
             value={formData.seccion}
+
             onChange={handleChange}
+
             placeholder="Ejemplo: L"
+
           />
 
           <div className="botones-form">
 
             <button
+
               type="submit"
+
               className="btn-guardar"
+
             >
+
               Guardar
+
             </button>
 
             <button
+
               type="button"
+
               className="btn-cancelar"
+
               onClick={onClose}
+
             >
+
               Cancelar
+
             </button>
 
           </div>
