@@ -184,3 +184,35 @@
 
   transform: scale(1.08);
 }
+
+
+
+
+.btn-clasificacion {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: .2s;
+  margin-right: 12px;
+  margin-top: 10px;
+}
+
+.btn-nueva {
+  background: #7BBE3A;   /* Verde */
+}
+
+.btn-nueva:hover {
+  background: #69a52f;
+}
+
+.btn-admin {
+  background: #C8A76A;   /* Beige/Dorado */
+}
+
+.btn-admin:hover {
+  background: #b29155;
+}

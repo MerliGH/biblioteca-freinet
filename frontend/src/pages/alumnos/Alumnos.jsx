@@ -290,7 +290,7 @@ const totalPaginas =
         setMostrarCreate(true)
       }
     >
-      Añadir Alumno
+      Añadir alumno
     </button>
 
   )}

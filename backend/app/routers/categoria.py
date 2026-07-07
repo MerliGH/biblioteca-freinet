@@ -17,12 +17,14 @@ router = APIRouter(
     tags=["Categorias"]
 )
 
-
 @router.get("/", response_model=List[CategoriaResponse])
 def listar_categorias(db: Session = Depends(get_db)):
-    categorias = db.query(Categoria).all()
+    categorias = (
+        db.query(Categoria)
+        .filter(Categoria.estado == True)
+        .all()
+    )
     return categorias
-
 
 @router.post("/", response_model=CategoriaResponse)
 def crear_categoria(categoria: CategoriaCreate, db: Session = Depends(get_db)):

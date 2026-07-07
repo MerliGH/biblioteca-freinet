@@ -89,7 +89,7 @@ function CreateCategoria({ onClose }) {
 
         <h2>
 
-          Nueva Clasificación
+          Nueva clasificación
 
         </h2>
 

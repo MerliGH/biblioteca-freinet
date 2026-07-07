@@ -37,12 +37,13 @@
 
 .icon {
   font-size: 38px;
-  min-width: 50px;
+  min-width: 10px;
 }
 
 .menu-item span {
   font-size: 20px;
   font-weight: 400;
+  margin-left: 14px;
   text-decoration: none;
 }
 

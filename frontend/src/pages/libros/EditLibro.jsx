@@ -5,7 +5,11 @@ import api from "../../services/api";
 import Swal from "sweetalert2";
 import Select from "react-select";
 
-function EditLibro({ libro, onClose }) {
+function EditLibro({
+  libro,
+  categorias,
+  onClose,
+})  {
 
   const [formData, setFormData] = useState({
 
@@ -38,24 +42,10 @@ function EditLibro({ libro, onClose }) {
 
   });
 
-  const opcionesCategorias = [
-
-    {
-      value: 1,
-      label: "Cuentos",
-    },
-
-    {
-      value: 2,
-      label: "Novela",
-    },
-
-    {
-      value: 3,
-      label: "Infantil",
-    },
-
-  ];
+  const opcionesCategorias = categorias.map((categoria) => ({
+  value: categoria.id_categoria,
+  label: categoria.nombre,
+}));
 
   const handleChange = (e) => {
 

@@ -32,6 +32,15 @@ function Libros() {
     setClasificacionSeleccionada] =
     useState("TODOS");
 
+    const [paginaActual,
+  setPaginaActual] =
+  useState(1);
+
+const librosPorPagina = 8;
+
+
+
+
   const [mostrarModal,
     setMostrarModal] =
     useState(false);
@@ -261,6 +270,27 @@ function Libros() {
 
     );
 
+    const indiceUltimo =
+  paginaActual * librosPorPagina;
+
+const indicePrimero =
+  indiceUltimo - librosPorPagina;
+
+const librosPaginados =
+  librosFiltrados.slice(
+    indicePrimero,
+    indiceUltimo
+  );
+
+const totalPaginas =
+  Math.ceil(
+    librosFiltrados.length /
+    librosPorPagina
+  );
+
+
+
+
   return (
 
     <Layout>
@@ -273,98 +303,56 @@ function Libros() {
 
             <h1>
 
-              Gestión de Libros
+              Gestión de libros
 
             </h1>
-            <select
-              className="filtro-clasificacion"
-              value={clasificacionSeleccionada}
-              onChange={(e) => {
+           <select
+  className="filtro-clasificacion"
+  value={clasificacionSeleccionada}
+  onChange={(e) => {
 
-              if (
+  setClasificacionSeleccionada(
+    e.target.value
+  );
 
-                e.target.value ===
+  setPaginaActual(1);
 
-                "NUEVA_CATEGORIA"
+}}
+>
+  <option value="TODOS">
+    Todas las clasificaciones
+  </option>
 
-              ) {
+  {categorias.map((categoria) => (
+    <option
+      key={categoria.id_categoria}
+      value={categoria.id_categoria}
+    >
+      {categoria.nombre}
+    </option>
+  ))}
+</select>
 
-                setMostrarCategoria(
-                  true
-                );
 
-                return;
+{esDirectora && (
+  <div className="acciones-categorias">
 
-              }
+   <button
+  className="btn-clasificacion btn-nueva"
+  onClick={() => setMostrarCategoria(true)}
+>
+  Nueva clasificación
+</button>
 
-              if (
+<button
+  className="btn-clasificacion btn-admin"
+  onClick={() => setMostrarAdministrar(true)}
+>
+  Editar clasificaciones
+</button>
 
-                e.target.value ===
-
-                "ADMIN_CATEGORIAS"
-
-              ) {
-
-                setMostrarAdministrar(
-                  true
-                );
-
-                return;
-
-              }
-
-              setClasificacionSeleccionada(
-                e.target.value
-              );
-
-            }}
-          >
-
-              <option value="TODOS">
-
-                Todas las clasificaciones
-
-              </option>
-
-              {categorias.map(
-
-                (categoria) => (
-
-                  <option
-                    key={categoria.id_categoria}
-                    value={categoria.id_categoria}
-                  >
-
-                    {categoria.nombre}
-
-                  </option>
-
-                )
-
-              )}
-
-              {esDirectora && (
-
-                <option value="NUEVA_CATEGORIA">
-
-                  + Nueva clasificación
-
-                </option>
-
-              )}
-
-              {esDirectora && (
-
-                <option
-                  value="ADMIN_CATEGORIAS"
-                >
-
-                  Administrar clasificaciones
-
-                </option>
-
-              )}
-            </select>
+  </div>
+)}
 
           </div>
 
@@ -380,15 +368,15 @@ function Libros() {
 
               value={busqueda}
 
-              onChange={(e) =>
+              onChange={(e) => {
 
-                setBusqueda(
+  setBusqueda(
+    e.target.value
+  );
 
-                  e.target.value
+  setPaginaActual(1);
 
-                )
-
-              }
+}}
 
             />
 
@@ -410,7 +398,7 @@ function Libros() {
 
               >
 
-                Añadir Libro
+                Añadir libro
 
               </button>
 
@@ -419,6 +407,10 @@ function Libros() {
           </div>
 
         </div>
+
+
+
+
 
         <table className="tabla-libros">
 
@@ -450,7 +442,7 @@ function Libros() {
 
           <tbody>
 
-            {librosFiltrados.map(
+            {librosPaginados.map(
 
               (libro) => (
 
@@ -595,24 +587,55 @@ function Libros() {
           </tbody>
 
         </table>
+<div className="paginacion">
 
-        {mostrarModal && (
+  <button
+    disabled={paginaActual === 1}
+    onClick={() =>
+      setPaginaActual(
+        paginaActual - 1
+      )
+    }
+  >
+    ← Anterior
+  </button>
 
-          <CreateLibro
+  <span>
 
-            onClose={() =>
+    Página {paginaActual} de {totalPaginas || 1}
 
-              setMostrarModal(
+  </span>
 
-                false
+  <button
+    disabled={
+      paginaActual === totalPaginas ||
+      totalPaginas === 0
+    }
+    onClick={() =>
+      setPaginaActual(
+        paginaActual + 1
+      )
+    }
+  >
+    Siguiente →
+  </button>
 
-              )
+</div>
+       {mostrarModal && (
 
-            }
+  <CreateLibro
 
-          />
+    categorias={categorias}
 
-        )}
+    onClose={() =>
+      setMostrarModal(false)
+    }
+
+  />
+
+)}
+
+
         {mostrarCategoria && (
 
           <CreateCategoria
@@ -658,25 +681,13 @@ function Libros() {
 
           libroSeleccionado && (
 
-            <EditLibro
-
-              libro={
-
-                libroSeleccionado
-
-              }
-
-              onClose={() =>
-
-                setMostrarEdit(
-
-                  false
-
-                )
-
-              }
-
-            />
+           <EditLibro
+  libro={libroSeleccionado}
+  categorias={categorias}
+  onClose={() =>
+    setMostrarEdit(false)
+  }
+/>
 
           )}
 

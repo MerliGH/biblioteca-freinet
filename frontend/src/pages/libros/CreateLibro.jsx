@@ -6,7 +6,7 @@ import api from "../../services/api";
 import Swal from "sweetalert2";
 import Select from "react-select";
 
-function CreateLibro({ onClose }) {
+function CreateLibro({ onClose, categorias }) {
 
   const [formData, setFormData] = useState({
     categoria_id: "",
@@ -20,11 +20,11 @@ function CreateLibro({ onClose }) {
     estado: true,
   });
 
-  const opcionesCategorias = [
-    { value: 1, label: "Cuentos" },
-    { value: 2, label: "Novela" },
-    { value: 3, label: "Infantil" },
-  ];
+const opcionesCategorias = categorias.map((categoria) => ({
+  value: categoria.id_categoria,
+  label: categoria.nombre,
+}));
+
 
   const handleChange = (e) => {
 

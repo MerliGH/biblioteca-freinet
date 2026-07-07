@@ -170,7 +170,7 @@ const totalPaginas =
                 setMostrarCreate(true)
               }
             >
-              Añadir Docente
+              Añadir docente
             </button>
 
           </div>
