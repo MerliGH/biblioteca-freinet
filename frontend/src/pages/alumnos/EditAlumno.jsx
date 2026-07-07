@@ -17,8 +17,7 @@ function EditAlumno({
       apellido_materno:
         alumno?.apellido_materno || "",
       correo: alumno?.correo || "",
-      password:
-        alumno?.password || "",
+      password: null,
       matricula:
         alumno?.matricula || "",
       rol: "ALUMNO",
@@ -47,9 +46,12 @@ function EditAlumno({
     try {
 
       await api.put(
-        `/usuarios/${alumno.id_usuario}`,
-        formData
-      );
+  `/usuarios/${alumno.id_usuario}`,
+  {
+    ...formData,
+    password: null,
+  }
+);
 
       await Swal.fire({
         icon: "success",
@@ -99,6 +101,7 @@ function EditAlumno({
           <input
             type="text"
             name="nombre"
+              required
             value={formData.nombre}
             onChange={handleChange}
           />
@@ -108,6 +111,7 @@ function EditAlumno({
           <input
             type="text"
             name="apellido_paterno"
+              required
             value={formData.apellido_paterno}
             onChange={handleChange}
           />
@@ -126,45 +130,49 @@ function EditAlumno({
           <input
             type="email"
             name="correo"
+              required
             value={formData.correo}
             onChange={handleChange}
           />
 
-          <label>Contraseña:</label>
-
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
+         
 
           <label>Matrícula:</label>
 
           <input
             type="text"
             name="matricula"
+              required
             value={formData.matricula}
             onChange={handleChange}
           />
 
           <label>Grado:</label>
 
-          <input
-            type="text"
-            name="grado"
-            value={formData.grado}
-            onChange={handleChange}
-          />
+          <select
+  name="grado"
+  value={formData.grado}
+  onChange={handleChange}
+>
+  <option value="1">1°</option>
+  <option value="2">2°</option>
+  <option value="3">3°</option>
+  <option value="4">4°</option>
+  <option value="5">5°</option>
+  <option value="6">6°</option>
+</select>
 
           <label>Grupo:</label>
 
-          <input
-            type="text"
-            name="grupo"
-            value={formData.grupo}
-            onChange={handleChange}
-          />
+          <select
+  name="grupo"
+  value={formData.grupo}
+  onChange={handleChange}
+>
+  <option value="A">A</option>
+  <option value="B">B</option>
+
+</select>
 
           <label>Estado:</label>
 

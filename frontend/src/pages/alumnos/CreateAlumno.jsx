@@ -10,27 +10,17 @@ function CreateAlumno({ onClose }) {
 
   const [formData, setFormData] = useState({
 
-    nombre: "",
-
-    apellido_paterno: "",
-
-    apellido_materno: "",
-
-    correo: "",
-
-    password: "",
-
-    matricula: "",
-
-    rol: "ALUMNO",
-
-    grado: "",
-
-    grupo: "",
-
-    estado: true,
-
-  });
+     nombre: "",
+  apellido_paterno: "",
+  apellido_materno: "",
+  correo: "",
+  password: null,
+  matricula: "",
+  rol: "ALUMNO",
+  grado: "",
+  grupo: "",
+  estado: true,
+});
 
   const handleChange = (e) => {
 
@@ -64,19 +54,9 @@ function CreateAlumno({ onClose }) {
 
         {
 
-          ...formData,
-
-          estado:
-
-            Boolean(
-
-              formData.estado
-
-            ),
-
-        }
-
-      );
+          ...formData
+  }
+);
 
       await Swal.fire({
 
@@ -167,6 +147,7 @@ function CreateAlumno({ onClose }) {
             type="text"
 
             name="nombre"
+            required
 
             value={formData.nombre}
 
@@ -187,6 +168,7 @@ function CreateAlumno({ onClose }) {
             type="text"
 
             name="apellido_paterno"
+            required
 
             value={
 
@@ -235,35 +217,17 @@ function CreateAlumno({ onClose }) {
             type="email"
 
             name="correo"
+            required
 
             value={formData.correo}
 
             onChange={handleChange}
 
-            placeholder="Ejemplo: alumno@ut-tijuana.edu.mx"
+            placeholder=" Ejemplo: nombre@institutocelestinfreinet.com.mx"
 
           />
 
-          <label>
-
-            Contraseña:
-
-          </label>
-
-          <input
-
-            type="password"
-
-            name="password"
-
-            value={formData.password}
-
-            onChange={handleChange}
-
-            placeholder="Ingrese contraseña"
-
-          />
-
+          
           <label>
 
             Matrícula:
@@ -275,6 +239,7 @@ function CreateAlumno({ onClose }) {
             type="text"
 
             name="matricula"
+            required
 
             value={formData.matricula}
 
@@ -290,19 +255,20 @@ function CreateAlumno({ onClose }) {
 
           </label>
 
-          <input
-
-            type="text"
-
-            name="grado"
-
-            value={formData.grado}
-
-            onChange={handleChange}
-
-            placeholder="Ejemplo: 1"
-
-          />
+          <select
+  name="grado"
+  value={formData.grado}
+  onChange={handleChange}
+  required
+>
+  <option value="">Seleccione un grado</option>
+  <option value="1">1°</option>
+  <option value="2">2°</option>
+  <option value="3">3°</option>
+  <option value="4">4°</option>
+  <option value="5">5°</option>
+  <option value="6">6°</option>
+</select>
 
           <label>
 
@@ -310,69 +276,19 @@ function CreateAlumno({ onClose }) {
 
           </label>
 
-          <input
+    <select
+  name="grupo"
+  value={formData.grupo}
+  onChange={handleChange}
+  required
+>
+  <option value="">Seleccione un grupo</option>
+  <option value="A">A</option>
+  <option value="B">B</option>
 
-            type="text"
+</select>
 
-            name="grupo"
-
-            value={formData.grupo}
-
-            onChange={handleChange}
-
-            placeholder="Ejemplo: A"
-
-          />
-
-          <label>
-
-            Estado:
-
-          </label>
-
-          <select
-
-            value={
-
-              formData.estado
-
-                ? "Activo"
-
-                : "Inactivo"
-
-            }
-
-            onChange={(e) =>
-
-              setFormData({
-
-                ...formData,
-
-                estado:
-
-                  e.target.value ===
-
-                  "Activo",
-
-              })
-
-            }
-
-          >
-
-            <option value="Activo">
-
-              Activo
-
-            </option>
-
-            <option value="Inactivo">
-
-              Inactivo
-
-            </option>
-
-          </select>
+         
 
           <div
 

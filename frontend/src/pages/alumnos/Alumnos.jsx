@@ -228,7 +228,7 @@ const totalPaginas =
   <div>
 
     <h1>
-      Gestión de Alumnos
+      Gestión de alumnos
     </h1>
 
     {puedeFiltrar && (
