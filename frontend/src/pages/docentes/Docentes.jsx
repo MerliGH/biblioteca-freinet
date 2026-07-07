@@ -20,7 +20,10 @@ function Docentes() {
   const [busqueda,
     setBusqueda] =
     useState("");
+const [paginaActual, setPaginaActual] =
+  useState(1);
 
+const docentesPorPagina = 8;
   const [mostrarCreate,
     setMostrarCreate] =
     useState(false);
@@ -117,6 +120,25 @@ function Docentes() {
       }
     );
 
+    const indiceUltimo =
+  paginaActual * docentesPorPagina;
+
+const indicePrimero =
+  indiceUltimo - docentesPorPagina;
+
+const docentesPaginados =
+  docentesBusqueda.slice(
+    indicePrimero,
+    indiceUltimo
+  );
+
+const totalPaginas =
+  Math.ceil(
+    docentesBusqueda.length /
+    docentesPorPagina
+  );
+
+  
   return (
 
     <Layout>
@@ -136,11 +158,10 @@ function Docentes() {
               placeholder="Buscar..."
               className="buscador"
               value={busqueda}
-              onChange={(e) =>
-                setBusqueda(
-                  e.target.value
-                )
-              }
+           onChange={(e) => {
+  setBusqueda(e.target.value);
+  setPaginaActual(1);
+}}
             />
 
             <button
@@ -184,7 +205,7 @@ function Docentes() {
 
           <tbody>
 
-            {docentesBusqueda.map(
+            {docentesPaginados.map(
               (docente) => (
 
                 <tr
@@ -313,7 +334,34 @@ function Docentes() {
           </tbody>
 
         </table>
+<div className="paginacion">
 
+  <button
+    disabled={paginaActual === 1}
+    onClick={() =>
+      setPaginaActual(paginaActual - 1)
+    }
+  >
+    ← Anterior
+  </button>
+
+  <span>
+    Página {paginaActual} de {totalPaginas || 1}
+  </span>
+
+  <button
+    disabled={
+      paginaActual === totalPaginas ||
+      totalPaginas === 0
+    }
+    onClick={() =>
+      setPaginaActual(paginaActual + 1)
+    }
+  >
+    Siguiente →
+  </button>
+
+</div>
         {mostrarCreate && (
 
           <CreateDocente
