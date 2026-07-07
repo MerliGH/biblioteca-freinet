@@ -126,7 +126,7 @@ function Docentes() {
         <div className="docentes-header">
 
           <h1>
-            Gestión de Docentes
+            Gestión de docentes
           </h1>
 
           <div className="acciones">
@@ -172,7 +172,7 @@ function Docentes() {
 
               <th>Grupo</th>
 
-              <th>Estado</th>
+              
 
               <th>Fecha de registro</th>
 
@@ -230,16 +230,7 @@ function Docentes() {
 
                   </td>
 
-                  <td>
-
-                    {docente.estado
-
-                      ? "Activo"
-
-                      : "Inactivo"}
-
-                  </td>
-
+                  
                   <td>
 
                     <span className="fecha-pill">

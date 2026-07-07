@@ -68,16 +68,29 @@ function EditDocente({
   const handleSubmit = async (e) => {
 
     e.preventDefault();
+if (
+  (formData.grado === "" && formData.grupo !== "") ||
+  (formData.grado !== "" && formData.grupo === "")
+) {
+  Swal.fire({
+    icon: "warning",
+    title: "Selección inválida",
+    text: "Seleccione un grado y un grupo, o deje ambos en 'Todos'.",
+    confirmButtonColor: "#173b70",
+  });
+  return;
+}
 
     try {
 
-      await api.put(
-
-        `/usuarios/${docente.id_usuario}`,
-
-        formData
-
-      );
+    await api.put(
+  `/usuarios/${docente.id_usuario}`,
+  {
+    ...formData,
+    grado: formData.grado || null,
+    grupo: formData.grupo || null,
+  }
+);
 
       await Swal.fire({
 
@@ -322,61 +335,35 @@ function EditDocente({
 
           />
 
-          <label>
+        <label>Grado:</label>
 
-            Grado:
+<select
+  name="grado"
+  value={formData.grado}
+  onChange={handleChange}
+>
+  <option value="">Todos los grados</option>
+  <option value="1">1°</option>
+  <option value="2">2°</option>
+  <option value="3">3°</option>
+  <option value="4">4°</option>
+  <option value="5">5°</option>
+  <option value="6">6°</option>
+</select>
 
-          </label>
+         
 
-          <input
+         <label>Grupo:</label>
 
-            type="text"
-
-            name="grado"
-
-            value={
-
-              formData.grado
-
-            }
-
-            onChange={
-
-              handleChange
-
-            }
-
-            placeholder="Ejemplo: 3"
-
-          />
-
-          <label>
-
-            Grupo:
-
-          </label>
-
-          <input
-
-            type="text"
-
-            name="grupo"
-
-            value={
-
-              formData.grupo
-
-            }
-
-            onChange={
-
-              handleChange
-
-            }
-
-            placeholder="Ejemplo: A"
-
-          />
+<select
+  name="grupo"
+  value={formData.grupo}
+  onChange={handleChange}
+>
+  <option value="">Todos los grupos</option>
+  <option value="A">A</option>
+  <option value="B">B</option>
+</select>
 
           <label>
 

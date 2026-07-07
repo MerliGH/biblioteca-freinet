@@ -56,28 +56,26 @@ function CreateDocente({ onClose }) {
   const handleSubmit = async (e) => {
 
     e.preventDefault();
-
+if (
+  (formData.grado === "" && formData.grupo !== "") ||
+  (formData.grado !== "" && formData.grupo === "")
+) {
+  Swal.fire({
+    icon: "warning",
+    title: "Selección inválida",
+    text: "Seleccione un grado y un grupo, o deje ambos en 'Todos'.",
+    confirmButtonColor: "#173b70",
+  });
+  return;
+}
     try {
 
-      await api.post(
-
-        "/usuarios/",
-
-        {
-
-          ...formData,
-
-          estado:
-
-            Boolean(
-
-              formData.estado
-
-            ),
-
-        }
-
-      );
+     await api.post("/usuarios/", {
+  ...formData,
+  grado: formData.grado || null,
+  grupo: formData.grupo || null,
+  estado: Boolean(formData.estado),
+});
 
       await Swal.fire({
 
@@ -168,6 +166,7 @@ function CreateDocente({ onClose }) {
             type="text"
 
             name="nombre"
+            required
 
             value={
 
@@ -196,6 +195,7 @@ function CreateDocente({ onClose }) {
             type="text"
 
             name="apellido_paterno"
+            required
 
             value={
 
@@ -224,6 +224,7 @@ function CreateDocente({ onClose }) {
             type="text"
 
             name="apellido_materno"
+            
 
             value={
 
@@ -252,6 +253,7 @@ function CreateDocente({ onClose }) {
             type="email"
 
             name="correo"
+            required
 
             value={
 
@@ -280,6 +282,7 @@ function CreateDocente({ onClose }) {
             type="password"
 
             name="password"
+            required
 
             value={
 
@@ -308,6 +311,7 @@ function CreateDocente({ onClose }) {
             type="text"
 
             name="matricula"
+            required
 
             value={
 
@@ -331,27 +335,20 @@ function CreateDocente({ onClose }) {
 
           </label>
 
-          <input
-
-            type="text"
-
-            name="grado"
-
-            value={
-
-              formData.grado
-
-            }
-
-            onChange={
-
-              handleChange
-
-            }
-
-            placeholder="Ejemplo: 3"
-
-          />
+         <select
+  name="grado"
+  value={formData.grado}
+  onChange={handleChange}
+  
+>
+  <option value="">Todos los grados</option>
+  <option value="1">1°</option>
+  <option value="2">2°</option>
+  <option value="3">3°</option>
+  <option value="4">4°</option>
+  <option value="5">5°</option>
+  <option value="6">6°</option>
+</select>
 
           <label>
 
@@ -359,77 +356,17 @@ function CreateDocente({ onClose }) {
 
           </label>
 
-          <input
-
-            type="text"
-
-            name="grupo"
-
-            value={
-
-              formData.grupo
-
-            }
-
-            onChange={
-
-              handleChange
-
-            }
-
-            placeholder="Ejemplo: A"
-
-          />
-
-          <label>
-
-            Estado:
-
-          </label>
-
-          <select
-
-            value={
-
-              formData.estado
-
-                ? "Activo"
-
-                : "Inactivo"
-
-            }
-
-            onChange={(e) =>
-
-              setFormData({
-
-                ...formData,
-
-                estado:
-
-                  e.target.value ===
-
-                  "Activo",
-
-              })
-
-            }
-
-          >
-
-            <option value="Activo">
-
-              Activo
-
-            </option>
-
-            <option value="Inactivo">
-
-              Inactivo
-
-            </option>
-
-          </select>
+         <select
+  name="grupo"
+  value={formData.grupo}
+  onChange={handleChange}
+  
+>
+  <option value="">Todos los grupos</option>
+  <option value="A">A</option>
+  <option value="B">B</option>
+</select>
+          
 
           <div
 
@@ -440,6 +377,7 @@ function CreateDocente({ onClose }) {
             <button
 
               type="submit"
+              
 
               className="btn-guardar"
 
