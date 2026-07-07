@@ -55,12 +55,11 @@ function DeleteLibro({
         }
       >
 
-        <h2>
-          ¿Deseas eliminar el libro?
-          <br />
-          "{libro?.titulo}"
-        </h2>
-
+       <h2>
+  ¿Deseas eliminar el libro?
+  <br />
+  <strong>"{libro?.titulo}"</strong>
+</h2>
         <div className="delete-buttons">
 
           <button

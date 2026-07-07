@@ -276,3 +276,43 @@
   border-color: #173b70;
 
 }
+
+
+
+.tabla-historial {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin-top: 15px;
+}
+
+.tabla-historial thead tr {
+  background-color: #173b70;
+}
+
+.tabla-historial th {
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 14px 8px;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tabla-historial th:last-child {
+  border-right: none;
+}
+
+.tabla-historial td {
+  color: #173b70;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  padding: 14px 8px;
+  border-bottom: 1px solid #dcdcdc;
+  word-wrap: break-word;
+}
+
+.tabla-historial tbody tr:hover {
+  background-color: #f7f7f7;
+}

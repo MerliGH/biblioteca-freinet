@@ -143,7 +143,7 @@ if (
 
         <h1>
 
-          AGREGAR DOCENTE
+          Agregar Docente
 
         </h1>
 

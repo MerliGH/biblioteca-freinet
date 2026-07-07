@@ -281,8 +281,7 @@ function EditPrestamo({
 
         <h1>
 
-          EDITAR PRÉSTAMO
-
+          Editar préstamo
         </h1>
 
         <form

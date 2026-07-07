@@ -124,7 +124,7 @@ function CreateAlumno({ onClose }) {
 
         <h1>
 
-          AGREGAR ALUMNO
+          Agregar alumno
 
         </h1>
 

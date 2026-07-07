@@ -155,7 +155,7 @@ if (
 
         <h1>
 
-          EDITAR DOCENTE
+          Editar docente
 
         </h1>
 

@@ -123,7 +123,7 @@ const opcionesCategorias = categorias.map((categoria) => ({
         }
       >
 
-        <h1>AGREGAR LIBRO</h1>
+        <h1>Agregar libro</h1>
 
         <form
           className="libro-form"

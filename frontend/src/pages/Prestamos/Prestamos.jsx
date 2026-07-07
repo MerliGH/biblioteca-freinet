@@ -30,6 +30,13 @@ function Prestamos() {
     setFiltroGrupo] =
     useState("");
 
+    const [paginaActual, setPaginaActual] =
+  useState(1);
+
+const prestamosPorPagina = 8;
+
+
+
   const [mostrarCreate,
     setMostrarCreate] =
     useState(false);
@@ -423,6 +430,25 @@ const obtenerPrestamos = async () => {
 
   );
 
+  const indiceUltimo =
+  paginaActual * prestamosPorPagina;
+
+const indicePrimero =
+  indiceUltimo - prestamosPorPagina;
+
+const prestamosPaginados =
+  prestamosFiltrados.slice(
+    indicePrimero,
+    indiceUltimo
+  );
+
+const totalPaginas =
+  Math.ceil(
+    prestamosFiltrados.length /
+    prestamosPorPagina
+  );
+
+
   return (
 
     <Layout>
@@ -431,162 +457,89 @@ const obtenerPrestamos = async () => {
 
         <div className="prestamos-header">
 
-          <h1>
-            Préstamos Activos
-          </h1>
-      <div className="acciones">
+  <div>
 
-          <div className="barra-filtros">
+    <h1>
+      Préstamos activos
+    </h1>
 
-            <input
+    {mostrarFiltros && (
 
-              type="text"
+      <div className="filtros-alumnos">
 
-              placeholder="Buscar..."
+        <select
+          value={filtroGrado}
+          onChange={(e) => {
+            setFiltroGrado(e.target.value);
+            setPaginaActual(1);
+          }}
+        >
+          <option value="">Todos los grados</option>
 
-              className="buscador"
+          {grados.map((grado) => (
 
-              value={busqueda}
+            <option
+              key={grado}
+              value={grado}
+            >
+              {grado}°
+            </option>
 
-              onChange={(e) =>
+          ))}
 
-                setBusqueda(
+        </select>
 
-                  e.target.value
+        <select
+          value={filtroGrupo}
+          onChange={(e) => {
+            setFiltroGrupo(e.target.value);
+            setPaginaActual(1);
+          }}
+        >
+          <option value="">Todos los grupos</option>
 
-                )
+          {grupos.map((grupo) => (
 
-              }
+            <option
+              key={grupo}
+              value={grupo}
+            >
+              {grupo}
+            </option>
 
-            />
+          ))}
 
-            {mostrarFiltros && (
+        </select>
 
-              <>
+      </div>
 
-                <select
+    )}
 
-                  className="filtro-select"
+  </div>
 
-                  value={filtroGrado}
+  <div className="acciones">
 
-                  onChange={(e) =>
+    <input
+      type="text"
+      placeholder="Buscar..."
+      className="buscador"
+      value={busqueda}
+      onChange={(e) => {
+        setBusqueda(e.target.value);
+        setPaginaActual(1);
+      }}
+    />
 
-                    setFiltroGrado(
+    <button
+      className="btn-agregar"
+      onClick={() => setMostrarCreate(true)}
+    >
+      Añadir préstamo
+    </button>
 
-                      e.target.value
+  </div>
 
-                    )
-
-                  }
-
-                >
-
-                  <option value="">
-
-                    Todos los grados
-
-                  </option>
-
-                  {grados.map(
-
-                    (grado) => (
-
-                      <option
-
-                        key={grado}
-
-                        value={grado}
-
-                      >
-
-                        {grado}°
-
-                      </option>
-
-                    )
-
-                  )}
-
-                </select>
-
-
-                <select
-
-                  className="filtro-select"
-
-                  value={filtroGrupo}
-
-                  onChange={(e) =>
-
-                    setFiltroGrupo(
-
-                      e.target.value
-
-                    )
-
-                  }
-
-                >
-
-                  <option value="">
-
-                    Todos los grupos
-
-                  </option>
-
-                  {grupos.map(
-
-                    (grupo) => (
-
-                      <option
-
-                        key={grupo}
-
-                        value={grupo}
-
-                      >
-
-                        {grupo}
-
-                      </option>
-
-                    )
-
-                  )}
-
-                </select>
-
-              </>
-
-            )}
-
-          </div>
-
-
-          <button
-
-            className="btn-agregar"
-
-            onClick={() =>
-
-              setMostrarCreate(
-
-                true
-
-              )
-
-            }
-
-          >
-
-            Añadir Préstamo
-
-          </button>
-
-        </div>
-
-        </div>
+</div>
 
         <table className="tabla-prestamos">
 
@@ -615,8 +568,7 @@ const obtenerPrestamos = async () => {
           </thead>
 
           <tbody>
-
-            {prestamosFiltrados.map(
+{prestamosPaginados.map(
               (prestamo) => (
 
                 <tr
@@ -736,7 +688,38 @@ const obtenerPrestamos = async () => {
           </tbody>
 
         </table>
+<div className="paginacion">
 
+  <button
+    disabled={paginaActual === 1}
+    onClick={() =>
+      setPaginaActual(
+        paginaActual - 1
+      )
+    }
+  >
+    ← Anterior
+  </button>
+
+  <span>
+    Página {paginaActual} de {totalPaginas || 1}
+  </span>
+
+  <button
+    disabled={
+      paginaActual === totalPaginas ||
+      totalPaginas === 0
+    }
+    onClick={() =>
+      setPaginaActual(
+        paginaActual + 1
+      )
+    }
+  >
+    Siguiente →
+  </button>
+
+</div>
         {mostrarCreate && (
 
           <CreatePrestamo

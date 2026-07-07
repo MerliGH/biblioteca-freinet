@@ -203,8 +203,7 @@ function EditLibro({
 
         <h1>
 
-          EDITAR LIBRO
-
+          Editar libro
         </h1>
 
         <form

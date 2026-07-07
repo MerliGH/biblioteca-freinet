@@ -378,7 +378,7 @@ function CreatePrestamo({ onClose }) {
 
         <h1>
 
-          AGREGAR PRÉSTAMO
+          Agregar préstamo
 
         </h1>
 

@@ -89,7 +89,7 @@ function EditAlumno({
         }
       >
 
-        <h1>EDITAR ALUMNO</h1>
+        <h1>Editar alumno</h1>
 
         <form
           className="alumno-form"

@@ -20,7 +20,11 @@ function Historial() {
   const [filtroGrupo,
     setFiltroGrupo] =
     useState("");
+const [paginaActual,
+  setPaginaActual] =
+  useState(1);
 
+const registrosPorPagina = 8;
   const usuario = JSON.parse(
     localStorage.getItem("usuario")
   );
@@ -239,6 +243,24 @@ function Historial() {
 
     );
 
+
+    const indiceUltimo =
+  paginaActual * registrosPorPagina;
+
+const indicePrimero =
+  indiceUltimo - registrosPorPagina;
+
+const historialPaginado =
+  historialFiltrado.slice(
+    indicePrimero,
+    indiceUltimo
+  );
+
+const totalPaginas =
+  Math.ceil(
+    historialFiltrado.length /
+    registrosPorPagina
+  );
   return (
 
     <Layout>
@@ -247,139 +269,83 @@ function Historial() {
 
         <div className="historial-header">
 
-          <h1>
-            Historial de Préstamos
-          </h1>
+  <div>
+
+    <h1>
+      Historial de préstamos
+    </h1>
+
+    {mostrarFiltros && (
+
+      <div className="filtros-alumnos">
+
+        <select
+          className="filtro-select"
+          value={filtroGrado}
+          onChange={(e) => {
+            setFiltroGrado(e.target.value);
+            setPaginaActual(1);
+          }}
+        >
+          <option value="">
+            Todos los grados
+          </option>
+
+          {grados.map((grado) => (
+            <option
+              key={grado}
+              value={grado}
+            >
+              {grado}°
+            </option>
+          ))}
+
+        </select>
+
+        <select
+          className="filtro-select"
+          value={filtroGrupo}
+          onChange={(e) => {
+            setFiltroGrupo(e.target.value);
+            setPaginaActual(1);
+          }}
+        >
+          <option value="">
+            Todos los grupos
+          </option>
+
+          {grupos.map((grupo) => (
+            <option
+              key={grupo}
+              value={grupo}
+            >
+              {grupo}
+            </option>
+          ))}
+
+        </select>
+
+      </div>
+
+    )}
+
+  </div>
+
+  <div className="acciones">
+
+    <input
+      type="text"
+      placeholder="Buscar..."
+      className="buscador"
+      value={busqueda}
+      onChange={(e) => {
+        setBusqueda(e.target.value);
+        setPaginaActual(1);
+      }}
+    />
+
+  </div>
 
-          <div className="acciones">
-
-            <div className="barra-filtros">
-
-              <input
-
-                type="text"
-
-                placeholder="Buscar..."
-
-                className="buscador"
-
-                value={busqueda}
-
-                onChange={(e) =>
-
-                  setBusqueda(
-
-                    e.target.value
-
-                  )
-
-                }
-
-              />
-
-              {mostrarFiltros && (
-
-                <>
-
-                  <select
-
-                    className="filtro-select"
-
-                    value={filtroGrado}
-
-                    onChange={(e) =>
-
-                      setFiltroGrado(
-
-                        e.target.value
-
-                      )
-
-                    }
-
-                  >
-
-                    <option value="">
-
-                      Todos los grados
-
-                    </option>
-
-                    {grados.map(
-
-                      (grado) => (
-
-                        <option
-
-                          key={grado}
-
-                          value={grado}
-
-                        >
-
-                          {grado}°
-
-                        </option>
-
-                      )
-
-                    )}
-
-                  </select>
-
-                  <select
-
-                    className="filtro-select"
-
-                    value={filtroGrupo}
-
-                    onChange={(e) =>
-
-                      setFiltroGrupo(
-
-                        e.target.value
-
-                      )
-
-                    }
-
-                  >
-
-                    <option value="">
-
-                      Todos los grupos
-
-                    </option>
-
-                    {grupos.map(
-
-                      (grupo) => (
-
-                        <option
-
-                          key={grupo}
-
-                          value={grupo}
-
-                        >
-
-                          {grupo}
-
-                        </option>
-
-                      )
-
-                    )}
-
-                  </select>
-
-                </>
-
-              )}
-
-            </div>
-
-          </div>
 
         </div>
 
@@ -400,7 +366,7 @@ function Historial() {
           </thead>
 
           <tbody>
-            {historialFiltrado.map(
+          {historialPaginado.map(
               (registro) => (
                 <tr
                   key={
@@ -456,7 +422,40 @@ function Historial() {
           </tbody>
 
         </table>
+<div className="paginacion">
 
+  <button
+    disabled={paginaActual === 1}
+    onClick={() =>
+      setPaginaActual(
+        paginaActual - 1
+      )
+    }
+  >
+    ← Anterior
+  </button>
+
+  <span>
+
+    Página {paginaActual} de {totalPaginas || 1}
+
+  </span>
+
+  <button
+    disabled={
+      paginaActual === totalPaginas ||
+      totalPaginas === 0
+    }
+    onClick={() =>
+      setPaginaActual(
+        paginaActual + 1
+      )
+    }
+  >
+    Siguiente →
+  </button>
+
+</div>
       </div>
 
     </Layout>
