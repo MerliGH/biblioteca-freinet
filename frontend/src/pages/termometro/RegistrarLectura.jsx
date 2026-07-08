@@ -8,7 +8,12 @@ import api from "../../services/api";
 
 import Select from "react-select";
 
-function CrearPRegistro({ onClose }) {
+function RegistrarLectura({
+  onClose,
+  alumno,
+  prestamo,
+  actualizar,
+}) {
 
   const [alumnos, setAlumnos] =
     useState([]);
@@ -36,11 +41,11 @@ const [todosLosLibros, setTodosLosLibros] =
 const [registrosTermometro, setRegistrosTermometro] =
   useState([]);
 
-  useEffect(() => {
+  //useEffect(() => {
 
-    cargarDatos();
+   // cargarDatos();
 
-  }, []);
+ // }, []);
 
   const cargarDatos =
     async () => {
@@ -162,47 +167,12 @@ setRegistrosTermometro(
 
           );
 
-        await api.post(
-
-          "/termometro/",
-
-          {
-
-            usuario_id:
-
-              Number(
-
-                formData.usuario_id
-
-              ),
-
-            libro_id:
-
-              Number(
-
-                formData.libro_id
-
-              ),
-
-            registrado_por:
-
-              usuario.id_usuario,
-
-            fecha_acreditacion:
-
-              new Date()
-
-                .toISOString()
-
-                .split("T")[0],
-
-            observaciones:
-
-              formData.observaciones,
-
-          }
-
-        );
+await api.post("/termometro/", {
+  usuario_id: alumno.id_usuario,
+  libro_id: prestamo.libro_id,
+  registrado_por: usuario.id_usuario,
+  observaciones: formData.observaciones,
+});
 
         await Swal.fire({
 
@@ -212,11 +182,11 @@ setRegistrosTermometro(
 
           title:
 
-            "Registro creado",
+            "Lectura creada",
 
           text:
 
-            "El termómetro fue iniciado correctamente.",
+            "La lectura fue acreditada correctamente.",
 
           confirmButtonColor:
 
@@ -224,7 +194,15 @@ setRegistrosTermometro(
 
         });
 
-        window.location.reload();
+      if (actualizar) {
+  await actualizar();
+}
+
+await new Promise((resolve) =>
+  setTimeout(resolve, 100)
+);
+
+onClose();
 
       } catch (error) {
 console.log(error.response);
@@ -315,7 +293,7 @@ console.log(error.response.data);
 
         <h1>
 
-          Iniciar termómetro
+          Acreditar lectura
 
         </h1>
 
@@ -337,153 +315,21 @@ console.log(error.response.data);
 
           </label>
 
-          <Select
+         <label></label>
 
-            classNamePrefix="biblioteca"
+<input
+  type="text"
+  value={alumno.nombreAlumno}
+  disabled
+/>
 
-            options={
+         <label>Libro:</label>
 
-              opcionesAlumnos
-
-            }
-
-            placeholder="Buscar alumno..."
-
-            isSearchable
-
-            value={
-
-              opcionesAlumnos.find(
-
-                (opcion) =>
-
-                  opcion.value ===
-
-                  Number(
-
-                    formData.usuario_id
-
-                  )
-
-              ) || null
-
-            }
-
-            onChange={(opcion) => {
-
-  const alumnoId = opcion.value;
-
-  const prestamosDevueltos = prestamos.filter(
-    (prestamo) =>
-      prestamo.usuario_id === alumnoId &&
-      prestamo.estado === "DEVUELTO"
-  );
-
-  const librosYaRegistrados =
-    registrosTermometro
-      .filter(
-        (registro) =>
-          registro.usuario_id === alumnoId
-      )
-      .map(
-        (registro) =>
-          registro.libro_id
-      );
-
-  const librosDisponibles =
-  todosLosLibros.filter(
-      (libro) =>
-
-        prestamosDevueltos.some(
-          (prestamo) =>
-            prestamo.libro_id ===
-            libro.id_libro
-        )
-
-        &&
-
-        !librosYaRegistrados.includes(
-          libro.id_libro
-        )
-
-    );
-
-  setLibros(
-    librosDisponibles
-  );
-
-  setFormData({
-
-    ...formData,
-
-    usuario_id: alumnoId,
-
-    libro_id: "",
-
-  });
-
-}}
-
-            noOptionsMessage={() =>
-
-              "No se encontraron resultados"
-
-            }
-
-          />
-
-          <label>
-
-            Primer libro:
-
-          </label>
-
-          <Select
-
-            classNamePrefix="biblioteca"
-
-            options={
-
-              opcionesLibros
-
-            }
-
-            placeholder="Buscar libro..."
-
-            isSearchable
-
-            value={
-
-              opcionesLibros.find(
-
-                (opcion) =>
-
-                  opcion.value ===
-
-                  Number(
-
-                    formData.libro_id
-
-                  )
-
-              ) || null
-
-            }
-
-        onChange={(opcion) => {
-  setFormData((prev) => ({
-    ...prev,
-    libro_id: opcion.value,
-  }));
-}}
-
-            noOptionsMessage={() =>
-
-              "No se encontraron resultados"
-
-            }
-
-          />
+<input
+  type="text"
+  value={prestamo.tituloLibro}
+  disabled
+/>
 
           <label>
 
@@ -496,7 +342,7 @@ console.log(error.response.data);
             type="text"
 
             name="observaciones"
-placeholder="Anotaciones..."
+
             value={
 
               formData.observaciones
@@ -555,4 +401,4 @@ placeholder="Anotaciones..."
 
 }
 
-export default CrearPRegistro;
+export default RegistrarLectura;

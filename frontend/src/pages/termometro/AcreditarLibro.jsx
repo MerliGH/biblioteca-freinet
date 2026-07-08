@@ -1,5 +1,5 @@
 import "./AcreditarLibro.css";
-
+import RegistrarLectura from "./RegistrarLectura";
 import { useEffect, useState } from "react";
 
 import Swal from "sweetalert2";
@@ -19,7 +19,13 @@ function AcreditarLibro({
   const [cargando,
     setCargando] =
     useState(true);
+const [mostrarCrear,
+  setMostrarCrear] =
+  useState(false);
 
+const [prestamoSeleccionado,
+  setPrestamoSeleccionado] =
+  useState(null);
   useEffect(() => {
 
     obtenerPrestamos();
@@ -254,17 +260,25 @@ onClose();
 
                       <td>
 
-                        <button
-                          className="btn-acreditar"
-                          onClick={() =>
-                            acreditarLibro(
-                              prestamo
-                            )
-                          }
-                        >
-                          Acreditar
-                        </button>
+                       <button
+  className="btn-acreditar"
+  onClick={() => {
+     console.log("Alumno:", alumno);
 
+  console.log("Libro:", prestamo);
+
+    setPrestamoSeleccionado(
+      prestamo
+    );
+
+    setMostrarCrear(
+      true
+    );
+
+  }}
+>
+  Acreditar
+</button>
                       </td>
 
                     </tr>
@@ -304,7 +318,20 @@ onClose();
         >
           Cerrar
         </button>
+        
+{mostrarCrear && prestamoSeleccionado && (
 
+ <RegistrarLectura
+  onClose={() => {
+    setMostrarCrear(false);
+    onClose();
+  }}
+  alumno={alumno}
+  prestamo={prestamoSeleccionado}
+  actualizar={actualizar}
+/>
+
+)}
       </div>
 
     </div>

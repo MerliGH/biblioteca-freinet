@@ -22,7 +22,7 @@ function RegistrosAlumno({
         <h2>
           Libros de {alumno.nombreAlumno}
         </h2>
-
+<div className="tabla-scroll">
         <table className="tabla-registros">
 
           <thead>
@@ -36,6 +36,7 @@ function RegistrosAlumno({
               <th>Estado</th>
 
               <th>Fecha</th>
+              <th>Observaciones</th>
 
             </tr>
 
@@ -69,8 +70,8 @@ function RegistrosAlumno({
 
                     <td>
                       {registro.estado
-                        ? "✅ Acreditado"
-                        : "⏳ Pendiente"}
+                        ? "Acreditado"
+                        : "Pendiente"}
                     </td>
 
                     <td>
@@ -80,7 +81,9 @@ function RegistrosAlumno({
                           ).toLocaleDateString()
                         : "-"}
                     </td>
-
+ <td>
+    {registro.observaciones || "-"}
+  </td>
                   </tr>
 
                 )
@@ -91,7 +94,7 @@ function RegistrosAlumno({
               <tr>
 
                 <td
-                  colSpan="4"
+                  colSpan="5"
                   style={{
                     textAlign:
                       "center",
@@ -108,6 +111,7 @@ function RegistrosAlumno({
 
         </table>
 
+</div>
         <button
           className="btn-cancelar"
           onClick={onClose}

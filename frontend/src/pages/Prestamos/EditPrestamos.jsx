@@ -245,7 +245,7 @@ function EditPrestamo({
 
         text:
 
-          "No se pudo actualizar el préstamo.",
+          "No fue posible actualizar el préstamo. Revisa los datos capturados y vuelve a intentarlo. Si es una devolución favor de ingresar la fecha en que el libro fue devuelto.",
 
         confirmButtonColor:
 

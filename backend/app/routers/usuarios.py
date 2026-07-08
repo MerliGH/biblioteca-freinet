@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from typing import List
-
+from app.models.termometro import Termometro
 from app.database import get_db
 from app.models.usuario import Usuario
 from app.models.prestamo import Prestamo
@@ -125,8 +125,16 @@ def eliminar_usuario(id_usuario: int, db: Session = Depends(get_db)):
         )
 
     usuario.estado = False
-
-    db.commit()
+    
+    if usuario.rol == "ALUMNO":
+        db.query(Termometro).filter(
+            Termometro.usuario_id == id_usuario,
+            Termometro.estado == True
+        ).update(
+            {Termometro.estado: False},
+            synchronize_session=False
+        )
+        db.commit()
 
     return {
         "mensaje": "Usuario desactivado correctamente"

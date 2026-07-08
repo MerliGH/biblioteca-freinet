@@ -679,7 +679,7 @@ const registrosFiltrados =
 
                   }
 
-                  {" "}libros
+                  {" "}
 
                 </p>
 

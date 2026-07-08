@@ -32,7 +32,7 @@ function DeleteAlumno({
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "No se pudo eliminar el alumno.",
+        text: "No se pudo eliminar el alumno, revisar que no tenga adeudos de libros antes.",
         confirmButtonColor: "#173b70",
       });
 

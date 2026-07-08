@@ -104,6 +104,7 @@
   font-weight: 600;
 
   transition: 0.2s ease;
+  margin-left: 35px;
 }
 
 .btn-acreditar:hover {
