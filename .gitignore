@@ -29,6 +29,7 @@ __pycache__/
 node_modules/
 dist/
 dist-ssr/
+.vite/
 
 # ==========================
 # Variables de entorno
