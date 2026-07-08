@@ -221,7 +221,7 @@ console.log(error.response.data);
 
           text:
 
-            "No fue posible crear el registro.",
+            "Asegúrese de que el libro haya sido devuelto en el sistema antes de acreditar la lectura del alumno.",
 
           confirmButtonColor:
 
@@ -342,7 +342,7 @@ console.log(error.response.data);
             type="text"
 
             name="observaciones"
-
+            placeholder="Anotaciones..."
             value={
 
               formData.observaciones

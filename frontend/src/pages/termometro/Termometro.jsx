@@ -601,7 +601,7 @@ const registrosFiltrados =
 
           >
 
-            Iniciar Termómetro
+            Iniciar termómetro
 
           </button>
 

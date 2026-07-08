@@ -70,7 +70,7 @@ function RegistrosAlumno({
 
                     <td>
                       {registro.estado
-                        ? "Acreditado"
+                        ? "✔ Acreditado"
                         : "Pendiente"}
                     </td>
 

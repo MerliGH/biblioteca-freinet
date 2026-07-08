@@ -442,10 +442,8 @@ const totalPaginas =
 
           <tbody>
 
-            {librosPaginados.map(
-
-              (libro) => (
-
+           {librosPaginados.map(
+  (libro, index) => (
                 <tr
 
                   key={
@@ -458,7 +456,7 @@ const totalPaginas =
 
                   <td>
 
-                    {libro.id_libro}
+                     {(paginaActual - 1) * librosPorPagina + index + 1}
 
                   </td>
 
