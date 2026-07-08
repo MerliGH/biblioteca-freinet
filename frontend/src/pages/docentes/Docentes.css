@@ -236,3 +236,6 @@
 .tabla-docentes th:last-child {
   border-right: none;
 }
+.tabla-docentes tbody tr:hover {
+  background-color: #f7f7f7;
+}

@@ -30,23 +30,18 @@ function CreatePrestamo({ onClose }) {
 
     useState([]);
 
-  const [formData, setFormData] =
+const [formData, setFormData] =
+  useState({
 
-    useState({
+    usuario_id: "",
 
-      usuario_id: "",
+    libro_id: "",
 
-      libro_id: "",
+    autorizado_por: "",
 
-      autorizado_por: "",
+    fecha_limite: "",
 
-      fecha_limite: "",
-
-      fecha_devolucion: "",
-
-      estado: "PRESTADO",
-
-    });
+  });
 
   useEffect(() => {
 
@@ -86,7 +81,7 @@ function CreatePrestamo({ onClose }) {
 
         usuarioLogueado?.rol ===
 
-          "DOCENTE" &&
+        "DOCENTE" &&
 
         usuarioLogueado?.grado &&
 
@@ -106,11 +101,11 @@ function CreatePrestamo({ onClose }) {
 
               ) ===
 
-                String(
+              String(
 
-                  usuarioLogueado.grado
+                usuarioLogueado.grado
 
-                ) &&
+              ) &&
 
               String(
 
@@ -219,19 +214,13 @@ function CreatePrestamo({ onClose }) {
             ),
 
           fecha_limite:
+  formData.fecha_limite,
 
-            formData.fecha_limite,
+fecha_devolucion:
+  null,
 
-          fecha_devolucion:
-
-            formData.fecha_devolucion ||
-
-            null,
-
-          estado:
-
-            formData.estado,
-
+estado:
+  "PRESTADO",
         }
 
       );
@@ -314,46 +303,7 @@ function CreatePrestamo({ onClose }) {
 
     );
 
-  const opcionesEstado = [
-
-    {
-
-      value:
-
-        "PRESTADO",
-
-      label:
-
-        "PRESTADO",
-
-    },
-
-    {
-
-      value:
-
-        "DEVUELTO",
-
-      label:
-
-        "DEVUELTO",
-
-    },
-
-    {
-
-      value:
-
-        "VENCIDO",
-
-      label:
-
-        "VENCIDO",
-
-    },
-
-  ];
-
+  
   return (
 
     <div
@@ -523,9 +473,8 @@ function CreatePrestamo({ onClose }) {
           <input
             type="text"
             value={
-              `${usuarioLogueado.nombre ?? ""} ${
-                usuarioLogueado.apellido_paterno ?? ""
-              }`.trim()
+              `${usuarioLogueado.nombre ?? ""} ${usuarioLogueado.apellido_paterno ?? ""
+                }`.trim()
             }
             disabled
           />
@@ -537,104 +486,18 @@ function CreatePrestamo({ onClose }) {
           </label>
 
           <input
+  type="date"
+  name="fecha_limite"
+  value={formData.fecha_limite}
+  onChange={handleChange}
+  min={new Date().toISOString().split("T")[0]}
+  required
+/>
 
-            type="date"
+         
 
-            name="fecha_limite"
 
-            value={
-
-              formData.fecha_limite
-
-            }
-
-            onChange={
-
-              handleChange
-
-            }
-
-            required
-
-          />
-
-          <label>
-
-            Fecha devolución:
-
-          </label>
-
-          <input
-
-            type="date"
-
-            name="fecha_devolucion"
-
-            value={
-
-              formData.fecha_devolucion
-
-            }
-
-            onChange={
-
-              handleChange
-
-            }
-
-          />
-
-          <label>
-
-            Estado:
-
-          </label>
-
-          <Select
-
-            classNamePrefix="biblioteca"
-
-            options={
-
-              opcionesEstado
-
-            }
-
-            placeholder="Seleccionar estado"
-
-            isSearchable
-
-            value={
-
-              opcionesEstado.find(
-
-                (opcion) =>
-
-                  opcion.value ===
-
-                  formData.estado
-
-              )
-
-            }
-
-            onChange={
-
-              (opcion) =>
-
-                setFormData({
-
-                  ...formData,
-
-                  estado:
-
-                    opcion.value,
-
-                })
-
-            }
-
-          />
+         
 
           <div
 

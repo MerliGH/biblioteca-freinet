@@ -298,24 +298,11 @@ function EditPrestamo({
 
           </label>
 
-          <select
-
-            name="usuario_id"
-
-            value={
-
-              formData.usuario_id
-
-            }
-
-            onChange={
-
-              handleChange
-
-            }
-
-          >
-
+         <select
+  name="usuario_id"
+  value={formData.usuario_id}
+  disabled
+>
             {alumnos.map(
 
               (alumno) => (
@@ -358,23 +345,11 @@ function EditPrestamo({
 
           </label>
 
-          <select
-
-            name="libro_id"
-
-            value={
-
-              formData.libro_id
-
-            }
-
-            onChange={
-
-              handleChange
-
-            }
-
-          >
+        <select
+  name="libro_id"
+  value={formData.libro_id}
+  disabled
+>
 
             {libros.map(
 
@@ -422,23 +397,11 @@ function EditPrestamo({
 
           </label>
 
-          <select
-
-            name="autorizado_por"
-
-            value={
-
-              formData.autorizado_por
-
-            }
-
-            onChange={
-
-              handleChange
-
-            }
-
-          >
+         <select
+  name="autorizado_por"
+  value={formData.autorizado_por}
+  disabled
+>
 
             {docentes.map(
 
@@ -554,43 +517,25 @@ function EditPrestamo({
 
           </label>
 
-          <select
+         <select
+  name="estado"
+  value={formData.estado}
+  onChange={handleChange}
+>
+  {formData.estado === "VENCIDO" && (
+    <option value="VENCIDO">
+      VENCIDO
+    </option>
+  )}
 
-            name="estado"
+  <option value="PRESTADO">
+    PRESTADO
+  </option>
 
-            value={
-
-              formData.estado
-
-            }
-
-            onChange={
-
-              handleChange
-
-            }
-
-          >
-
-            <option value="PRESTADO">
-
-              PRESTADO
-
-            </option>
-
-            <option value="DEVUELTO">
-
-              DEVUELTO
-
-            </option>
-
-            <option value="VENCIDO">
-
-              VENCIDO
-
-            </option>
-
-          </select>
+  <option value="DEVUELTO">
+    DEVUELTO
+  </option>
+</select>
 
           <div
 

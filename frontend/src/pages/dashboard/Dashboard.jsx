@@ -186,12 +186,8 @@ setUltimosPrestamos(
   prestamosConAlumno
     .sort(
       (a, b) =>
-        new Date(
-          b.fecha_prestamo
-        ) -
-        new Date(
-          a.fecha_prestamo
-        )
+        new Date(b.fecha_registro) -
+        new Date(a.fecha_registro)
     )
     .slice(0, 5)
 );
@@ -295,46 +291,32 @@ console.error(
               <tr>
                 <th>Alumno</th>
                 <th>Libro</th>
+                    <th>Estado</th>
                 <th>Fecha</th>
               </tr>
 
             </thead>
 
-            <tbody>
+            
+<tbody>
+  {ultimosPrestamos.map((prestamo) => (
+    <tr key={prestamo.id_prestamo}>
+      <td>{prestamo.alumno}</td>
 
-              {ultimosPrestamos.map(
-                (prestamo) => (
+      <td>{prestamo.libro}</td>
 
-                  <tr
-                    key={
-                      prestamo.id_prestamo
-                    }
-                  >
+      <td>
+  <span className={`estado ${prestamo.estado.toLowerCase()}`}>
+    {prestamo.estado}
+  </span>
+</td>
 
-                    <td>
-                      {
-                        prestamo.alumno
-                      }
-                    </td>
-
-                    <td>
-                      {
-                        prestamo.libro
-                      }
-                    </td>
-
-                    <td>
-                      {new Date(
-                        prestamo.fecha_prestamo
-                      ).toLocaleDateString()}
-                    </td>
-
-                  </tr>
-
-                )
-              )}
-
-            </tbody>
+      <td>
+        {new Date(prestamo.fecha_prestamo).toLocaleDateString()}
+      </td>
+    </tr>
+  ))}
+</tbody>
 
           </table>
 

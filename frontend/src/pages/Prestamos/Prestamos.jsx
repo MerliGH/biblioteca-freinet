@@ -631,8 +631,12 @@ const totalPaginas =
                   </td>
 
                   <td>
-                    {prestamo.estado}
-                  </td>
+  <span
+    className={`estado-pill ${prestamo.estado.toLowerCase()}`}
+  >
+    {prestamo.estado}
+  </span>
+</td>
 
                   <td>
 

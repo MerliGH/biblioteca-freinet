@@ -73,14 +73,12 @@
 
 .tabla-alumnos {
   width: 100%;
-
   border-collapse: collapse;
-
   table-layout: fixed;
-
   margin-top: 15px;
-}
 
+  background: white;
+}
 .tabla-alumnos thead tr {
   background-color: #173b70;
 }

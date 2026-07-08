@@ -1,5 +1,5 @@
 import "./DeletePrestamo.css";
-
+import Swal from "sweetalert2";
 import api from "../../services/api";
 
 function DeletePrestamo({
@@ -22,18 +22,20 @@ function DeletePrestamo({
 
         window.location.reload();
 
-      } catch (error) {
+      }  catch (error) {
 
-        console.error(error);
+  console.error(error);
 
-        alert(
-          "Error al eliminar préstamo"
-        );
-
-      }
-
-    };
-
+  Swal.fire({
+    icon: "warning",
+    title: "Operación no permitida",
+    text:
+      error.response?.data?.detail ||
+      "No se pudo eliminar el préstamo.",
+    confirmButtonColor: "#173b70",
+  });
+}
+};
   return (
     <div
       className="modal-overlay"

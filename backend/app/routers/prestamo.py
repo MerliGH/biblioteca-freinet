@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-
+from datetime import date
 from app.database import get_db
 from app.models.prestamo import Prestamo
 from app.models.usuario import Usuario
@@ -17,9 +17,24 @@ router = APIRouter(
 
 @router.get("/", response_model=List[PrestamoResponse])
 def listar_prestamos(db: Session = Depends(get_db)):
-    prestamos = db.query(Prestamo).all()
-    return prestamos
 
+    prestamos = db.query(Prestamo).all()
+
+    hoy = date.today()
+    cambios = False
+
+    for prestamo in prestamos:
+        if (
+            prestamo.estado == "PRESTADO"
+            and prestamo.fecha_limite < hoy
+        ):
+            prestamo.estado = "VENCIDO"
+            cambios = True
+
+    if cambios:
+        db.commit()
+
+    return prestamos
 
 @router.get("/{id_prestamo}", response_model=PrestamoResponse)
 def obtener_prestamo(id_prestamo: int, db: Session = Depends(get_db)):
@@ -63,8 +78,13 @@ def crear_prestamo(prestamo: PrestamoCreate, db: Session = Depends(get_db)):
     if not libro:
         raise HTTPException(status_code=400, detail="El libro no existe")
 
+
+    
+
     if libro.cantidad_disponible <= 0:
         raise HTTPException(status_code=400, detail="No hay ejemplares disponibles")
+
+    
 
     nuevo_prestamo = Prestamo(**prestamo.model_dump())
     libro.cantidad_disponible -= 1
@@ -114,8 +134,29 @@ def actualizar_prestamo(
     if not libro:
         raise HTTPException(status_code=400, detail="El libro no existe")
 
-    if prestamo.estado == "PRESTADO" and datos.estado == "DEVUELTO":
-        libro.cantidad_disponible += 1
+
+    # Validaciones de fecha de devolución
+    if datos.estado == "DEVUELTO" and datos.fecha_devolucion is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Debe registrar la fecha de devolución para marcar el préstamo como DEVUELTO"
+        )
+
+    if datos.estado != "DEVUELTO" and datos.fecha_devolucion is not None:
+        raise HTTPException(
+            status_code=400,
+            detail="Solo un préstamo DEVUELTO puede tener fecha de devolución"
+        )
+
+
+
+
+
+    if (
+    prestamo.estado in ["PRESTADO", "VENCIDO"]
+    and datos.estado == "DEVUELTO"
+        ):
+            libro.cantidad_disponible += 1
 
     for campo, valor in datos.model_dump().items():
         setattr(prestamo, campo, valor)
@@ -130,5 +171,5 @@ def actualizar_prestamo(
 def eliminar_prestamo(id_prestamo: int):
     raise HTTPException(
         status_code=405,
-        detail="Los préstamos no se eliminan; se actualizan a Devuelto o Vencido"
+       detail="Los préstamos no se eliminan; deben marcarse como Devuelto. Si la fecha límite vence sin devolución, el sistema los cambiará automáticamente a Vencido."
     )

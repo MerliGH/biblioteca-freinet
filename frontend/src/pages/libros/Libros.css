@@ -78,6 +78,8 @@
   border-collapse: collapse;
   table-layout: fixed;
   margin-top: 15px;
+  
+  background: white;
 }
 
 .tabla-libros thead tr {
@@ -147,7 +149,9 @@
     white-space: nowrap;
   }
 }
-
+.tabla-libros tbody tr:hover {
+  background-color: #f7f7f7;
+}
 .acciones-tabla {
   display: flex;
   justify-content: center;

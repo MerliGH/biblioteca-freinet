@@ -139,3 +139,41 @@
     transform: scale(1);
   }
 }
+
+.biblioteca__control {
+  width: 100%;
+  min-height: 34px !important;
+  height: 34px !important;
+  border-radius: 12px !important;
+  box-sizing: border-box;
+}
+
+.biblioteca__value-container {
+  height: 34px;
+  padding: 0 12px !important;
+  box-sizing: border-box;
+}
+
+.biblioteca__indicators {
+  height: 34px;
+}
+
+.biblioteca__placeholder,
+.biblioteca__single-value {
+  color: #173b70;
+  font-size: 14px;
+}
+
+.biblioteca__placeholder {
+  margin: 0 !important;
+  color: #757575;
+}
+
+.biblioteca__value-container {
+  padding: 0 12px !important;
+}
+
+.biblioteca__input-container {
+  margin: 0 !important;
+  padding: 0 !important;
+}

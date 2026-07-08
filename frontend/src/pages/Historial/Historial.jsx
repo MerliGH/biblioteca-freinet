@@ -405,9 +405,13 @@ const totalPaginas =
                     </span>
                   </td>
 
-                  <td>
-                    {registro.estado}
-                  </td>
+                <td>
+  <span
+    className={`estado-pill ${registro.estado.toLowerCase()}`}
+  >
+    {registro.estado}
+  </span>
+</td>
 
                   <td>
                     {registro.autorizadoPor}

@@ -284,7 +284,9 @@
   border-collapse: collapse;
   table-layout: fixed;
   margin-top: 15px;
+  background: white;
 }
+
 
 .tabla-historial thead tr {
   background-color: #173b70;
@@ -315,4 +317,49 @@
 
 .tabla-historial tbody tr:hover {
   background-color: #f7f7f7;
+}
+
+.estado-pill{
+    display:inline-block;
+
+    min-width:90px;
+
+    padding:5px 12px;
+
+    border-radius:15px;
+
+    text-align:center;
+
+    font-size:13px;
+    font-weight:700;
+}
+
+/* PRESTADO */
+
+.estado-pill.prestado{
+
+    background:#F4A23A;
+
+    color:#173b70;
+
+}
+
+/* DEVUELTO */
+
+.estado-pill.devuelto{
+
+    background:#7AC943;
+
+    color:white;
+
+}
+
+/* VENCIDO */
+
+.estado-pill.vencido{
+
+    background:#D8BC86;
+
+    color:#173b70;
+
 }

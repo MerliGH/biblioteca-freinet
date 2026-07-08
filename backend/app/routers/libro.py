@@ -16,7 +16,13 @@ router = APIRouter(
 
 @router.get("/", response_model=List[LibroResponse])
 def obtener_libros(db: Session = Depends(get_db)):
-    libros = db.query(Libro).filter(Libro.estado == True).all()
+    libros = (
+        db.query(Libro)
+        .filter(Libro.estado == True)
+        .order_by(Libro.id_libro.asc())
+        .all()
+    )
+
     return libros
 
 
