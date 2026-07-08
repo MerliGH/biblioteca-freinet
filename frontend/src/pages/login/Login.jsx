@@ -147,7 +147,7 @@ function Login() {
 
             {loading
               ? "Ingresando..."
-              : "Iniciar Sesión"}
+              : "Iniciar sesión"}
 
           </button>
 
