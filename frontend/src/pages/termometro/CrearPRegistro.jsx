@@ -15,6 +15,8 @@ function CrearPRegistro({ onClose }) {
 
   const [libros, setLibros] =
     useState([]);
+const [todosLosLibros, setTodosLosLibros] =
+  useState([]);
 
   const [formData, setFormData] =
     useState({
@@ -28,6 +30,12 @@ function CrearPRegistro({ onClose }) {
 
     });
 
+    const [prestamos, setPrestamos] =
+  useState([]);
+
+const [registrosTermometro, setRegistrosTermometro] =
+  useState([]);
+
   useEffect(() => {
 
     cargarDatos();
@@ -40,22 +48,16 @@ function CrearPRegistro({ onClose }) {
       try {
 
         const [
-
-          usuariosRes,
-
-          librosRes,
-
-          termometroRes,
-
-        ] = await Promise.all([
-
-          api.get("/usuarios/"),
-
-          api.get("/libros/"),
-
-          api.get("/termometro/"),
-
-        ]);
+  usuariosRes,
+  librosRes,
+  termometroRes,
+  prestamosRes,
+] = await Promise.all([
+  api.get("/usuarios/"),
+  api.get("/libros/"),
+  api.get("/termometro/"),
+  api.get("/prestamos/"),
+]);
 
         const alumnosConTermometro =
 
@@ -99,11 +101,16 @@ function CrearPRegistro({ onClose }) {
 
         );
 
-        setLibros(
+        setTodosLosLibros(librosRes.data);
 
-          librosRes.data
+setLibros(librosRes.data);
+        setPrestamos(
+  prestamosRes.data
+);
 
-        );
+setRegistrosTermometro(
+  termometroRes.data
+);
 
       } catch (error) {
 
@@ -155,47 +162,12 @@ function CrearPRegistro({ onClose }) {
 
           );
 
-        await api.post(
-
-          "/termometro/",
-
-          {
-
-            usuario_id:
-
-              Number(
-
-                formData.usuario_id
-
-              ),
-
-            libro_id:
-
-              Number(
-
-                formData.libro_id
-
-              ),
-
-            registrado_por:
-
-              usuario.id_usuario,
-
-            fecha_acreditacion:
-
-              new Date()
-
-                .toISOString()
-
-                .split("T")[0],
-
-            observaciones:
-
-              formData.observaciones,
-
-          }
-
-        );
+        await api.post("/termometro/", {
+  usuario_id: Number(formData.usuario_id),
+  libro_id: Number(formData.libro_id),
+  registrado_por: usuario.id_usuario,
+  observaciones: formData.observaciones,
+});
 
         await Swal.fire({
 
@@ -220,7 +192,8 @@ function CrearPRegistro({ onClose }) {
         window.location.reload();
 
       } catch (error) {
-
+console.log(error.response);
+console.log(error.response.data);alert(error.response.data.detail);
         console.error(error);
 
         Swal.fire({
@@ -307,7 +280,7 @@ function CrearPRegistro({ onClose }) {
 
         <h1>
 
-          Iniciar Termómetro
+          Iniciar termómetro
 
         </h1>
 
@@ -361,19 +334,60 @@ function CrearPRegistro({ onClose }) {
 
             }
 
-            onChange={(opcion) =>
+            onChange={(opcion) => {
 
-              setFormData({
+  const alumnoId = opcion.value;
 
-                ...formData,
+  const prestamosDevueltos = prestamos.filter(
+    (prestamo) =>
+      prestamo.usuario_id === alumnoId &&
+      prestamo.estado === "DEVUELTO"
+  );
 
-                usuario_id:
+  const librosYaRegistrados =
+    registrosTermometro
+      .filter(
+        (registro) =>
+          registro.usuario_id === alumnoId
+      )
+      .map(
+        (registro) =>
+          registro.libro_id
+      );
 
-                  opcion.value,
+  const librosDisponibles =
+  todosLosLibros.filter(
+      (libro) =>
 
-              })
+        prestamosDevueltos.some(
+          (prestamo) =>
+            prestamo.libro_id ===
+            libro.id_libro
+        )
 
-            }
+        &&
+
+        !librosYaRegistrados.includes(
+          libro.id_libro
+        )
+
+    );
+
+  setLibros(
+    librosDisponibles
+  );
+
+  setFormData({
+
+    ...formData,
+
+    usuario_id: alumnoId,
+
+    libro_id: "",
+
+  });
+
+}}
 
             noOptionsMessage={() =>
 
@@ -421,19 +435,12 @@ function CrearPRegistro({ onClose }) {
 
             }
 
-            onChange={(opcion) =>
-
-              setFormData({
-
-                ...formData,
-
-                libro_id:
-
-                  opcion.value,
-
-              })
-
-            }
+        onChange={(opcion) => {
+  setFormData((prev) => ({
+    ...prev,
+    libro_id: opcion.value,
+  }));
+}}
 
             noOptionsMessage={() =>
 

@@ -9,6 +9,7 @@ import api from "../../services/api";
 function AcreditarLibro({
   alumno,
   onClose,
+  actualizar,
 }) {
 
   const [prestamos,
@@ -140,15 +141,18 @@ function AcreditarLibro({
           }
         );
 
-        await Swal.fire({
-          icon: "success",
-          title: "Libro acreditado",
-          text: `El libro "${prestamo.tituloLibro}" fue acreditado correctamente.`,
-          confirmButtonColor:
-            "#1f4788",
-        });
+       await Swal.fire({
+  icon: "success",
+  title: "Libro acreditado",
+  text: `El libro "${prestamo.tituloLibro}" fue acreditado correctamente.`,
+  confirmButtonColor: "#1f4788",
+});
 
-        obtenerPrestamos();
+await actualizar();
+
+obtenerPrestamos();
+
+onClose();
 
       } catch (error) {
 

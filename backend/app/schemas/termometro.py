@@ -7,7 +7,7 @@ class TermometroBase(BaseModel):
     usuario_id: int
     libro_id: int
     registrado_por: int
-    fecha_acreditacion: date
+    fecha_acreditacion: Optional[date] = None
     observaciones: Optional[str] = None
 
 

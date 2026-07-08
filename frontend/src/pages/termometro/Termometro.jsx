@@ -253,11 +253,24 @@ function Termometro() {
 
       );
 
-      setRegistros(
+     setRegistros(registrosFiltrados);
 
-        registrosFiltrados
+if (alumnoSeleccionado) {
 
-      );
+  const alumnoActualizado =
+    registrosFiltrados.find(
+      (registro) =>
+        registro.id_usuario ===
+        alumnoSeleccionado.id_usuario
+    );
+
+  if (alumnoActualizado) {
+    setAlumnoSeleccionado(
+      alumnoActualizado
+    );
+  }
+
+}
 
     } catch (error) {
 
@@ -682,25 +695,13 @@ const registrosFiltrados =
 
           alumnoSeleccionado && (
 
-            <DetailTermometro
-
-              alumno={
-
-                alumnoSeleccionado
-
-              }
-
-              onClose={() =>
-
-                setMostrarDetalle(
-
-                  false
-
-                )
-
-              }
-
-            />
+          <DetailTermometro
+  alumno={alumnoSeleccionado}
+  onClose={() =>
+    setMostrarDetalle(false)
+  }
+  actualizar={obtenerRegistros}
+/>
 
           )}
 

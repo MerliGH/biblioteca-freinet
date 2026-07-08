@@ -9,6 +9,7 @@ import TermometroVisual from "./TermometroVisual";
 function DetailTermometro({
   alumno,
   onClose,
+  actualizar,
 }) {
 
   const [mostrarRegistros,
@@ -252,14 +253,13 @@ function DetailTermometro({
 
       {mostrarAcreditar && (
 
-        <AcreditarLibro
-          alumno={alumno}
-          onClose={() =>
-            setMostrarAcreditar(
-              false
-            )
-          }
-        />
+       <AcreditarLibro
+  alumno={alumno}
+  actualizar={actualizar}
+  onClose={() =>
+    setMostrarAcreditar(false)
+  }
+/>
 
       )}
 

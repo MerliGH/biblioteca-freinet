@@ -11,7 +11,7 @@ from app.models.prestamo import Prestamo
 from app.schemas.termometro import (
     TermometroCreate,
     TermometroUpdate,
-    TermometroResponse
+    TermometroResponse 
 )
 
 
@@ -82,11 +82,7 @@ def crear_registro(registro: TermometroCreate, db: Session = Depends(get_db)):
             detail="El usuario que registra no existe, está inactivo o no tiene permiso"
         )
 
-    if registro.fecha_acreditacion > date.today():
-        raise HTTPException(
-            status_code=400,
-            detail="La fecha de acreditación no puede ser futura"
-        )
+  
 
     prestamo_devuelto = db.query(Prestamo).filter(
         Prestamo.usuario_id == registro.usuario_id,
@@ -112,7 +108,11 @@ def crear_registro(registro: TermometroCreate, db: Session = Depends(get_db)):
             detail="Este libro ya fue registrado en el termómetro para este alumno"
         )
 
-    nuevo_registro = Termometro(**registro.model_dump())
+    datos = registro.model_dump()
+
+    datos["fecha_acreditacion"] = date.today()
+
+    nuevo_registro = Termometro(**datos)
 
     db.add(nuevo_registro)
     db.commit()
