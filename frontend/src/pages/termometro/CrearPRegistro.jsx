@@ -10,9 +10,15 @@ import Select from "react-select";
 
 function CrearPRegistro({ onClose }) {
 
+const usuarioLogueado =
+  JSON.parse(
+    localStorage.getItem("usuario")
+  );
+
   const [alumnos, setAlumnos] =
     useState([]);
 
+    
   const [libros, setLibros] =
     useState([]);
 const [todosLosLibros, setTodosLosLibros] =
@@ -94,13 +100,36 @@ const [registrosTermometro, setRegistrosTermometro] =
               )
 
           );
+let alumnosFiltrados =
+  alumnosSinTermometro;
 
+if (
+  usuarioLogueado?.rol === "DOCENTE" &&
+  usuarioLogueado?.grado &&
+  usuarioLogueado?.grupo
+) {
+
+  alumnosFiltrados =
+    alumnosFiltrados.filter(
+      (alumno) =>
+        String(alumno.grado) ===
+          String(usuarioLogueado.grado) &&
+
+        String(alumno.grupo)
+          .trim()
+          .toUpperCase() ===
+
+        String(usuarioLogueado.grupo)
+          .trim()
+          .toUpperCase()
+    );
+
+}
         setAlumnos(
 
-          alumnosSinTermometro
+  alumnosFiltrados
 
-        );
-
+);
         setTodosLosLibros(librosRes.data);
 
 setLibros(librosRes.data);
