@@ -90,11 +90,11 @@ function Login() {
         />
 
         <h1>
-          Biblioteca Freinet
+          Biblioteca Célestin Freinet
         </h1>
 
         <p className="subtitulo">
-          Sistema de Gestión Bibliotecaria
+          Sistema de gestión bibliotecaria
         </p>
 
         <form
