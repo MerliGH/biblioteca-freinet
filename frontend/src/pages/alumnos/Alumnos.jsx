@@ -21,17 +21,17 @@ function Alumnos() {
     setBusqueda] =
     useState("");
 
-    const [gradoFiltro,
-  setGradoFiltro] =
-  useState("");
+  const [gradoFiltro,
+    setGradoFiltro] =
+    useState("");
 
-const [grupoFiltro,
-  setGrupoFiltro] =
-  useState("");
-const [paginaActual, setPaginaActual] =
-  useState(1);
+  const [grupoFiltro,
+    setGrupoFiltro] =
+    useState("");
+  const [paginaActual, setPaginaActual] =
+    useState(1);
 
-const alumnosPorPagina = 8;
+  const alumnosPorPagina = 8;
 
 
   const [mostrarCreate,
@@ -58,13 +58,13 @@ const alumnosPorPagina = 8;
     usuario?.rol === "DIRECTORA";
 
 
-    const puedeFiltrar =
-  esDirectora ||
-  (
-    usuario?.rol === "DOCENTE" &&
-    usuario?.grado == null &&
-    usuario?.grupo == null
-  );
+  const puedeFiltrar =
+    esDirectora ||
+    (
+      usuario?.rol === "DOCENTE" &&
+      usuario?.grado == null &&
+      usuario?.grupo == null
+    );
 
   useEffect(() => {
 
@@ -91,7 +91,7 @@ const alumnosPorPagina = 8;
 
       if (
         usuario?.rol ===
-          "DOCENTE" &&
+        "DOCENTE" &&
         usuario?.grado &&
         usuario?.grupo
       ) {
@@ -102,9 +102,9 @@ const alumnosPorPagina = 8;
               String(
                 alumno.grado
               ) ===
-                String(
-                  usuario.grado
-                ) &&
+              String(
+                usuario.grado
+              ) &&
               String(
                 alumno.grupo
               )
@@ -119,7 +119,7 @@ const alumnosPorPagina = 8;
 
       }
 
-      
+
 
       alumnosFiltrados.sort(
         (a, b) =>
@@ -143,79 +143,79 @@ const alumnosPorPagina = 8;
   };
 
   const alumnosFiltrados =
-  alumnos.filter((alumno) => {
+    alumnos.filter((alumno) => {
 
-    const texto =
-      busqueda.toLowerCase();
+      const texto =
+        busqueda.toLowerCase();
 
-    const coincideBusqueda = (
+      const coincideBusqueda = (
 
-      (alumno.nombre || "")
-        .toLowerCase()
-        .includes(texto)
+        (alumno.nombre || "")
+          .toLowerCase()
+          .includes(texto)
 
-      ||
+        ||
 
-      (alumno.apellido_paterno || "")
-        .toLowerCase()
-        .includes(texto)
+        `${alumno.apellido_paterno || ""} ${alumno.apellido_materno || ""}`
+  .toLowerCase()
+  .includes(texto)
 
-      ||
+        ||
 
-      (alumno.correo || "")
-        .toLowerCase()
-        .includes(texto)
+        (alumno.correo || "")
+          .toLowerCase()
+          .includes(texto)
 
-      ||
+        ||
 
-      (alumno.matricula || "")
-        .toLowerCase()
-        .includes(texto)
+        (alumno.matricula || "")
+          .toLowerCase()
+          .includes(texto)
 
-      ||
+        ||
 
-      `${alumno.grado || ""}${alumno.grupo || ""}`
-        .toLowerCase()
-        .includes(texto)
+        `${alumno.grado || ""}${alumno.grupo || ""}`
+          .toLowerCase()
+          .includes(texto)
 
-    );
+      );
 
-    const coincideGrado =
-      gradoFiltro === "" ||
-      String(alumno.grado) === gradoFiltro;
+      const coincideGrado =
+        gradoFiltro === "" ||
+        String(alumno.grado) === gradoFiltro;
 
-    const coincideGrupo =
-      grupoFiltro === "" ||
-      String(alumno.grupo)
-        .trim()
-        .toUpperCase() ===
-      grupoFiltro;
+      const coincideGrupo =
+        grupoFiltro === "" ||
+        String(alumno.grupo)
+          .trim()
+          .toUpperCase() ===
+        grupoFiltro;
 
-    return (
-      coincideBusqueda &&
-      coincideGrado &&
-      coincideGrupo
-    );
+      return (
+        coincideBusqueda &&
+        coincideGrado &&
+        coincideGrupo
+      );
 
-  });
+    });
 
   const indiceUltimo =
-  paginaActual * alumnosPorPagina;
+    paginaActual * alumnosPorPagina;
 
-const indicePrimero =
-  indiceUltimo - alumnosPorPagina;
+  const indicePrimero =
+    indiceUltimo - alumnosPorPagina;
 
-const alumnosPaginados =
-  alumnosFiltrados.slice(
-    indicePrimero,
-    indiceUltimo
-  );
+  const alumnosPaginados =
+    alumnosFiltrados.slice(
+      indicePrimero,
+      indiceUltimo
+    );
 
-const totalPaginas =
-  Math.ceil(
-    alumnosFiltrados.length /
-    alumnosPorPagina
-  );
+  const totalPaginas =
+    Math.ceil(
+      alumnosFiltrados.length /
+      alumnosPorPagina
+    );
 
   return (
 
@@ -223,79 +223,79 @@ const totalPaginas =
 
       <div className="alumnos-container">
 
-       <div className="alumnos-header">
+        <div className="alumnos-header">
 
-  <div>
+          <div>
 
-    <h1>
-      Gestión de alumnos
-    </h1>
+            <h1>
+              Gestión de alumnos
+            </h1>
 
-    {puedeFiltrar && (
+            {puedeFiltrar && (
 
-      <div className="filtros-alumnos">
+              <div className="filtros-alumnos">
 
-        
-        <select
-          value={gradoFiltro}
-          onChange={(e) => {
-  setGradoFiltro(e.target.value);
-  setPaginaActual(1);
-}}
-        >
-          <option value="">Todos los grados</option>
-          <option value="1">1°</option>
-          <option value="2">2°</option>
-          <option value="3">3°</option>
-          <option value="4">4°</option>
-          <option value="5">5°</option>
-          <option value="6">6°</option>
-        </select>
 
-        <select
-          value={grupoFiltro}
-          onChange={(e) => {
-  setGrupoFiltro(e.target.value);
-  setPaginaActual(1);
-}}
-        >
-          <option value="">Todos los grupos</option>
-          <option value="A">Grupo A</option>
-          <option value="B">Grupo B</option>
-        </select>
+                <select
+                  value={gradoFiltro}
+                  onChange={(e) => {
+                    setGradoFiltro(e.target.value);
+                    setPaginaActual(1);
+                  }}
+                >
+                  <option value="">Todos los grados</option>
+                  <option value="1">1°</option>
+                  <option value="2">2°</option>
+                  <option value="3">3°</option>
+                  <option value="4">4°</option>
+                  <option value="5">5°</option>
+                  <option value="6">6°</option>
+                </select>
 
-      </div>
+                <select
+                  value={grupoFiltro}
+                  onChange={(e) => {
+                    setGrupoFiltro(e.target.value);
+                    setPaginaActual(1);
+                  }}
+                >
+                  <option value="">Todos los grupos</option>
+                  <option value="A">Grupo A</option>
+                  <option value="B">Grupo B</option>
+                </select>
 
-    )}
+              </div>
 
-  </div>
+            )}
 
-<div className="acciones">
-    <input
-          type="text"
-          placeholder="Buscar..."
-          className="buscador"
-          value={busqueda}
-          onChange={(e) => {
-  setBusqueda(e.target.value);
-  setPaginaActual(1);
-}}
-        />
+          </div>
 
-  {esDirectora && (
+          <div className="acciones">
+            <input
+              type="text"
+              placeholder="Buscar..."
+              className="buscador"
+              value={busqueda}
+              onChange={(e) => {
+                setBusqueda(e.target.value);
+                setPaginaActual(1);
+              }}
+            />
 
-    <button
-      className="btn-agregar"
-      onClick={() =>
-        setMostrarCreate(true)
-      }
-    >
-      Añadir alumno
-    </button>
+            {esDirectora && (
 
-  )}
+              <button
+                className="btn-agregar"
+                onClick={() =>
+                  setMostrarCreate(true)
+                }
+              >
+                Añadir alumno
+              </button>
 
-</div>
+            )}
+
+          </div>
 
         </div>
 
@@ -320,7 +320,7 @@ const totalPaginas =
 
           <tbody>
 
-     {alumnosPaginados.map(
+            {alumnosPaginados.map(
               (alumno) => (
 
                 <tr
@@ -334,9 +334,9 @@ const totalPaginas =
                   </td>
 
                   <td>
-                    {
-                      alumno.apellido_paterno
-                    }
+                    {[alumno.apellido_paterno, alumno.apellido_materno]
+                      .filter(Boolean)
+                      .join(" ")}
                   </td>
 
                   <td>
@@ -428,40 +428,40 @@ const totalPaginas =
           </tbody>
 
         </table>
-<div className="paginacion">
+        <div className="paginacion">
 
-  <button
-    disabled={paginaActual === 1}
-    onClick={() =>
-      setPaginaActual(
-        paginaActual - 1
-      )
-    }
-  >
-    ← Anterior
-  </button>
+          <button
+            disabled={paginaActual === 1}
+            onClick={() =>
+              setPaginaActual(
+                paginaActual - 1
+              )
+            }
+          >
+            ← Anterior
+          </button>
 
-  <span>
+          <span>
 
-    Página {paginaActual} de {totalPaginas || 1}
+            Página {paginaActual} de {totalPaginas || 1}
 
-  </span>
+          </span>
 
-  <button
-    disabled={
-      paginaActual === totalPaginas ||
-      totalPaginas === 0
-    }
-    onClick={() =>
-      setPaginaActual(
-        paginaActual + 1
-      )
-    }
-  >
-    Siguiente →
-  </button>
+          <button
+            disabled={
+              paginaActual === totalPaginas ||
+              totalPaginas === 0
+            }
+            onClick={() =>
+              setPaginaActual(
+                paginaActual + 1
+              )
+            }
+          >
+            Siguiente →
+          </button>
 
-</div>
+        </div>
         {mostrarCreate && (
 
           <CreateAlumno
