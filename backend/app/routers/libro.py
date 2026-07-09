@@ -67,7 +67,11 @@ def crear_libro(libro: LibroCreate, db: Session = Depends(get_db)):
             status_code=400,
             detail="La cantidad disponible no puede ser mayor que la cantidad total"
         )
-    nuevo_libro = Libro(**libro.model_dump())
+    datos = libro.model_dump()
+
+    datos["cantidad_disponible"] = datos["cantidad_total"]
+
+    nuevo_libro = Libro(**datos)
 
     db.add(nuevo_libro)
     db.commit()

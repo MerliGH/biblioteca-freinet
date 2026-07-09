@@ -32,32 +32,18 @@ const opcionesCategorias = categorias.map((categoria) => ({
 
     if (name === "cantidad_total") {
 
-      const cantidad = Number(value);
+  const cantidad = Number(value);
 
-      setFormData({
-        ...formData,
-        cantidad_total: cantidad,
-        cantidad_disponible: Math.min(
-          formData.cantidad_disponible,
-          cantidad
-        ),
-      });
+  setFormData({
+    ...formData,
+    cantidad_total: cantidad,
+    cantidad_disponible: cantidad,
+  });
 
-      return;
-    }
+  return;
+}
 
-    if (name === "cantidad_disponible") {
-
-      setFormData({
-        ...formData,
-        cantidad_disponible: Math.min(
-          Number(value),
-          formData.cantidad_total
-        ),
-      });
-
-      return;
-    }
+ 
 
     setFormData({
       ...formData,
@@ -250,29 +236,6 @@ const opcionesCategorias = categorias.map((categoria) => ({
 
           />
 
-          <label>
-
-            Cantidad disponible:
-
-          </label>
-
-          <input
-
-            type="number"
-
-            name="cantidad_disponible"
-
-            min="0"
-
-            max={formData.cantidad_total}
-
-            value={formData.cantidad_disponible}
-
-            onChange={handleChange}
-
-            required
-
-          />
 
           <label>Sección:</label>
 
