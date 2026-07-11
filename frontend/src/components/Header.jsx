@@ -54,8 +54,7 @@ function Header() {
 
         localStorage.clear();
 
-        window.location.href =
-          "/";
+        window.location.replace("/");
 
       }
 

@@ -4,6 +4,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import Login from "./pages/login/Login";
 
@@ -19,9 +20,23 @@ import Historial from "./pages/Historial/Historial";
 
 function App() {
 
-  const usuario = JSON.parse(
-    localStorage.getItem("usuario")
-  );
+  const [usuario, setUsuario] = useState(
+  JSON.parse(localStorage.getItem("usuario"))
+);
+
+useEffect(() => {
+  const verificarSesion = () => {
+    setUsuario(
+      JSON.parse(localStorage.getItem("usuario"))
+    );
+  };
+
+  window.addEventListener("pageshow", verificarSesion);
+
+  return () => {
+    window.removeEventListener("pageshow", verificarSesion);
+  };
+}, []);
 
   return (
 
