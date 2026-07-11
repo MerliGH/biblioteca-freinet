@@ -9,6 +9,7 @@ from app.models.libro import Libro
 from app.schemas.prestamo import PrestamoCreate, PrestamoUpdate, PrestamoResponse
 
 
+
 router = APIRouter(
     prefix="/prestamos",
     tags=["Prestamos"]
@@ -53,6 +54,7 @@ def obtener_prestamo(id_prestamo: int, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=PrestamoResponse)
 def crear_prestamo(prestamo: PrestamoCreate, db: Session = Depends(get_db)):
+    print(prestamo)
 
     usuario = db.query(Usuario).filter(
         Usuario.id_usuario == prestamo.usuario_id,
