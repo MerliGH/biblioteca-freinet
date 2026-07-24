@@ -1,0 +1,158 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-pdf {
+    width: 750px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+.modal-header {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 35px;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #173b70;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.btn-cerrar {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #555555;
+    font-size: 22px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-cerrar:hover {
+    color: #d62828;
+}
+
+.buscador-pdf {
+    width: 100%;
+    height: 42px;
+    padding: 0 15px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    border: 1px solid #d9d9d9;
+    border-radius: 10px;
+    background: #ffffff;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.buscador-pdf:focus {
+    border-color: #173b70;
+    box-shadow: 0 0 0 2px rgba(23, 59, 112, 0.08);
+}
+
+.buscador-pdf::placeholder {
+    color: #999999;
+}
+
+.tabla-pdf {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+}
+
+.tabla-pdf th {
+    padding: 12px;
+    background: #173b70;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.tabla-pdf th:first-child {
+    border-radius: 8px 0 0 0;
+}
+
+.tabla-pdf th:last-child {
+    border-radius: 0 8px 0 0;
+}
+
+.tabla-pdf td {
+    padding: 12px;
+    border-bottom: 1px solid #ececec;
+    color: #333333;
+    font-size: 14px;
+    text-align: center;
+}
+
+.tabla-pdf tbody tr {
+    transition: background 0.2s;
+}
+
+.tabla-pdf tbody tr:hover {
+    background: #f7f9fc;
+}
+
+.btn-descargar {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: #d62828;
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-descargar:hover {
+    background: #b71c1c;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 800px) {
+    .modal-pdf {
+        width: calc(100% - 30px);
+        padding: 20px;
+    }
+
+    .modal-header h2 {
+        font-size: 20px;
+        padding: 0 45px;
+    }
+
+    .tabla-pdf th,
+    .tabla-pdf td {
+        padding: 10px 6px;
+        font-size: 13px;
+    }
+}
