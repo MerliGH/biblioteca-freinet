@@ -137,15 +137,8 @@ const registrosPorPagina = 8;
       ? libro.titulo
       : "No encontrado",
 
-  gradoAlumno:
-    usuarioPrestamo?.rol === "ALUMNO"
-      ? usuarioPrestamo.grado
-      : "",
-
-  grupoAlumno:
-    usuarioPrestamo?.rol === "ALUMNO"
-      ? usuarioPrestamo.grupo
-      : "",
+  gradoAlumno: usuarioPrestamo?.grado || "",
+grupoAlumno: usuarioPrestamo?.grupo || "",
 };
 
           });
@@ -430,13 +423,10 @@ const totalPaginas =
   </small>
 </td>
 
-                  <td>
-  {registro.rolUsuario === "DOCENTE"
-    ? "-"
-    : registro.gradoAlumno &&
-      registro.grupoAlumno
-      ? `${registro.gradoAlumno}° ${registro.grupoAlumno}`
-      : "Sin grupo"}
+                 <td>
+  {registro.gradoAlumno && registro.grupoAlumno
+    ? `${registro.gradoAlumno}° ${registro.grupoAlumno}`
+    : "Todos los grupos"}
 </td>
 
                   <td>

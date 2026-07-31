@@ -210,14 +210,10 @@ rolUsuario:
   usuarioPrestamo?.rol || "",
 
 gradoAlumno:
-  usuarioPrestamo?.rol === "ALUMNO"
-    ? usuarioPrestamo.grado
-    : "",
+  usuarioPrestamo?.grado || "",
 
 grupoAlumno:
-  usuarioPrestamo?.rol === "ALUMNO"
-    ? usuarioPrestamo.grupo
-    : "",
+  usuarioPrestamo?.grupo || "",
 
             autorizadoPor:
 
@@ -613,13 +609,10 @@ const totalPaginas =
   </small>
 </td>
 
-              <td>
-  {prestamo.rolUsuario === "DOCENTE"
-    ? "-"
-    : prestamo.gradoAlumno &&
-      prestamo.grupoAlumno
-      ? `${prestamo.gradoAlumno}° ${prestamo.grupoAlumno}`
-      : "Sin grupo"}
+             <td>
+  {prestamo.gradoAlumno && prestamo.grupoAlumno
+    ? `${prestamo.gradoAlumno}° ${prestamo.grupoAlumno}`
+    : "Todos los grupos"}
 </td>
               <td>
 
