@@ -14,8 +14,7 @@ function EditPrestamo({
 
 }) {
 
-  const [alumnos, setAlumnos] =
-    useState([]);
+  const [usuariosPrestamo, setUsuariosPrestamo] = useState([]);
 
   const [docentes, setDocentes] =
     useState([]);
@@ -79,17 +78,13 @@ function EditPrestamo({
 
       ]);
 
-      setAlumnos(
-
-        usuariosResponse.data.filter(
-
-          (u) =>
-
-            u.rol === "ALUMNO"
-
-        )
-
-      );
+      setUsuariosPrestamo(
+  usuariosResponse.data.filter(
+    (u) =>
+      u.rol === "ALUMNO" ||
+      u.rol === "DOCENTE"
+  )
+);
 
       setDocentes(
 
@@ -294,7 +289,7 @@ function EditPrestamo({
 
           <label>
 
-            Alumno:
+            Usuario:
 
           </label>
 
@@ -303,39 +298,16 @@ function EditPrestamo({
   value={formData.usuario_id}
   disabled
 >
-            {alumnos.map(
-
-              (alumno) => (
-
-                <option
-
-                  key={
-
-                    alumno.id_usuario
-
-                  }
-
-                  value={
-
-                    alumno.id_usuario
-
-                  }
-
-                >
-
-                  {alumno.nombre}{" "}
-
-                  {
-
-                    alumno.apellido_paterno
-
-                  }
-
-                </option>
-
-              )
-
-            )}
+            {usuariosPrestamo.map(
+  (usuario) => (
+    <option
+      key={usuario.id_usuario}
+      value={usuario.id_usuario}
+    >
+      {usuario.nombre} {usuario.apellido_paterno} ({usuario.rol})
+    </option>
+  )
+)}
 
           </select>
 

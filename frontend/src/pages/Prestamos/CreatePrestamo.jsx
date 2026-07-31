@@ -22,9 +22,7 @@ function CreatePrestamo({ onClose }) {
 
     );
 
-  const [alumnos, setAlumnos] =
-
-    useState([]);
+  const [usuariosPrestamo, setUsuariosPrestamo] = useState([]);
 
   const [libros, setLibros] =
 
@@ -67,76 +65,36 @@ const [formData, setFormData] =
 
       ]);
 
-      let alumnosFiltrados =
+      let usuariosFiltrados =
+  usuariosResponse.data.filter(
+    (u) =>
+      u.rol === "ALUMNO" ||
+      u.rol === "DOCENTE"
+  );
 
-        usuariosResponse.data.filter(
+     if (
+  usuarioLogueado?.rol === "DOCENTE" &&
+  usuarioLogueado?.grado &&
+  usuarioLogueado?.grupo
+) {
+  usuariosFiltrados =
+    usuariosFiltrados.filter((usuario) => {
 
-          (u) =>
-
-            u.rol === "ALUMNO"
-
-        );
-
-      if (
-
-        usuarioLogueado?.rol ===
-
-        "DOCENTE" &&
-
-        usuarioLogueado?.grado &&
-
-        usuarioLogueado?.grupo
-
-      ) {
-
-        alumnosFiltrados =
-
-          alumnosFiltrados.filter(
-
-            (alumno) =>
-
-              String(
-
-                alumno.grado
-
-              ) ===
-
-              String(
-
-                usuarioLogueado.grado
-
-              ) &&
-
-              String(
-
-                alumno.grupo
-
-              )
-
-                .trim()
-
-                .toUpperCase() ===
-
-              String(
-
-                usuarioLogueado.grupo
-
-              )
-
-                .trim()
-
-                .toUpperCase()
-
-          );
-
+      if (usuario.rol === "DOCENTE") {
+        return true;
       }
 
-      setAlumnos(
-
-        alumnosFiltrados
-
+      return (
+        String(usuario.grado) === String(usuarioLogueado.grado) &&
+        String(usuario.grupo).trim().toUpperCase() ===
+        String(usuarioLogueado.grupo).trim().toUpperCase()
       );
+    });
+}
 
+      setUsuariosPrestamo(
+  usuariosFiltrados
+);
       setLibros(
 
         librosResponse.data.filter(
@@ -259,23 +217,13 @@ estado:
 
   };
 
-  const opcionesAlumnos =
-
-    alumnos.map(
-
-      (alumno) => ({
-
-        value:
-
-          alumno.id_usuario,
-
-        label:
-
-          `${alumno.nombre} ${alumno.apellido_paterno}`,
-
-      })
-
-    );
+  const opcionesUsuarios =
+  usuariosPrestamo.map(
+    (usuario) => ({
+      value: usuario.id_usuario,
+      label: `${usuario.nombre} ${usuario.apellido_paterno} (${usuario.rol})`,
+    })
+  );
 
   const opcionesLibros =
 
@@ -334,7 +282,7 @@ estado:
 
           <label>
 
-            Nombre del Alumno:
+            Nombre:
 
           </label>
 
@@ -342,19 +290,15 @@ estado:
 
             classNamePrefix="biblioteca"
 
-            options={
+            options={opcionesUsuarios}
 
-              opcionesAlumnos
-
-            }
-
-            placeholder="Buscar alumno..."
+            placeholder="Buscar usuario..."
 
             isSearchable
 
             value={
 
-              opcionesAlumnos.find(
+                opcionesUsuarios.find(
 
                 (opcion) =>
 

@@ -18,6 +18,9 @@ function Prestamos() {
   const [prestamos, setPrestamos] =
     useState([]);
 
+    const [soloDocentes, setSoloDocentes] =
+  useState(false);
+
   const [busqueda,
     setBusqueda] =
     useState("");
@@ -163,17 +166,12 @@ const obtenerPrestamos = async () => {
 
         .map((prestamo) => {
 
-          const alumno =
-
-            usuariosResponse.data.find(
-
-              (usuario) =>
-
-                usuario.id_usuario ===
-
-                prestamo.usuario_id
-
-            );
+          const usuarioPrestamo =
+  usuariosResponse.data.find(
+    (usuario) =>
+      usuario.id_usuario ===
+      prestamo.usuario_id
+  );
 
           const docente =
 
@@ -203,13 +201,23 @@ const obtenerPrestamos = async () => {
 
             ...prestamo,
 
-            nombreAlumno:
+            nombreUsuario:
+  usuarioPrestamo
+    ? `${usuarioPrestamo.nombre} ${usuarioPrestamo.apellido_paterno}`
+    : "No encontrado",
 
-              alumno
+rolUsuario:
+  usuarioPrestamo?.rol || "",
 
-                ? `${alumno.nombre} ${alumno.apellido_paterno}`
+gradoAlumno:
+  usuarioPrestamo?.rol === "ALUMNO"
+    ? usuarioPrestamo.grado
+    : "",
 
-                : "No encontrado",
+grupoAlumno:
+  usuarioPrestamo?.rol === "ALUMNO"
+    ? usuarioPrestamo.grupo
+    : "",
 
             autorizadoPor:
 
@@ -226,14 +234,6 @@ const obtenerPrestamos = async () => {
                 ? libro.titulo
 
                 : "No encontrado",
-
-            gradoAlumno:
-
-              alumno?.grado || "",
-
-            grupoAlumno:
-
-              alumno?.grupo || "",
 
           };
 
@@ -354,7 +354,7 @@ const obtenerPrestamos = async () => {
 
       const coincideBusqueda =
 
-        (prestamo.nombreAlumno || "")
+        (prestamo.nombreUsuario || "")
           .toLowerCase()
           .includes(texto)
 
@@ -411,20 +411,24 @@ const obtenerPrestamos = async () => {
         String(
           prestamo.grupoAlumno
         ) === filtroGrupo;
+const coincideRol =
 
+  !soloDocentes ||
+
+  prestamo.rolUsuario === "DOCENTE";
       return (
 
-        coincideBusqueda
+  coincideBusqueda &&
 
-        &&
+  coincideGrado &&
 
-        coincideGrado
+  coincideGrupo &&
 
-        &&
+  coincideRol
 
-        coincideGrupo
+);
 
-      );
+      
 
     }
 
@@ -465,55 +469,79 @@ const totalPaginas =
 
     {mostrarFiltros && (
 
-      <div className="filtros-alumnos">
+  <div className="filtros-alumnos">
 
-        <select
-          value={filtroGrado}
-          onChange={(e) => {
-            setFiltroGrado(e.target.value);
-            setPaginaActual(1);
-          }}
+    <select
+  disabled={soloDocentes}
+  value={filtroGrado}
+  onChange={(e) => {
+    setFiltroGrado(e.target.value);
+    setPaginaActual(1);
+  }}
+><option value="">Todos los grados</option>
+
+      {grados.map((grado) => (
+
+        <option
+          key={grado}
+          value={grado}
         >
-          <option value="">Todos los grados</option>
+          {grado}°
+        </option>
 
-          {grados.map((grado) => (
+      ))}
 
-            <option
-              key={grado}
-              value={grado}
-            >
-              {grado}°
-            </option>
+    </select>
 
-          ))}
+   <select
+  disabled={soloDocentes}
+  value={filtroGrupo}
+  onChange={(e) => {
+    setFiltroGrupo(e.target.value);
+    setPaginaActual(1);
+  }}
+>
+      <option value="">Todos los grupos</option>
 
-        </select>
+      {grupos.map((grupo) => (
 
-        <select
-          value={filtroGrupo}
-          onChange={(e) => {
-            setFiltroGrupo(e.target.value);
-            setPaginaActual(1);
-          }}
+        <option
+          key={grupo}
+          value={grupo}
         >
-          <option value="">Todos los grupos</option>
+          {grupo}
+        </option>
 
-          {grupos.map((grupo) => (
+      ))}
 
-            <option
-              key={grupo}
-              value={grupo}
-            >
-              {grupo}
-            </option>
+    </select>
 
-          ))}
+    <label className="filtro-docentes">
 
-        </select>
+      <input
+        type="checkbox"
+        checked={soloDocentes}
+        onChange={(e) => {
+  const checked = e.target.checked;
 
-      </div>
+  setSoloDocentes(checked);
 
-    )}
+  if (checked) {
+    setFiltroGrado("");
+    setFiltroGrupo("");
+  }
+
+  setPaginaActual(1);
+}}
+      />
+
+      Mostrar solo docentes
+
+    </label>
+
+  </div>
+
+)}
 
   </div>
 
@@ -547,7 +575,7 @@ const totalPaginas =
 
           <tr>
 
-            <th>Nombre del alumno</th>
+            <th>Nombre</th>
 
             <th>Grupo</th>
 
@@ -577,23 +605,22 @@ const totalPaginas =
                   }
                 >
 
-                 <td>
-
-                  {prestamo.nombreAlumno}
-
-                </td>
+                <td>
+  {prestamo.nombreUsuario}
+  <br />
+  <small>
+    {prestamo.rolUsuario}
+  </small>
+</td>
 
               <td>
-
-                {prestamo.gradoAlumno &&
-                prestamo.grupoAlumno
-
-                  ? `${prestamo.gradoAlumno}° ${prestamo.grupoAlumno}`
-
-                  : "Sin grupo"}
-
-              </td>
-
+  {prestamo.rolUsuario === "DOCENTE"
+    ? "-"
+    : prestamo.gradoAlumno &&
+      prestamo.grupoAlumno
+      ? `${prestamo.gradoAlumno}° ${prestamo.grupoAlumno}`
+      : "Sin grupo"}
+</td>
               <td>
 
                 {prestamo.tituloLibro}
@@ -629,13 +656,14 @@ const totalPaginas =
                     </span>
 
                   </td>
+<td>
 
-                  <td>
   <span
     className={`estado-pill ${prestamo.estado.toLowerCase()}`}
   >
     {prestamo.estado}
   </span>
+
 </td>
 
                   <td>

@@ -9,7 +9,8 @@ function Historial() {
 
   const [historial, setHistorial] =
     useState([]);
-
+const [soloDocentes, setSoloDocentes] =
+  useState(false);
   const [busqueda, setBusqueda] =
     useState("");
 
@@ -94,12 +95,12 @@ const registrosPorPagina = 8;
               "DEVUELTO"
           )
           .map((prestamo) => {
-            const alumno =
-              usuariosResponse.data.find(
-                (usuarioItem) =>
-                  usuarioItem.id_usuario ===
-                  prestamo.usuario_id
-              );
+            const usuarioPrestamo =
+  usuariosResponse.data.find(
+    (usuarioItem) =>
+      usuarioItem.id_usuario ===
+      prestamo.usuario_id
+  );
 
             const docente =
               usuariosResponse.data.find(
@@ -115,25 +116,37 @@ const registrosPorPagina = 8;
                   prestamo.libro_id
               );
 
-            return {
-              ...prestamo,
-              nombreAlumno:
-                alumno
-                  ? `${alumno.nombre} ${alumno.apellido_paterno}`
-                  : "No encontrado",
-              autorizadoPor:
-                docente
-                  ? `${docente.nombre} ${docente.apellido_paterno}`
-                  : "No encontrado",
-              tituloLibro:
-                libro
-                  ? libro.titulo
-                  : "No encontrado",
-              gradoAlumno:
-                alumno?.grado || "",
-              grupoAlumno:
-                alumno?.grupo || "",
-            };
+           return {
+  ...prestamo,
+
+  nombreUsuario:
+    usuarioPrestamo
+      ? `${usuarioPrestamo.nombre} ${usuarioPrestamo.apellido_paterno}`
+      : "No encontrado",
+
+  rolUsuario:
+    usuarioPrestamo?.rol || "",
+
+  autorizadoPor:
+    docente
+      ? `${docente.nombre} ${docente.apellido_paterno}`
+      : "No encontrado",
+
+  tituloLibro:
+    libro
+      ? libro.titulo
+      : "No encontrado",
+
+  gradoAlumno:
+    usuarioPrestamo?.rol === "ALUMNO"
+      ? usuarioPrestamo.grado
+      : "",
+
+  grupoAlumno:
+    usuarioPrestamo?.rol === "ALUMNO"
+      ? usuarioPrestamo.grupo
+      : "",
+};
 
           });
       if (
@@ -189,7 +202,7 @@ const registrosPorPagina = 8;
         const texto =
           busqueda.toLowerCase();
         const coincideBusqueda =
-          (registro.nombreAlumno || "")
+          (registro.nombreUsuario || "")
             .toLowerCase()
             .includes(texto)
           ||
@@ -229,15 +242,23 @@ const registrosPorPagina = 8;
           ||
           String(
             registro.grupoAlumno
-          ) === filtroGrupo
+          ) === filtroGrupo;
+const coincideRol =
 
+  !soloDocentes ||
+
+  registro.rolUsuario === "DOCENTE";
         return (
-          coincideBusqueda
-          &&
-          coincideGrado
-          &&
-          coincideGrupo
-        );
+
+  coincideBusqueda &&
+
+  coincideGrado &&
+
+  coincideGrupo &&
+
+  coincideRol
+
+);
 
       }
 
@@ -280,6 +301,7 @@ const totalPaginas =
       <div className="filtros-alumnos">
 
         <select
+        disabled={soloDocentes}
           className="filtro-select"
           value={filtroGrado}
           onChange={(e) => {
@@ -303,6 +325,7 @@ const totalPaginas =
         </select>
 
         <select
+          disabled={soloDocentes}
           className="filtro-select"
           value={filtroGrupo}
           onChange={(e) => {
@@ -324,8 +347,31 @@ const totalPaginas =
           ))}
 
         </select>
+<label className="filtro-docentes">
 
+  <input
+    type="checkbox"
+    checked={soloDocentes}
+   onChange={(e) => {
+  const checked = e.target.checked;
+
+  setSoloDocentes(checked);
+
+  if (checked) {
+    setFiltroGrado("");
+    setFiltroGrupo("");
+  }
+
+  setPaginaActual(1);
+}}
+  
+  />
+
+  Mostrar solo docentes
+
+</label>
       </div>
+      
 
     )}
 
@@ -344,6 +390,8 @@ const totalPaginas =
       }}
     />
 
+
+
   </div>
 
 
@@ -354,7 +402,7 @@ const totalPaginas =
           <thead>
 
             <tr>
-              <th>Alumno</th>
+              <th>Usuario</th>
               <th>Grupo</th>
               <th>Libro</th>
               <th>Fecha préstamo</th>
@@ -374,16 +422,22 @@ const totalPaginas =
                   }
                 >
 
-                  <td>
-                    {registro.nombreAlumno}
-                  </td>
+                <td>
+  {registro.nombreUsuario}
+  <br />
+  <small>
+    {registro.rolUsuario}
+  </small>
+</td>
 
                   <td>
-                    {registro.gradoAlumno &&
-                    registro.grupoAlumno
-                      ? `${registro.gradoAlumno}° ${registro.grupoAlumno}`
-                      : "Sin grupo"}
-                  </td>
+  {registro.rolUsuario === "DOCENTE"
+    ? "-"
+    : registro.gradoAlumno &&
+      registro.grupoAlumno
+      ? `${registro.gradoAlumno}° ${registro.grupoAlumno}`
+      : "Sin grupo"}
+</td>
 
                   <td>
                     {registro.tituloLibro}
