@@ -65,33 +65,40 @@ const [formData, setFormData] =
 
       ]);
 
-      let usuariosFiltrados =
-  usuariosResponse.data.filter(
+     let usuariosFiltrados = [];
+
+if (usuarioLogueado?.rol === "DIRECTORA") {
+
+  // La directora puede prestar a alumnos y docentes
+  usuariosFiltrados = usuariosResponse.data.filter(
     (u) =>
       u.rol === "ALUMNO" ||
       u.rol === "DOCENTE"
   );
 
-     if (
+} else if (
   usuarioLogueado?.rol === "DOCENTE" &&
   usuarioLogueado?.grado &&
   usuarioLogueado?.grupo
 ) {
-  usuariosFiltrados =
-    usuariosFiltrados.filter((usuario) => {
 
-      if (usuario.rol === "DOCENTE") {
-        return true;
-      }
+  // Docente con grupo: solo alumnos de su grupo
+  usuariosFiltrados = usuariosResponse.data.filter(
+    (usuario) =>
+      usuario.rol === "ALUMNO" &&
+      String(usuario.grado) === String(usuarioLogueado.grado) &&
+      String(usuario.grupo).trim().toUpperCase() ===
+      String(usuarioLogueado.grupo).trim().toUpperCase()
+  );
 
-      return (
-        String(usuario.grado) === String(usuarioLogueado.grado) &&
-        String(usuario.grupo).trim().toUpperCase() ===
-        String(usuarioLogueado.grupo).trim().toUpperCase()
-      );
-    });
+} else if (usuarioLogueado?.rol === "DOCENTE") {
+
+  // Docente con "Todos los grupos": todos los alumnos
+  usuariosFiltrados = usuariosResponse.data.filter(
+    (usuario) => usuario.rol === "ALUMNO"
+  );
+
 }
-
       setUsuariosPrestamo(
   usuariosFiltrados
 );
