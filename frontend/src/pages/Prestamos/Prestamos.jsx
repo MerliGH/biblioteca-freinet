@@ -253,60 +253,36 @@ grupoAlumno:
 
       prestamosConDatos;
 
-    if (
+ if (
+  usuario?.rol === "DOCENTE" &&
+  usuario?.grado &&
+  usuario?.grupo
+) {
 
-      usuario?.rol ===
+  prestamosFiltradosPorGrupo =
+    prestamosConDatos.filter(
+      (prestamo) =>
+        String(prestamo.gradoAlumno) === String(usuario.grado) &&
+        String(prestamo.grupoAlumno)
+          .trim()
+          .toUpperCase() ===
+        String(usuario.grupo)
+          .trim()
+          .toUpperCase()
+    );
 
-        "DOCENTE" &&
+}
+else if (
+  usuario?.rol === "DOCENTE"
+) {
 
-      usuario?.grado &&
+  prestamosFiltradosPorGrupo =
+    prestamosConDatos.filter(
+      (prestamo) =>
+        prestamo.rolUsuario === "ALUMNO"
+    );
 
-      usuario?.grupo
-
-    ) {
-
-      prestamosFiltradosPorGrupo =
-
-        prestamosConDatos.filter(
-
-          (prestamo) =>
-
-            String(
-
-              prestamo.gradoAlumno
-
-            ) ===
-
-              String(
-
-                usuario.grado
-
-              ) &&
-
-            String(
-
-              prestamo.grupoAlumno
-
-            )
-
-              .trim()
-
-              .toUpperCase() ===
-
-            String(
-
-              usuario.grupo
-
-            )
-
-              .trim()
-
-              .toUpperCase()
-
-        );
-
-    }
-
+}
 
     prestamosFiltradosPorGrupo.sort(
 
