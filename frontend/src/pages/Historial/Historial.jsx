@@ -286,7 +286,7 @@ const totalPaginas =
   <div>
 
     <h1>
-      Historial de préstamos
+      Préstamos devueltos
     </h1>
 
     {mostrarFiltros && (
