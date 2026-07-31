@@ -600,13 +600,15 @@ const totalPaginas =
                     prestamo.id_prestamo
                   }
                 >
-
-                <td>
+<td>
   {prestamo.nombreUsuario}
-  <br />
-  <small>
-    {prestamo.rolUsuario}
-  </small>
+
+  {prestamo.rolUsuario === "DOCENTE" && (
+    <>
+      <br />
+      <small>DOCENTE</small>
+    </>
+  )}
 </td>
 
              <td>

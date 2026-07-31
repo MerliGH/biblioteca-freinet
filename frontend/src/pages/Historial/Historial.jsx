@@ -417,10 +417,13 @@ const totalPaginas =
 
                 <td>
   {registro.nombreUsuario}
-  <br />
-  <small>
-    {registro.rolUsuario}
-  </small>
+
+  {registro.rolUsuario === "DOCENTE" && (
+    <>
+      <br />
+      <small>DOCENTE</small>
+    </>
+  )}
 </td>
 
                  <td>
