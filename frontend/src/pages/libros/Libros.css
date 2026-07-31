@@ -25,22 +25,18 @@
   font-weight: 600;
   cursor: pointer;
 }
+
 .filtro-clasificacion {
   border: none;
-
   background: transparent;
-
   color: #173b70;
-
   font-size: 16px;
   font-weight: 600;
-
   cursor: pointer;
-
   outline: none;
-
   padding: 0;
 }
+
 .acciones {
   display: flex;
   align-items: center;
@@ -78,7 +74,6 @@
   border-collapse: collapse;
   table-layout: fixed;
   margin-top: 15px;
-  
   background: white;
 }
 
@@ -113,6 +108,7 @@
   background-color: #f7f7f7;
 }
 
+/* Acciones */
 .acciones-tabla {
   display: flex;
   justify-content: center;
@@ -120,16 +116,68 @@
   gap: 12px;
 }
 
-.icono-editar {
-  color: #173b70;
+.btn-editar {
+  margin-right: 18px;
+}
+
+.btn-editar,
+.btn-eliminar {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   font-size: 16px;
+  background-color: #d9d9d9;
+  color: #5f5f5f;
+  transition: all 0.2s ease;
+}
+
+.btn-editar:hover,
+.btn-eliminar:hover {
+  background-color: #173b70;
+  color: white;
+  transform: scale(1.08);
+}
+
+.icono-editar {
+  color: inherit;
 }
 
 .icono-eliminar {
-  color: #9c9c9c;
+  color: inherit;
+}
+
+.btn-clasificacion {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 10px;
+  color: white;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: .2s;
+  margin-right: 12px;
+  margin-top: 10px;
+}
+
+.btn-nueva {
+  background: #7BBE3A;
+}
+
+.btn-nueva:hover {
+  background: #69a52f;
+}
+
+.btn-admin {
+  background: #C8A76A;
+}
+
+.btn-admin:hover {
+  background: #b29155;
 }
 
 @media (max-width: 1200px) {
@@ -148,75 +196,4 @@
     overflow-x: auto;
     white-space: nowrap;
   }
-}
-.tabla-libros tbody tr:hover {
-  background-color: #f7f7f7;
-}
-.acciones-tabla {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-}
-
-.btn-editar,
-.btn-eliminar {
-  width: 34px;
-  height: 34px;
-
-  border: none;
-  border-radius: 8px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  cursor: pointer;
-
-  font-size: 16px;
-
-  background-color: #d9d9d9;
-  color: #5f5f5f;
-
-  transition: all 0.2s ease;
-}
-
-.btn-editar:hover,
-.btn-eliminar:hover {
-  background-color: #173b70;
-  color: white;
-
-  transform: scale(1.08);
-}
-
-
-
-
-.btn-clasificacion {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 10px;
-  color: white;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: .2s;
-  margin-right: 12px;
-  margin-top: 10px;
-}
-
-.btn-nueva {
-  background: #7BBE3A;   /* Verde */
-}
-
-.btn-nueva:hover {
-  background: #69a52f;
-}
-
-.btn-admin {
-  background: #C8A76A;   /* Beige/Dorado */
-}
-
-.btn-admin:hover {
-  background: #b29155;
 }

@@ -1,23 +1,14 @@
 import "./Sidebar.css";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
 
 import { HiOutlineHome } from "react-icons/hi";
 import { PiBookOpenTextLight } from "react-icons/pi";
-
-import {
-  FaUserGraduate,
-  FaChalkboardTeacher,
-} from "react-icons/fa";
-
+import { FaUserGraduate, FaChalkboardTeacher } from "react-icons/fa";
 import { BsThermometerHalf } from "react-icons/bs";
-import { IoChevronDown } from "react-icons/io5";
+import { TbBooks } from "react-icons/tb";
+import { RiHistoryLine } from "react-icons/ri";
 
 function Sidebar() {
-
-  const [openLibros, setOpenLibros] =
-    useState(false);
-
   const usuario = JSON.parse(
     localStorage.getItem("usuario")
   );
@@ -26,7 +17,6 @@ function Sidebar() {
     usuario?.rol === "DIRECTORA";
 
   return (
-
     <aside className="sidebar">
 
       {/* Inicio */}
@@ -43,56 +33,43 @@ function Sidebar() {
       </NavLink>
 
       {/* Libros */}
-      <div className="menu-item libros-menu">
+      <NavLink
+        to="/libros"
+        className={({ isActive }) =>
+          isActive
+            ? "menu-item active"
+            : "menu-item"
+        }
+      >
+        <PiBookOpenTextLight className="icon" />
+        <span>Libros</span>
+      </NavLink>
 
-        <NavLink
-          to="/libros"
-          className="libros-link"
-        >
-          <PiBookOpenTextLight
-            className="icon"
-          />
+      {/* Préstamos */}
+      <NavLink
+        to="/prestamos"
+        className={({ isActive }) =>
+          isActive
+            ? "menu-item active"
+            : "menu-item"
+        }
+      >
+        <TbBooks className="icon" />
+        <span>Préstamos</span>
+      </NavLink>
 
-          <span>Libros</span>
-
-        </NavLink>
-
-        <IoChevronDown
-          className={`arrow ${
-            openLibros
-              ? "rotate"
-              : ""
-          }`}
-          onClick={() =>
-            setOpenLibros(
-              !openLibros
-            )
-          }
-        />
-
-      </div>
-
-      {openLibros && (
-
-        <div className="submenu">
-
-          <NavLink
-            to="/prestamos"
-            className="submenu-item"
-          >
-            Préstamos
-          </NavLink>
-
-          <NavLink
-            to="/historial"
-            className="submenu-item"
-          >
-            Historial
-          </NavLink>
-
-        </div>
-
-      )}
+      {/* Historial */}
+      <NavLink
+        to="/historial"
+        className={({ isActive }) =>
+          isActive
+            ? "menu-item active"
+            : "menu-item"
+        }
+      >
+        <RiHistoryLine className="icon" />
+        <span>Historial</span>
+      </NavLink>
 
       {/* Alumnos */}
       <NavLink
@@ -107,9 +84,8 @@ function Sidebar() {
         <span>Alumnos</span>
       </NavLink>
 
-      {/* SOLO DIRECTORA */}
+      {/* Docentes (solo Directora) */}
       {esDirectora && (
-
         <NavLink
           to="/docentes"
           className={({ isActive }) =>
@@ -118,12 +94,9 @@ function Sidebar() {
               : "menu-item"
           }
         >
-          <FaChalkboardTeacher
-            className="icon"
-          />
+          <FaChalkboardTeacher className="icon" />
           <span>Docentes</span>
         </NavLink>
-
       )}
 
       {/* Termómetro */}
@@ -140,7 +113,6 @@ function Sidebar() {
       </NavLink>
 
     </aside>
-
   );
 }
 

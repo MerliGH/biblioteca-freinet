@@ -1,5 +1,7 @@
 import Layout from "../../components/Layout";
 import "./Termometro.css";
+import ModalPdfIndividual from "./PdfIndividual/ModalPdfIndividual";
+import ModalPdfGrupal from "./PdfGrupal/ModalPdfGrupal";
 
 import { useState, useEffect } from "react";
 
@@ -38,7 +40,13 @@ function Termometro() {
   const [mostrarCreate,
     setMostrarCreate] =
     useState(false);
-
+    const [mostrarPDFGrupal,
+setMostrarPDFGrupal] =
+useState(false);
+const [
+  mostrarPDFIndividual,
+  setMostrarPDFIndividual
+] = useState(false);
   useEffect(() => {
 
     obtenerRegistros();
@@ -450,162 +458,116 @@ const registrosFiltrados =
 
         <div className="termometro-header">
 
-          <h1>
+          <div>
 
-            Termómetro escolar
-
-          </h1>
-
-        <div className="acciones">
-
-          <div className="barra-filtros">
-
-            <input
-
-              type="text"
-
-              placeholder="Buscar alumno o grupo..."
-
-              className="buscador"
-
-              value={busqueda}
-
-              onChange={(e) =>
-
-                setBusqueda(
-
-                  e.target.value
-
-                )
-
-              }
-
-            />
+            <h1>
+              Termómetro escolar
+            </h1>
 
             {mostrarFiltros && (
 
-              <>
+              <div className="filtros-alumnos">
 
                 <select
-
-                  className="filtro-select"
-
                   value={filtroGrado}
-
                   onChange={(e) =>
-
-                    setFiltroGrado(
-
-                      e.target.value
-
-                    )
-
+                    setFiltroGrado(e.target.value)
                   }
-
                 >
-
                   <option value="">
-
                     Todos los grados
-
                   </option>
 
-                  {grados.map(
+                  {grados.map((grado) => (
 
-                    (grado) => (
+                    <option
+                      key={grado}
+                      value={grado}
+                    >
+                      {grado}°
+                    </option>
 
-                      <option
-
-                        key={grado}
-
-                        value={grado}
-
-                      >
-
-                        {grado}°
-
-                      </option>
-
-                    )
-
-                  )}
+                  ))}
 
                 </select>
-
 
                 <select
-
-                  className="filtro-select"
-
                   value={filtroGrupo}
-
                   onChange={(e) =>
-
-                    setFiltroGrupo(
-
-                      e.target.value
-
-                    )
-
+                    setFiltroGrupo(e.target.value)
                   }
-
                 >
-
                   <option value="">
-
                     Todos los grupos
-
                   </option>
 
-                  {grupos.map(
+                  {grupos.map((grupo) => (
 
-                    (grupo) => (
+                    <option
+                      key={grupo}
+                      value={grupo}
+                    >
+                      {grupo}
+                    </option>
 
-                      <option
-
-                        key={grupo}
-
-                        value={grupo}
-
-                      >
-
-                        {grupo}
-
-                      </option>
-
-                    )
-
-                  )}
+                  ))}
 
                 </select>
 
-              </>
+              </div>
 
             )}
 
           </div>
 
-          <button
+          <div className="acciones">
 
-            className="btn-agregar"
+            <input
+              type="text"
+              placeholder="Buscar alumno o grupo..."
+              className="buscador"
+              value={busqueda}
+              onChange={(e) =>
+                setBusqueda(e.target.value)
+              }
+            />
 
-            onClick={() =>
+            {mostrarFiltros && (
 
-              setMostrarCreate(
+              <div className="botones-pdf">
 
-                true
+                <button
+                  className="btn-pdf-individual"
+                  onClick={() =>
+                    setMostrarPDFIndividual(true)
+                  }
+                >
+                  Exportar PDF individual
+                </button>
 
-              )
+                <button
+                  className="btn-pdf-grupal"
+                  onClick={() =>
+                    setMostrarPDFGrupal(true)
+                  }
+                >
+                  Exportar PDF grupal
+                </button>
 
-            }
+              </div>
 
-          >
+            )}
 
-            Iniciar termómetro
+            <button
+              className="btn-agregar"
+              onClick={() =>
+                setMostrarCreate(true)
+              }
+            >
+              Iniciar termómetro
+            </button>
 
-          </button>
-
-        </div>
+          </div>
 
         </div>
 
@@ -696,12 +658,12 @@ const registrosFiltrados =
           alumnoSeleccionado && (
 
           <DetailTermometro
-  alumno={alumnoSeleccionado}
-  onClose={() =>
-    setMostrarDetalle(false)
-  }
-  actualizar={obtenerRegistros}
-/>
+            alumno={alumnoSeleccionado}
+            onClose={() =>
+              setMostrarDetalle(false)
+            }
+            actualizar={obtenerRegistros}
+          />
 
           )}
 
@@ -724,7 +686,22 @@ const registrosFiltrados =
         )}
 
       </div>
-
+{mostrarPDFIndividual && (
+  <ModalPdfIndividual
+    alumnos={registros}
+    onClose={() =>
+      setMostrarPDFIndividual(false)
+    }
+  />
+)}
+{mostrarPDFGrupal && (
+  <ModalPdfGrupal
+    alumnos={registros}
+    onClose={() =>
+      setMostrarPDFGrupal(false)
+    }
+  />
+)}
     </Layout>
 
   );
